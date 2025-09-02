@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Project</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="/styles/main.css" />
+  <link rel="stylesheet" href="/styles/projectTiles.css" />
+  <link rel="stylesheet" href="/styles/newProjectButton.css" />
+</head>
+<body>
+  <div id="homeView">
+    <h1 id="homeViewTitle">Project Dashboard</h1>
+    <hr />
+    <div id="homeViewProjectsWrapper">
+            
+      <div class="newProjectButton">
+        <h1>
+          <i class="fa-solid fa-folder" style="margin-right:0.4em;"></i> New Project
+        </h1>
+          <i class="fa-solid fa-plus" style="margin-right:0.4em;"></i>
+      </div>
+
+      <div class="projectTile">
+        <h3 class="projectTitle">
+            <i class="fa-solid fa-folder" style="margin-right:0.4em;"></i> Project 1
+        </h1>
+        <div class="projectDescription">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
+        </div>
+        <div class="progressBarWrapper">
+          <div class="progressBarDetailsWrapper">
+            <div class="progressBarLabelWrapper">
+              <p class="progressBarLabel">Progress</p>
+            </div>
+            <div class="projectBarPercentageWrapper">
+              <p class="projectBarPercentage">45 %</p>
+            </div>
+          </div>
+          <div class="progressBar">
+            <div class="progressBarBackground">
+              <div class="progressBarFill"></div>
+            </div>
+          </div>
+          <div class="progressBarDetailsWrapper">
+            <div class="taskQuantityWrapper">
+              <p class="taskQuantity">4 Tasks</p>
+            </div>
+            <div class="projectStatusWrapper">
+              <p class="projectStatusBubble">In Progress</p>
+            </div>
+          </div>
+        </div>
+        <div class="projectActionsWrapper">
+          <div class="projectActions">
+            <span>...</span>
+            <div class="projectActionsDropDown">
+                <button title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="uiListeners.js"></script>
+</body>
+</html>
