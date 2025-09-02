@@ -23,7 +23,7 @@
   transition: box-shadow 0.2s;
 }
 
-.projectTitle {
+.projectTile .projectTitle {
   display: block;
   width: 100%;
   height: 1em;
@@ -32,11 +32,11 @@
   transition: font-size 0.2s, color 0.2s;
 }
 
-.projectTitle .fa-folder {
+.projectTile .projectTitle .fa-folder {
   margin: 0 0.4em 0 0;
 }
 
-.projectDescription {
+.projectTile .projectDescription {
   display: block;
   margin: 0 0 0.5em 0;
   height: fit-content;
@@ -47,7 +47,7 @@
 
 /* Progress Bar styles: Includes text details */
 
-.progressBarWrapper {
+.projectTile .progressBarWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,7 +56,7 @@
   width: 100%;
 }
 
-.progressBar {
+.projectTile .progressBar {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -65,7 +65,7 @@
   width: 100%;
 }
 
-.progressBarBackground {
+.projectTile .progressBarBackground {
   display: block;
   width: 100%;
   height: 0.5em;
@@ -73,16 +73,16 @@
   border-radius: 1em;
 }
 
-.progressBarFill {
+.projectTile .progressBarFill {
   display: block;
-  width: 75%;
+  width: 45%;
   height: 100%;
   background-color: #444;
   border-bottom-left-radius: 1em;
   border-top-left-radius: 1em;
 }
 
-.progressBarDetailsWrapper {
+.projectTile .progressBarDetailsWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -91,7 +91,7 @@
   width: 100%;
 }
 
-.progressBarLabelWrapper {
+.projectTile .progressBarLabelWrapper {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -100,7 +100,7 @@
   height: 100%;
 }
 
-.progressBarLabel {
+.projectTile .progressBarLabel {
   display: inline-block;
   padding: 0;
   margin: 0;
@@ -108,7 +108,7 @@
   color:#aaa;
 }
 
-.projectBarPercentageWrapper {
+.projectTile .projectBarPercentageWrapper {
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -117,7 +117,7 @@
   height: 100%;
 }
 
-.projectBarPercentage {
+.projectTile .projectBarPercentage {
   display: inline-block;
   padding: 0;
   margin: 0;
@@ -125,7 +125,7 @@
   color:#111;
 }
 
-.taskQuantityWrapper {
+.projectTile .taskQuantityWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -134,7 +134,7 @@
   height: 100%;
 }
 
-.taskQuantity {
+.projectTile .taskQuantity {
   display: inline-block;
   padding: 0;
   margin: 0;
@@ -143,7 +143,7 @@
   color:#888;
 }
 
-.projectStatusWrapper {
+.projectTile .projectStatusWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -152,7 +152,7 @@
   height: 100%;
 }
 
-.projectStatusBubble {
+.projectTile .projectStatusBubble {
   display: inline-block;
   padding: 0.25em 0.5em;
   margin: 0;
@@ -164,7 +164,7 @@
 
 /* Project Actions styles: Includes dropdown menu */
 
-.projectActionsWrapper {
+.projectTile .projectActionsWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -174,7 +174,7 @@
   margin: 0 0 0.5em 0;
 }
 
-.projectActions {
+.projectTile .projectActions {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -185,20 +185,20 @@
   color: #666
 }
 
-.projectActions span {
+.projectTile .projectActions span {
   display: block;
   width: 100%;
   font-weight: bold;
   text-align: center;
 }
 
-.projectActions:hover span {
+.projectTile .projectActions:hover span {
   background-color: #ddd;
   color: #fff;
   border-radius: 5px;
 }
 
-.projectActionsDropDown {
+.projectTile .projectActionsDropDown {
   position: absolute;
   top: 1em;
   right: 0;
@@ -213,12 +213,12 @@
   border-radius: 0.6em;
 }
 
-.projectActions:hover .projectActionsDropDown {
+.projectTile .projectActions:hover .projectActionsDropDown {
   display: flex;
   z-index: 100;
 }
 
-.projectActionsDropDown button { 
+.projectTile .projectActionsDropDown button { 
   padding: 0.25em 0.5em;
   background-color: #fff;
   border: none;
@@ -226,7 +226,7 @@
   font-size: 1.1em;
 }
 
-.projectActionsDropDown button:hover {
+.projectTile .projectActionsDropDown button:hover {
   background-color: #111;
   color: #fff;
 }
