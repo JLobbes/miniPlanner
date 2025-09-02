@@ -20,6 +20,7 @@
 }
 
 .newProjectButton .fa-folder {
+  margin: 0 0.4em 0 0 ;
   color: #ddd;
 }
 

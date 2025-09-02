@@ -6,25 +6,31 @@
   <title>My Project</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <link rel="stylesheet" href="/styles/main.css" />
-  <link rel="stylesheet" href="/styles/projectTiles.css" />
-  <link rel="stylesheet" href="/styles/newProjectButton.css" />
+  
+  <link rel="stylesheet" href="/styles/home/homeView.css" />
+  <link rel="stylesheet" href="/styles/home/projectTiles.css" />
+  <link rel="stylesheet" href="/styles/home/newProjectButton.css" />
+  
+  <link rel="stylesheet" href="/styles/projects/projectView.css" />
 </head>
 <body>
   <div id="homeView">
-    <h1 id="homeViewTitle">Project Dashboard</h1>
+    <h1 id="homeViewTitle">
+      Dashboard
+    </h1>
     <hr />
     <div id="homeViewProjectsWrapper">
             
       <div class="newProjectButton">
         <h1>
-          <i class="fa-solid fa-folder" style="margin-right:0.4em;"></i> New Project
+          <i class="fa-solid fa-folder" ></i> New Project
         </h1>
-          <i class="fa-solid fa-plus" style="margin-right:0.4em;"></i>
+          <i class="fa-solid fa-plus"></i>
       </div>
 
       <div class="projectTile">
         <h3 class="projectTitle">
-            <i class="fa-solid fa-folder" style="margin-right:0.4em;"></i> Project 1
+            <i class="fa-solid fa-folder"></i> Project 1
         </h1>
         <div class="projectDescription">
           Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
@@ -63,6 +69,10 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="projectView">
+    
   </div>
   <script src="uiListeners.js"></script>
 </body>
