@@ -1,0 +1,185 @@
+/* Project Time Tracking Styles */
+
+.timeWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5em;
+  height: 50%;
+  width: 100%;
+  padding: 0 1em 1em 1em;
+  background-color: #333;
+  border-radius: 0.5em;
+}
+
+.timeWrapper .timeWrapperHeader {
+  display: block;
+  width: 100%;
+  padding: 0 0 0 0.5em;
+  margin: 0.5em 0 0 0;
+  color: #fff;
+  font-size: 1.5em;
+}
+
+.timeItems {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1; /* Growing Vertically */
+  gap: 0.5em;
+  height: calc(100% - 4em);
+  width: 100%;
+}
+
+.totalTimeDisplay {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
+  width: 7em;
+  background-color: #555;
+  border-radius: 0.5em;
+}
+
+.totalTimeDisplay .totalTimeHours,
+.totalTimeDisplay .totalTimeMinutes {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 1em;
+}
+
+.totalTimeDisplay .totalTimeDigit {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.totalTimeDisplay .totalTimeUnits {
+  margin: 0 0.5em;
+  color: #fff;
+  font-weight: regular;
+  font-size: 1.5em;
+}
+
+.timeLog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25em;
+  flex-grow: 4;
+  height: 100%;
+  overflow: auto;
+}
+
+.timeLog::-webkit-scrollbar {
+  width: 0px;
+}
+
+.timeLog .timeLogEntry {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1em;
+  padding: 0.25em 0.5em;
+  border: #fff 1px solid;
+  border-radius: 0.5em;
+  background-color: #fff;
+  width: 100%;
+  overflow: scroll;
+}
+
+.timeLog .timeLogEntry::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.timeLog .timeLogEntry p {
+  color: #111;
+}
+
+.timeLog p.timeLogEntrySource {
+  color: #777;
+  font-style: italic;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.timeLog .timeLogEntryTime {
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeLog .timeLogEntryDate{
+  font-style: italic;  
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.timeLog .timeLogEntryEdit {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.timeLog .timeLogEntryEdit .fa-pen {
+  padding: 0.25em;
+  color: #ccc;
+  border-radius: 0.5em;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.timeLog .timeLogEntryEdit:hover .fa-pen {
+  background-color: #333;
+  color: #fff;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.addTimeLogBtn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 2em;
+  width: 2em;
+  border: #fff 1px solid;
+  border-radius: 0.5em;
+  transition: background-color 0.2s;
+}
+
+.addTimeLogBtn .fa-plus {
+  margin: 0.05em 0 0 0;
+  color: #fff;
+  font-size: 1.3em;
+  transition: color 0.2s;
+}
+
+.addTimeLogBtn:hover {
+  background-color: #fff;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.addTimeLogBtn:hover .fa-plus {
+  color: #333;
+  transition: color 0.2s;
+}

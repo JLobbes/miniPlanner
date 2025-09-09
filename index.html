@@ -11,7 +11,12 @@
   <link rel="stylesheet" href="/styles/home/projectTiles.css" />
   <link rel="stylesheet" href="/styles/home/newProjectButton.css" />
   
-  <link rel="stylesheet" href="/styles/projects/projectView.css" />
+  <link rel="stylesheet" href="/styles/projectView/projectMain.css" />
+  <link rel="stylesheet" href="/styles/projectView/projectHeader.css" />
+  <link rel="stylesheet" href="/styles/projectView/projectProgress.css" />
+  <link rel="stylesheet" href="/styles/projectView/projectTasks.css" />
+  <link rel="stylesheet" href="/styles/projectView/projectTime.css" />
+  <link rel="stylesheet" href="/styles/projectView/projectNotes.css" />
 </head>
 <body>
   <div id="homeView">
@@ -115,22 +120,73 @@
         </div>
       </div>
     </div>
-    <div class="tasksWrapper">
-      <h2>Tasks</h2>
-      <div class="newTaskBtn">
-        <h1>
-          <i class="fa-regular fa-rectangle-list"></i> New Task
-        </h1>
+    <div class="bottomPanel">
+      <div class="bottomPanelLeft">
+        <div class="tasksWrapper">
+          <h2>Tasks</h2>
+          <div class="newTaskBtn">
+            <h3>
+              <i class="fa-regular fa-rectangle-list"></i> New Task
+            </h3>
+          </div>
+          <div class="task">
+            <i class="fa-regular fa-rectangle-list"></i>
+            <h3 class="taskName">
+              New Task 1
+            </h3>
+            <div class="taskStatusBubble" >Pending</div>
+          </div>
+        </div>
       </div>
-      <div class="task">
-        <i class="fa-regular fa-rectangle-list"></i>
-        <h3 class="taskName">
-          New Task 1
-        </h3>
-        <div class="taskStatusBubble" >Pending</div>
+
+      <div class="bottomPanelRight">
+        <div class="timeWrapper">
+          <h2 class="timeWrapperHeader">
+            <i class="fa-regular fa-clock"></i> 
+            Time
+          </h2>
+          <div class="timeItems">
+            <div class="totalTimeDisplay">
+              <div class="totalTimeHours">
+                <p class="totalTimeDigit">11</p>
+                <p class="totalTimeUnits">hr</p>
+              </div>
+              <div class="totalTimeMinutes">
+                <p class="totalTimeDigit">11</p>
+                <p class="totalTimeUnits">min</p>
+              </div>
+            </div>
+            <div class="timeLog">
+              <div class="timeLogEntry">
+                <p class="timeLogEntrySource">
+                  <i class="fa-solid fa-folder"></i> 
+                  New Project 1
+                </p>
+                <p class="timeLogEntryTime">55 min</p>
+                <p class="timeLogEntryDate">7pm | 2025 May 05</p>
+                <div class="timeLogEntryEdit">
+                  <i class="fa-solid fa-pen"></i>
+                </div>
+              </div>
+
+            </div>
+            
+            <div class="addTimeLogBtn">
+              <i class="fa-solid fa-plus"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="notesWrapper">
+          <h2>
+            <i class="fa-regular fa-note-sticky"></i> 
+            Notes
+          </h2>
+          <div></div>
+        </div>
       </div>
     </div>
-    
+
   </div>
   <script src="uiListeners.js"></script>
 </body>
