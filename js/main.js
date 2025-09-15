@@ -1,5 +1,6 @@
 // Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
+  loadProjectData();
   renderProjectsToDash();
   console.log('Page loaded and ready!');
 
@@ -26,4 +27,12 @@ function openProjectView() {
 
 function closeProjectView() {
   projectView.classList.add('active');
+}
+
+const globalProjectData = [];
+
+function loadProjectData() {
+  globalProjectData.length = 0; // clear existing
+  globalProjectData.push(...testData.map(project => ({ ...project })));
+  console.log('globalProjectData:', globalProjectData);
 }

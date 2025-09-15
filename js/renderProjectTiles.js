@@ -7,7 +7,7 @@ function renderProjectsToDash() {
   container.appendChild(newProjBtn);
 
   // Filter and render top-level projects
-  const topLevelProjects = testData.filter(p => p.parentProjectID === null);
+  const topLevelProjects = globalProjectData.filter(p => p.parentProjectID === null);
   topLevelProjects.forEach(project => {
     const tile = createProjectTile(project);
     container.appendChild(tile);
@@ -52,8 +52,8 @@ function createProgressBar(project) {
   const progressWrapper = document.createElement('div');
   progressWrapper.className = 'progressBarWrapper';
 
-  const percent = calculateProjectProgress(testData, project.uniqueProjectID);
-  const taskCount = calculateProjectTaskCount(testData, project.uniqueProjectID);
+  const percent = calculateProjectProgress(globalProjectData, project.uniqueProjectID);
+  const taskCount = calculateProjectTaskCount(globalProjectData, project.uniqueProjectID);
   const status = project.projectStatus;
 
   progressWrapper.innerHTML = `
@@ -84,11 +84,11 @@ function createProgressBar(project) {
 }
 
 // Calculate percent complete based on immediate subProjects found via parentProjectID
-function calculateProjectProgress(testData, projectID) {
+function calculateProjectProgress(globalProjectData, projectID) {
   try {
     if (!projectID) return 0;
 
-    const tasks = testData.filter(p => p.parentProjectID === projectID);
+    const tasks = globalProjectData.filter(p => p.parentProjectID === projectID);
     if (tasks.length === 0) return 0;
 
     const completeCount = tasks.filter(t => t.projectStatus.toLowerCase() === 'complete').length;
@@ -100,12 +100,12 @@ function calculateProjectProgress(testData, projectID) {
 }
 
 // Calculate number of immediate subProjects/Tasks (one level deep, excluding nested children)
-function calculateProjectTaskCount(testData, projectID) {
+function calculateProjectTaskCount(globalProjectData, projectID) {
   try {
     if (!projectID) return 0;
 
     // Find direct children of the project
-    const children = testData.filter(p => p.parentProjectID === projectID);
+    const children = globalProjectData.filter(p => p.parentProjectID === projectID);
 
     return children.length;
   } catch (error) {
