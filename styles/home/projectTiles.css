@@ -26,9 +26,13 @@
 .projectTile .projectTitle {
   display: block;
   width: 100%;
+  max-width: 100%;  
   height: 1em;
   margin: 0.5em 0;
   text-align: center;
+  white-space: nowrap;           
+  overflow: hidden;       
+  text-overflow: ellipsis; 
   transition: font-size 0.2s, color 0.2s;
 }
 

@@ -121,6 +121,7 @@ function createProjectTitle(titleText) {
   const title = document.createElement('h3');
   title.className = 'projectTitle';
   title.innerHTML = `<i class="fa-solid fa-folder"></i> ${titleText}`;
+  if(titleText.length > 15) title.title = titleText; // A tooltip for long titles
   return title;
 }
 
