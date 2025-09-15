@@ -11,28 +11,6 @@ const testData = [
     projectTitle: "Test Project 1",
     projectDescription: `Some mumbo jumbo for my description.`,
     projectStatus: "In Progress",
-    subProjects: [
-      {
-        uniqueProjectID: "proj_a1c7e4829bd3",
-        projectTitle: "Test Task Uno",
-        projectDescription: `Some mumbo jumbo for my test task uno.`,
-        projectStatus: "Complete",
-        subProjects: [
-          // empty 
-        ],
-        parentProjectID: "proj_7f9b3d21e0c4",
-      },
-      {
-        uniqueProjectID: "proj_d4f05b7c92e8",
-        projectTitle: "Test Task Dos",
-        projectDescription: `Some mumbo jumbo for my test task dos.`,
-        projectStatus: "Pending",
-        subProjects: [
-          // empty
-        ],
-        parentProjectID: "proj_7f9b3d21e0c4",
-      },
-    ],
     created: '2023-07-08T16:38:22Z',
     timeLog: [
       { date: '2023-07-16T17:38:22Z',
@@ -52,6 +30,38 @@ const testData = [
     ],
     parentProjectID: null,
   },
+  { 
+    uniqueProjectID: "proj_mickey1234",
+    projectTitle: "Mickey’s Magical Hat",
+    projectDescription: `Helping Mickey find the magic to make his hat float and dance!`,
+    projectStatus: "In Progress",
+    created: '2025-09-01T09:00:00Z',
+    timeLog: [
+      { date: '2025-09-02T10:00:00Z', time: 42 },
+      { date: '2025-09-03T15:00:00Z', time: 30 },
+    ],
+    noteLog: [
+      { date: '2025-09-02T11:00:00Z', note: "Oops! The hat floated away again..." },
+      { date: '2025-09-03T16:00:00Z', note: "Try adding some fairy dust next time!" },
+    ],
+    parentProjectID: null,
+  },
+  { 
+    uniqueProjectID: "proj_bugs5678",
+    projectTitle: "Bugs Bunny’s Carrot Contraption",
+    projectDescription: `Inventing the ultimate carrot-powered rocket for a quick getaway!`,
+    projectStatus: "Delayed (Elmer keeps chasing)",
+    created: '2025-09-05T14:30:00Z',
+    timeLog: [
+      { date: '2025-09-06T10:00:00Z', time: 55 },
+      { date: '2025-09-07T12:00:00Z', time: 20 },
+    ],
+    noteLog: [
+      { date: '2025-09-06T11:30:00Z', note: "Added too many carrots—it's now a veggie overload!" },
+      { date: '2025-09-07T13:00:00Z', note: "Need to hide from Elmer before testing again." },
+    ],
+    parentProjectID: "proj_mickey1234",
+  }
 ]
 
 const homeView = document.getElementById('homeView');
@@ -128,7 +138,7 @@ function createProgressBar(project) {
   progressWrapper.className = 'progressBarWrapper';
 
   const percent = calculateProjectProgress(project);
-  const taskCount = project.subProjects.length;
+  const taskCount = calculateProjectTaskCount(project);
   const status = project.projectStatus;
 
   progressWrapper.innerHTML = `
@@ -158,13 +168,35 @@ function createProgressBar(project) {
   return progressWrapper;
 }
 
-// Calculate percent complete based on subProjects
-function calculateProjectProgress(project) {
-  const tasks = project.subProjects;
-  if (!tasks.length) return 0;
+// Calculate percent complete based on immediate subProjects found via parentProjectID
+function calculateProjectProgress(testData, projectID) {
+  try {
+    if (!projectID) return 0;
 
-  const completeCount = tasks.filter(t => t.projectStatus.toLowerCase() === 'complete').length;
-  return Math.round((completeCount / tasks.length) * 100);
+    const tasks = testData.filter(p => p.parentProjectID === projectID);
+    if (tasks.length === 0) return 0;
+
+    const completeCount = tasks.filter(t => t.projectStatus.toLowerCase() === 'complete').length;
+    return Math.round((completeCount / tasks.length) * 100);
+  } catch (error) {
+    console.error('Error calculating project progress:', error);
+    return 0;
+  }
+}
+
+// Calculate number of immediate subProjects/Tasks (one level deep, excluding nested children)
+function calculateProjectTaskCount(testData, projectID) {
+  try {
+    if (!projectID) return 0;
+
+    // Find direct children of the project
+    const children = testData.filter(p => p.parentProjectID === projectID);
+
+    return children.length;
+  } catch (error) {
+    console.error('Error calculating task count:', error);
+    return 0;
+  }
 }
 
 // Ellipsis action menu (currently static)
