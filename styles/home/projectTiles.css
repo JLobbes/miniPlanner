@@ -43,9 +43,10 @@
 .projectTile .projectDescription {
   display: block;
   margin: 0 0 0.5em 0;
-  height: fit-content;
+  height: 3.5em;
   text-align: left;
   font-size: 0.95em;
+  overflow: hidden;       
   color: #666
 }
 

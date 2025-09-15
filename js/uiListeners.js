@@ -70,7 +70,9 @@ function createProjectTitle(titleText) {
 function createProjectDescription(descText) {
   const desc = document.createElement('div');
   desc.className = 'projectDescription';
-  desc.textContent = descText;
+  desc.textContent = descText.length > 65 
+    ? descText.slice(0, 65) + '...'
+    : descText;
   return desc;
 }
 

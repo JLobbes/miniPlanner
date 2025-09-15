@@ -20,7 +20,7 @@ const testData = [
   { 
     uniqueProjectID: "proj_mickey1234",
     projectTitle: "Mickey’s Magical Hat",
-    projectDescription: `Helping Mickey find the magic to make his hat float and dance!`,
+    projectDescription: `Helping Mickey find the magic to make his hat float and dance! And then some more garbage.`,
     projectStatus: "In Progress",
     created: '2025-09-01T09:00:00Z',
     timeLog: [
