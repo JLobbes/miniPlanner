@@ -5,65 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-const testData = [
-  { 
-    uniqueProjectID: "proj_7f9b3d21e0c4",
-    projectTitle: "Test Project 1",
-    projectDescription: `Some mumbo jumbo for my description.`,
-    projectStatus: "In Progress",
-    created: '2023-07-08T16:38:22Z',
-    timeLog: [
-      { date: '2023-07-16T17:38:22Z',
-        time: 47, // minutes
-      },
-      { date: '2023-07-17T17:38:22Z',
-        time: 23, // minutes
-      },
-    ],
-    noteLog: [
-      { date: '2023-07-16T17:38:22Z',
-        note: 'Left off writing xyz...', // just text.
-      },
-      { date: '2023-07-17T17:38:22Z',
-        time: 'Don\'t forget to turn off the lights.', // just text
-      },
-    ],
-    parentProjectID: null,
-  },
-  { 
-    uniqueProjectID: "proj_mickey1234",
-    projectTitle: "Mickey’s Magical Hat",
-    projectDescription: `Helping Mickey find the magic to make his hat float and dance!`,
-    projectStatus: "In Progress",
-    created: '2025-09-01T09:00:00Z',
-    timeLog: [
-      { date: '2025-09-02T10:00:00Z', time: 42 },
-      { date: '2025-09-03T15:00:00Z', time: 30 },
-    ],
-    noteLog: [
-      { date: '2025-09-02T11:00:00Z', note: "Oops! The hat floated away again..." },
-      { date: '2025-09-03T16:00:00Z', note: "Try adding some fairy dust next time!" },
-    ],
-    parentProjectID: null,
-  },
-  { 
-    uniqueProjectID: "proj_bugs5678",
-    projectTitle: "Bugs Bunny’s Carrot Contraption",
-    projectDescription: `Inventing the ultimate carrot-powered rocket for a quick getaway!`,
-    projectStatus: "Delayed (Elmer keeps chasing)",
-    created: '2025-09-05T14:30:00Z',
-    timeLog: [
-      { date: '2025-09-06T10:00:00Z', time: 55 },
-      { date: '2025-09-07T12:00:00Z', time: 20 },
-    ],
-    noteLog: [
-      { date: '2025-09-06T11:30:00Z', note: "Added too many carrots—it's now a veggie overload!" },
-      { date: '2025-09-07T13:00:00Z', note: "Need to hide from Elmer before testing again." },
-    ],
-    parentProjectID: "proj_mickey1234",
-  }
-]
-
 const homeView = document.getElementById('homeView');
 const projectView = document.getElementsByClassName('projectView')[0];
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
@@ -138,8 +79,8 @@ function createProgressBar(project) {
   const progressWrapper = document.createElement('div');
   progressWrapper.className = 'progressBarWrapper';
 
-  const percent = calculateProjectProgress(project);
-  const taskCount = calculateProjectTaskCount(project);
+  const percent = calculateProjectProgress(testData, project.uniqueProjectID);
+  const taskCount = calculateProjectTaskCount(testData, project.uniqueProjectID);
   const status = project.projectStatus;
 
   progressWrapper.innerHTML = `
