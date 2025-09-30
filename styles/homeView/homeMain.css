@@ -10,6 +10,12 @@
   overflow: auto;
 }
 
+@media (max-width: 1200px) {
+  #homeView {
+    padding: 0 5vw 0 5vw ;
+  }
+}
+
 #homeViewTitle {
   display: block;
   width: 100%;
