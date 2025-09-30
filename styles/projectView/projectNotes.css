@@ -1,6 +1,6 @@
 /* Project Notes Tracking Styles */
 
-.notesWrapper {
+/* .notesWrapper {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -20,4 +20,159 @@
   margin: 0.5em 0 0 0;
   color: #fff;
   font-size: 1.5em;
+} */
+
+/* Project Time Tracking Styles */
+
+.notesWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5em;
+  height: 50%;
+  width: 100%;
+  padding: 0 1em 1em 1em;
+  background-color: #333;
+  border-radius: 0.5em;
+}
+
+.notesWrapper .notesWrapperHeader {
+  display: block;
+  width: 100%;
+  padding: 0 0 0 0.5em;
+  margin: 0.5em 0 0 0;
+  color: #fff;
+  font-size: 1.5em;
+}
+
+.notesItems {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-grow: 1; /* Growing Vertically */
+  gap: 0.5em;
+  height: calc(100% - 4em);
+  width: 100%;
+}
+
+.noteLog {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25em;
+  flex-grow: 4;
+  height: 100%;
+  overflow: auto;
+}
+
+.noteLog::-webkit-scrollbar {
+  width: 0px;
+}
+
+.noteLog .noteLogEntry {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1em;
+  padding: 0.25em 0.5em;
+  border: #fff 1px solid;
+  border-radius: 0.5em;
+  background-color: #fff;
+  width: 100%;
+  overflow: scroll;
+}
+
+.noteLog .noteLogEntry::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.noteLog .noteLogEntry p {
+  color: #111;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.noteLog p.noteLogEntrySource {
+  color: #777;
+  font-style: italic;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.noteLog .noteLogEntryTime {
+  font-weight: bold;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noteLog .noteLogEntryDate{
+  font-style: italic;  
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.noteLog .noteLogEntryEdit {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.noteLog .noteLogEntryEdit .fa-pen {
+  padding: 0.25em;
+  color: #ccc;
+  border-radius: 0.5em;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.noteLog .noteLogEntryEdit:hover .fa-pen {
+  background-color: #333;
+  color: #fff;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.addNoteLogBtn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 2em;
+  width: 2em;
+  border: #fff 1px solid;
+  border-radius: 0.5em;
+  transition: background-color 0.2s;
+}
+
+.addNoteLogBtn .fa-plus {
+  display: block;
+  margin: 0.05em 0.25em 0 0.25em;
+  color: #fff;
+  font-size: 1.3em;
+  transition: color 0.2s;
+}
+
+.addNoteLogBtn:hover {
+  background-color: #fff;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+
+.addNoteLogBtn:hover .fa-plus {
+  color: #333;
+  transition: color 0.2s;
 }
