@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadProjectData();
   renderProjectsToDash();
   console.log('Page loaded and ready!');
-
+  
 });
 
 const homeView = document.getElementById('homeView');

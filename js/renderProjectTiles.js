@@ -25,6 +25,8 @@ function createProjectTile(project) {
   tile.appendChild(createProgressBar(project));
   tile.appendChild(createProjectActions());
 
+  tile.addEventListener('click', () => openProjectViewByID(project));
+
   return tile;
 }
 
