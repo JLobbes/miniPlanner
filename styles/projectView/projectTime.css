@@ -98,6 +98,13 @@
   background-color: #777;
   width: 100%;
   overflow: scroll;
+  opacity: 0.15;
+  transition: opacity 0.3s;
+}
+
+.timeLog .timeLogEntry:hover {
+  opacity: 0.9;
+  transition: opacity 0.3s;
 }
 
 .timeLog .timeLogEntry::-webkit-scrollbar {
@@ -132,6 +139,7 @@
   font-style: italic;  
   text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: default;
 }
 
 .timeLog p.timeLogEntryDate {

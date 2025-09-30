@@ -63,18 +63,18 @@
   background-color: #fff;
   width: 100%;
   overflow: scroll;
+  opacity: 0.15;
+  transition: opacity 0.3s;
+}
+
+.noteLog .noteLogEntry:hover {
+  opacity: 0.9;
+  transition: opacity 0.3s;
 }
 
 .noteLog .noteLogEntry::-webkit-scrollbar {
   width: 0px;
   height: 0px;
-}
-
-.noteLog .noteLogEntry p {
-  color: #111;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .noteLog p.noteLogEntrySource {
@@ -99,12 +99,16 @@
 .noteLog p.noteLogEntryNote {
   color: #fff;
   font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.noteLog .noteLogEntryDate{
+.noteLog p.noteLogEntryDate {
   font-style: italic;  
-  text-overflow: ellipsis;
   white-space: nowrap;
+  cursor: default;
+  width: fit-content;
 }
 
 .noteLog .noteLogEntryEdit {
