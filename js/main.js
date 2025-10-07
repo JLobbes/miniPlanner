@@ -7,26 +7,33 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const homeView = document.getElementById('homeView');
-const projectView = document.getElementsByClassName('projectView')[0];
+let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
 homeView.addEventListener('click', () => {
-  openProjectView();
+  closeProjectView();
 });
 
 newProjBtn.addEventListener('click', (e) => {
   e.stopPropagation(); // Prevents the event from bubbling up to homeView
-  closeProjectView();
+  openProjectView();
 });
 
-function openProjectView() {
-  if (projectView.classList.contains('active')) {
-    projectView.classList.remove('active');
+function closeProjectView() {
+  projectViews = document.getElementsByClassName('projectView');
+  console.log(projectViews);
+
+  for (let i = 0; i < projectViews.length; i++) {
+    const openProject = projectViews[i];
+    
+    if (openProject.classList.contains('active')) {
+      openProject.classList.remove('active');
+    }
   }
 }
 
-function closeProjectView() {
-  projectView.classList.add('active');
+function openProjectView() {
+  projectViews.classList.add('active');
 }
 
 const globalProjectData = [];
