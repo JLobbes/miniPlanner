@@ -46,7 +46,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  width: 100%;
+  width: fit-content;
   height: 1em;
   margin: 0 0 0 0;
 }
