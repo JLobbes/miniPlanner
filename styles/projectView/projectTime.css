@@ -136,8 +136,10 @@
 }
 
 .timeLog .timeLogEntryDate {
+  width: 6.5em;
+  min-width: 6.5em;
+  text-align: right;
   font-style: italic;  
-  text-overflow: ellipsis;
   white-space: nowrap;
   cursor: default;
 }

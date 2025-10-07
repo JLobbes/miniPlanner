@@ -87,11 +87,12 @@
 }
 
 .noteLog .noteLogEntryNote {
+  width: 10em;
+  padding: 0.5em;
   font-weight: bold;
   text-overflow: ellipsis;
   white-space: nowrap;
   background-color:#222;
-  padding: 0.5em;
   border-radius: 0.5em;
   cursor: default;
 }
@@ -105,10 +106,12 @@
 }
 
 .noteLog p.noteLogEntryDate {
+  width: 6.5em;
+  min-width: 6.5em;
+  text-align: right;
   font-style: italic;  
   white-space: nowrap;
   cursor: default;
-  width: fit-content;
 }
 
 .noteLog .noteLogEntryEdit {
