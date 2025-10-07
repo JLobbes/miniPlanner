@@ -56,7 +56,7 @@ const testData = [
     parentProjectID: "proj_7f9b3d21e0c4",
   },
 
-  // Additional child for Mickey’s project
+  // Additional child projects for Mickey’s project
   {
     uniqueProjectID: "proj_child2a",
     projectTitle: "Hat Levitation Spell",
@@ -81,7 +81,7 @@ const testData = [
     uniqueProjectID: "proj_bugs5678",
     projectTitle: "Bugs Bunny’s Carrot Contraption",
     projectDescription: `Inventing the ultimate carrot-powered rocket for a quick getaway!`,
-    projectStatus: "Delayed (Elmer keeps chasing)",
+    projectStatus: "Delayed",
     created: '2025-09-05T14:30:00Z',
     timeLog: [
       { date: '2025-09-06T10:00:00Z', time: 55 },
@@ -93,4 +93,45 @@ const testData = [
     ],
     parentProjectID: "proj_mickey1234",
   },
+  {
+    uniqueProjectID: "proj_child2c",
+    projectTitle: "Hat Sound Effects",
+    projectDescription: "Design magical swoosh and sparkle sounds for hat animations.",
+    projectStatus: "In Progress",
+    created: '2025-09-05T08:00:00Z',
+    timeLog: [
+      { date: '2025-09-05T09:00:00Z', time: 40 },
+    ],
+    noteLog: [
+      { date: '2025-09-05T09:45:00Z', note: "Too much sparkle—sounds like a firework show." },
+    ],
+    parentProjectID: "proj_mickey1234",
+  },
+  {
+    uniqueProjectID: "proj_child2d",
+    projectTitle: "Hat Control Wand",
+    projectDescription: "Craft a wand that remotely controls the hat’s movements.",
+    projectStatus: "Not Started",
+    created: '2025-09-06T13:30:00Z',
+    timeLog: [],
+    noteLog: [
+      { date: '2025-09-06T13:45:00Z', note: "Idea: use enchanted wood from the Sorcerer’s Tree." },
+    ],
+    parentProjectID: "proj_mickey1234",
+  },
+  {
+    uniqueProjectID: "proj_child2e",
+    projectTitle: "Safety Testing Protocols",
+    projectDescription: "Ensure the hat doesn’t accidentally fly off with Mickey.",
+    projectStatus: "In Progress",
+    created: '2025-09-07T07:15:00Z',
+    timeLog: [
+      { date: '2025-09-07T08:00:00Z', time: 50 },
+    ],
+    noteLog: [
+      { date: '2025-09-07T08:55:00Z', note: "Added straps. Still needs a magic failsafe." },
+    ],
+    parentProjectID: "proj_mickey1234",
+  },
+
 ];

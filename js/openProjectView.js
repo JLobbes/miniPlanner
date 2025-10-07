@@ -86,6 +86,10 @@ function createTasksWrapper(project) {
   newTaskBtn.innerHTML = `<h3><i class="fa-regular fa-rectangle-list"></i> New Task</h3>`;
   wrapper.appendChild(newTaskBtn);
 
+  const tasksList = document.createElement('div');
+  tasksList.className = 'tasksList';
+  wrapper.appendChild(tasksList);
+
   // Render tasks (immediate children)
   const tasks = globalProjectData.filter(p => p.parentProjectID === project.uniqueProjectID);
   tasks.forEach(task => {
@@ -96,7 +100,7 @@ function createTasksWrapper(project) {
       <h3 class="taskName">${task.projectTitle}</h3>
       <div class="taskStatusBubble">${task.projectStatus}</div>
     `;
-    wrapper.appendChild(taskDiv);
+    tasksList.appendChild(taskDiv);
   });
 
   return wrapper;
