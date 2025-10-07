@@ -11,7 +11,7 @@ let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
 homeView.addEventListener('click', () => {
-  closeProjectView();
+  closeProjectViews();
 });
 
 newProjBtn.addEventListener('click', (e) => {
@@ -19,7 +19,7 @@ newProjBtn.addEventListener('click', (e) => {
   openProjectView();
 });
 
-function closeProjectView() {
+function closeProjectViews() {
   projectViews = document.getElementsByClassName('projectView');
   console.log(projectViews);
 

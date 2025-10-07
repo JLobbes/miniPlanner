@@ -21,8 +21,8 @@ function createProjectView(project) {
   projectView.className = 'projectView';
 
   projectView.appendChild(createProjectViewTitleBar(project));
-  projectView.appendChild(createProgressBar(project));
-  projectView.appendChild(createBottomPanel(project));
+  projectView.appendChild(createProgressBar(project)); // Defined in renderProjectTiles.js
+  projectView.appendChild(createBottomPanel(project)); // Defined in renderProjectTiles.js
 
   return projectView;
 }
@@ -50,41 +50,6 @@ function createProjectViewTitleBar(project) {
   wrapper.appendChild(createProjectActions());
 
   return wrapper;
-}
-
-// Progress Bar (reuse from renderProjectTiles.js)
-function createProgressBar(project) {
-  const progressWrapper = document.createElement('div');
-  progressWrapper.className = 'progressBarWrapper';
-
-  const percent = calculateProjectProgress(globalProjectData, project.uniqueProjectID);
-  const taskCount = calculateProjectTaskCount(globalProjectData, project.uniqueProjectID);
-  const status = project.projectStatus;
-
-  progressWrapper.innerHTML = `
-    <div class="progressBarDetailsWrapper">
-      <div class="progressBarLabelWrapper">
-        <p class="progressBarLabel">Progress</p>
-      </div>
-      <div class="projectBarPercentageWrapper">
-        <p class="projectBarPercentage">${percent} %</p>
-      </div>
-    </div>
-    <div class="progressBar">
-      <div class="progressBarBackground">
-        <div class="progressBarFill" style="width: ${percent}%"></div>
-      </div>
-    </div>
-    <div class="progressBarDetailsWrapper">
-      <div class="taskQuantityWrapper">
-        <p class="taskQuantity">${taskCount} Task${taskCount !== 1 ? 's' : ''}</p>
-      </div>
-      <div class="projectStatusWrapper">
-        <p class="projectStatusBubble">${status}</p>
-      </div>
-    </div>
-  `;
-  return progressWrapper;
 }
 
 // Bottom Panel (tasks, time, notes)
@@ -137,7 +102,7 @@ function createTasksWrapper(project) {
   return wrapper;
 }
 
-// Time Section (static for now)
+// Time Section 
 function createTimeWrapper(project) {
   const wrapper = document.createElement('div');
   wrapper.className = 'timeWrapper';
@@ -150,7 +115,8 @@ function createTimeWrapper(project) {
   // Build time log entries
   const timeLogEntries = (project.timeLog || [])
     .map(entry => {
-      const dateObj = new Date(entry.date);
+      const dateObj = new Date(entry.date)
+      console.log('creating dateObj:', dateObj);
       const timeStr = `${entry.time} min`;
       const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
@@ -194,7 +160,7 @@ function createTimeWrapper(project) {
   return wrapper;
 }
 
-// Notes Section (static for now)
+// Notes Section 
 function createNotesWrapper(project) {
   const wrapper = document.createElement('div');
   wrapper.className = 'notesWrapper';
@@ -236,46 +202,8 @@ function createNotesWrapper(project) {
   return wrapper;
 }
 
-// Actions (reuse from renderProjectTiles.js)
-function createProjectActions() {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'projectActionsWrapper';
-  wrapper.innerHTML = `
-    <div class="projectActions">
-      <span>...</span>
-      <div class="projectActionsDropDown">
-        <button title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-        <button title="Delete"><i class="fa-solid fa-trash"></i></button>
-      </div>
-    </div>
-  `;
-  return wrapper;
-}
-
-// Progress/Task helpers (reuse from renderProjectTiles.js)
-function calculateProjectProgress(globalProjectData, projectID) {
-  try {
-    if (!projectID) return 0;
-    const tasks = globalProjectData.filter(p => p.parentProjectID === projectID);
-    if (tasks.length === 0) return 0;
-    const completeCount = tasks.filter(t => t.projectStatus.toLowerCase() === 'complete').length;
-    return Math.round((completeCount / tasks.length) * 100);
-  } catch (error) {
-    console.error('Error calculating project progress:', error);
-    return 0;
-  }
-}
-function calculateProjectTaskCount(globalProjectData, projectID) {
-  try {
-    if (!projectID) return 0;
-    const children = globalProjectData.filter(p => p.parentProjectID === projectID);
-    return children.length;
-  } catch (error) {
-    console.error('Error calculating task count:', error);
-    return 0;
-  }
-}
-
+// Handles delays dropDown of projectView to allow for drop down effect.
+// Will be a pop-up if not used.
 function triggerDropDown(element, className = 'active', delay = 20) {
   element.classList.remove(className);
   void element.offsetWidth;
