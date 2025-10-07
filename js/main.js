@@ -21,7 +21,6 @@ newProjBtn.addEventListener('click', (e) => {
 
 function closeProjectViews() {
   projectViews = document.getElementsByClassName('projectView');
-  console.log(projectViews);
 
   for (let i = 0; i < projectViews.length; i++) {
     const openProject = projectViews[i];

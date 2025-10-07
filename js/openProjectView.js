@@ -116,7 +116,6 @@ function createTimeWrapper(project) {
   const timeLogEntries = (project.timeLog || [])
     .map(entry => {
       const dateObj = new Date(entry.date)
-      console.log('creating dateObj:', dateObj);
       const timeStr = `${entry.time} min`;
       const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
