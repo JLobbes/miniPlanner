@@ -111,7 +111,7 @@ const testData = [
     uniqueProjectID: "proj_child2d",
     projectTitle: "Hat Control Wand",
     projectDescription: "Craft a wand that remotely controls the hat’s movements.",
-    projectStatus: "Planned",
+    projectStatus: "Complete",
     created: '2025-09-06T13:30:00Z',
     timeLog: [],
     noteLog: [
