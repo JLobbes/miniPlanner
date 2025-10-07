@@ -5,7 +5,7 @@ const testData = [
     uniqueProjectID: "proj_7f9b3d21e0c4",
     projectTitle: "Test Project 1",
     projectDescription: `Some mumbo jumbo for my description.`,
-    projectStatus: "In Progress",
+    projectStatus: "Complete",
     created: '2023-07-08T16:38:22Z',
     timeLog: [
       { date: '2023-07-16T17:38:22Z', time: 47 },
@@ -71,7 +71,7 @@ const testData = [
     uniqueProjectID: "proj_child2b",
     projectTitle: "Mouse-Sized Stage Effects",
     projectDescription: "Miniature lighting and fog machine setup.",
-    projectStatus: "In Progress",
+    projectStatus: "Paused",
     created: '2025-09-04T09:30:00Z',
     timeLog: [{ date: '2025-09-04T10:00:00Z', time: 35 }],
     noteLog: [{ date: '2025-09-04T11:00:00Z', note: "Lights too bright—scared Pluto." }],
@@ -111,7 +111,7 @@ const testData = [
     uniqueProjectID: "proj_child2d",
     projectTitle: "Hat Control Wand",
     projectDescription: "Craft a wand that remotely controls the hat’s movements.",
-    projectStatus: "Not Started",
+    projectStatus: "Planned",
     created: '2025-09-06T13:30:00Z',
     timeLog: [],
     noteLog: [
@@ -123,7 +123,7 @@ const testData = [
     uniqueProjectID: "proj_child2e",
     projectTitle: "Safety Testing Protocols",
     projectDescription: "Ensure the hat doesn’t accidentally fly off with Mickey.",
-    projectStatus: "In Progress",
+    projectStatus: "Dead",
     created: '2025-09-07T07:15:00Z',
     timeLog: [
       { date: '2025-09-07T08:00:00Z', time: 50 },

@@ -118,6 +118,37 @@
   font-size: 0.9em;
   color:#333;
   border-radius: 1em;
-  background-color: #c1e9d0;
   border: #eee solid 2px;
+}
+
+.projectView .projectStatusBubble.statusShowingComplete {
+  background-color: #76e255;
+}
+
+.projectView .projectStatusBubble.statusShowingPlanned {
+  background-color: #4a97ca;
+}
+
+.projectView p.projectStatusBubble.statusShowingPlanned {
+  color: #fff;
+}
+
+.projectView .projectStatusBubble.statusShowingInProgress {
+  background-color: #dcee37;
+}
+
+.projectView .projectStatusBubble.statusShowingPaused {
+  background-color: #ee9f37;
+}
+
+.projectView .projectStatusBubble.statusShowingDelayed {
+  background-color: #ee4426;
+}
+
+.projectView .projectStatusBubble.statusShowingDead {
+  background-color: #111;
+}
+
+.projectView p.projectStatusBubble.statusShowingDead {
+  color: #fff;
 }

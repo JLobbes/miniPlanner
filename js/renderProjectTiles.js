@@ -77,7 +77,7 @@ function createProgressBar(project) {
         <p class="taskQuantity">${taskCount} Task${taskCount !== 1 ? 's' : ''}</p>
       </div>
       <div class="projectStatusWrapper">
-        <p class="projectStatusBubble">${status}</p>
+        <p class="projectStatusBubble statusShowing${status.replace(' ', '')}">${status}</p>
       </div>
     </div>
   `;

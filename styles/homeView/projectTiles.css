@@ -164,7 +164,38 @@
   font-size: 0.8em;
   color:#333;
   border-radius: 1em;
-  background-color: #c1e9d0;
+}
+
+.projectStatusBubble.statusShowingComplete {
+  background-color: #76e255;
+}
+
+.projectStatusBubble.statusShowingPlanned {
+  background-color: #4a97ca;
+}
+
+p.projectStatusBubble.statusShowingPlanned {
+  color: #fff;
+}
+
+.projectStatusBubble.statusShowingInProgress {
+  background-color: #dcee37af;
+}
+
+.projectStatusBubble.statusShowingPaused {
+  background-color: #ee9f37;
+}
+
+.projectStatusBubble.statusShowingDelayed {
+  background-color: #ee4426;
+}
+
+.projectStatusBubble.statusShowingDead {
+  background-color: #111;
+}
+
+p.projectStatusBubble.statusShowingDead {
+  color: #fff;
 }
 
 /* Project Actions styles: Includes dropdown menu */

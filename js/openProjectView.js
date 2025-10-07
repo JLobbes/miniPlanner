@@ -98,7 +98,7 @@ function createTasksWrapper(project) {
     taskDiv.innerHTML = `
       <i class="fa-regular fa-rectangle-list"></i>
       <h3 class="taskName">${task.projectTitle}</h3>
-      <div class="taskStatusBubble">${task.projectStatus}</div>
+      <div class="taskStatusBubble statusShowing${task.projectStatus.replace(' ', '')}">${task.projectStatus}</div>
     `;
     tasksList.appendChild(taskDiv);
   });

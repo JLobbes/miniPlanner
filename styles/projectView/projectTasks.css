@@ -127,6 +127,31 @@
   font-size: 0.8em;
   color:#333;
   border-radius: 1em;
-  background-color: #fff177f6;
   border: #333 solid 1px;
+}
+
+.projectView .task .taskStatusBubble.statusShowingComplete {
+  background-color: #76e255;
+}
+
+.projectView .task .taskStatusBubble.statusShowingPlanned {
+  background-color: #4a97ca;
+  color: #fff;
+}
+
+.projectView .task .taskStatusBubble.statusShowingInProgress {
+  background-color: #dcee37;
+}
+
+.projectView .task .taskStatusBubble.statusShowingPaused {
+  background-color: #ee9f37;
+}
+
+.projectView .task .taskStatusBubble.statusShowingDelayed {
+  background-color: #ee4426;
+}
+
+.projectView .task .taskStatusBubble.statusShowingDead {
+  background-color: #111;
+  color: #fff;
 }
