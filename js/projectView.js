@@ -1,4 +1,6 @@
 function openProjectViewByID(project) {
+  console.log('Opening Project:', project.uniqueProjectID);
+
   if (!project) {
     console.error('Project not found:', project?.uniqueProjectID);
     return;

@@ -1,6 +1,6 @@
 // Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
-  loadProjectData();
+  loadDataToGlobalProjects();
   renderProjectsToDash();
   console.log('Page loaded and ready!');
   
@@ -33,36 +33,19 @@ function closeProjectViews() {
 
 function openNewProject() {
   const newProj = createBlankProject();
-  globalProjectData.push(newProj);
+  loadDataToGlobalProjects();
   renderProjectsToDash();
+
+  // Trigger drop down animation
+  openProjectViewByID(newProj.uniqueProjectID);
 }
 
 const globalProjectData = [];
 
-function loadProjectData() {
+function loadDataToGlobalProjects() {
   globalProjectData.length = 0; // clear existing
   globalProjectData.push(...testData.map(project => ({ ...project })));
   console.log('globalProjectData:', globalProjectData);
 }
 
-function generateUniqueProjectID() {
-  let id;
-  const existingIDs = globalProjectData.map(p => p.uniqueProjectID);
-  do {
-    id = 'proj_' + Math.random().toString(36).slice(2, 12);
-  } while (existingIDs.includes(id));
-  return id;
-}
 
-function createBlankProject() {
-  return {
-    uniqueProjectID: generateUniqueProjectID(),
-    projectTitle: 'New Project',
-    projectDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    projectStatus: 'Planned',
-    created: new Date().toISOString(),
-    timeLog: [],
-    noteLog: [],
-    parentProjectID: null,
-  };
-}
