@@ -1,4 +1,5 @@
-function openProjectViewByID(project) {
+function openProjectView(project) {
+  console.log('GlobalProjects @ Start of openProjectViewByID', globalProjectData);
   console.log('Opening Project:', project.uniqueProjectID);
 
   if (!project) {

@@ -33,19 +33,21 @@ function closeProjectViews() {
 
 function openNewProject() {
   const newProj = createBlankProject();
-  loadDataToGlobalProjects();
+  console.log('newProj created in openNewProj():', newProj);
+  addProjectToGlobalData(newProj);
   renderProjectsToDash();
 
   // Trigger drop down animation
-  openProjectViewByID(newProj.uniqueProjectID);
+  openProjectView(newProj);
 }
 
 const globalProjectData = [];
 
 function loadDataToGlobalProjects() {
   globalProjectData.length = 0; // clear existing
+
+  // Add test data during development
   globalProjectData.push(...testData.map(project => ({ ...project })));
   console.log('globalProjectData:', globalProjectData);
 }
-
 

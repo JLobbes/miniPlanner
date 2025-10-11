@@ -20,7 +20,27 @@ function createBlankProject() {
   };
 }
 
-function deleteProjectByID() {
+function addProjectToGlobalData(project) {
+  const exists = globalProjectData.some(
+    (p) => p.uniqueProjectID === project.uniqueProjectID
+  );
 
+  if (!exists) {
+    globalProjectData.push({ ...project }); // shallow copy for safety
+  } else {
+    console.warn(`Project with ID ${project.uniqueProjectID} already exists. Skipped adding.`);
+  }
+}
+
+function syncProjectInGlobalData(project) {
+  const index = globalProjectData.findIndex(
+    (p) => p.uniqueProjectID === project.uniqueProjectID
+  );
+
+  if (index !== -1) {
+    globalProjectData[index] = { ...project }; // replace with new object
+  } else {
+    console.warn(`Project with ID ${project.uniqueProjectID} not found. Cannot sync.`);
+  }
 }
 
