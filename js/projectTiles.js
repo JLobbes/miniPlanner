@@ -18,17 +18,30 @@ function renderProjectsToDash() {
 function createProjectTile(project) {
   const tile = document.createElement('div');
   tile.className = 'projectTile';
-  tile.setAttribute('projectID', project.uniqueProjectID);
+  tile.setAttribute('projectid', project.uniqueProjectID); // ID gets converted to lowercase during setAttribute() call
 
   tile.appendChild(createProjectTitle(project.projectTitle));
   tile.appendChild(createProjectDescription(project.projectDescription));
   tile.appendChild(createProgressBar(project));
   tile.appendChild(createProjectActions());
 
-  tile.addEventListener('click', () => openProjectViewByID(project));
+  addTileEventListeners(project, tile) // TO-DO: Group all scattered listeners
 
   return tile;
 }
+
+function addTileEventListeners(projectData, projectTile) {
+  
+  projectTile.addEventListener('click', () => openProjectView(projectData));
+
+  const deleteBtn = projectTile.querySelector('.projectActionsDropDown button[title="Delete"]');
+  deleteBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // prevent project from opening
+    deleteProject(projectData, projectTile)
+  });
+  
+}
+
 
 // Title section
 function createProjectTitle(titleText) {

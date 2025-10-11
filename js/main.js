@@ -29,7 +29,7 @@ function closeProjectViews() {
       openProject.classList.remove('active');
     }
   }
-}
+} 
 
 function openNewProject() {
   const newProj = createBlankProject();

@@ -22,12 +22,26 @@ function openProjectView(project) {
 function createProjectView(project) {
   const projectView = document.createElement('div');
   projectView.className = 'projectView';
+  projectView.setAttribute('projectid', project.uniqueProjectID);
 
   projectView.appendChild(createProjectViewTitleBar(project));
   projectView.appendChild(createProgressBar(project)); // Defined in renderProjectTiles.js
   projectView.appendChild(createBottomPanel(project)); // Defined in renderProjectTiles.js
 
+  addProjectEventListeners(project, projectView) // TO-DO: Group all scattered listeners
+
   return projectView;
+}
+
+function addProjectEventListeners(projectData, projectView) {
+
+  const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
+  deleteBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent project from opening
+    closeProjectViews(); 
+    deleteProject(projectData); 
+  });
+
 }
 
 // Title Bar

@@ -44,3 +44,31 @@ function syncProjectInGlobalData(project) {
   }
 }
 
+
+function deleteProject(projectData, projectTile) {
+  console.log(`Project ${projectData.uniqueProjectID} is being deleted`);
+
+  // Handle Data Deletion
+  // Find the index of the project with the given ID
+  const index = globalProjectData.findIndex(projectInGlobalData => projectInGlobalData.uniqueProjectID === projectData.uniqueProjectID);
+
+  // If the project exists, remove it
+  if (index !== -1) {
+    globalProjectData.splice(index, 1);
+    console.log(`Project "${projectData.uniqueProjectID}" deleted successfully.`);
+  } else {
+    console.log(`Project "${projectData.uniqueProjectID}" not found.`);
+  }
+
+  console.log("Global Project Data after deletion:", globalProjectData);
+  
+  // Handle tile deletion
+  if(projectTile) {
+    projectTile.remove();
+  } else {
+    const projectTile = document.querySelector(`.projectTile[projectid="${projectData.uniqueProjectID}"]`);
+    console.log('project tile:', projectTile);
+    projectTile.remove();
+  }
+} 
+
