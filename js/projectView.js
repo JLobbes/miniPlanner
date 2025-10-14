@@ -1,6 +1,4 @@
 function openProjectView(project) {
-  console.log('GlobalProjects @ Start of openProjectViewByID', globalProjectData);
-  console.log('Opening Project:', project.uniqueProjectID);
 
   if (!project) {
     console.error('Project not found:', project?.uniqueProjectID);
@@ -37,12 +35,71 @@ function addProjectEventListeners(projectData, projectView) {
 
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Prevent project from opening
     closeProjectViews(); 
     deleteProject(projectData); 
   });
 
+  const editButton = projectView.querySelector('.projectActionsDropDown button[title="Edit"]');
+  editButton.addEventListener('click', (e) => {
+    enableEditHeader(projectData, projectView); 
+  });
 }
+
+function enableEditHeader(projectData, projectView) {
+
+  // Replace header with editible mini-form
+  const projectTitle = projectView.querySelector('.projectTitle');
+  projectTitle.innerHTML = 
+    `
+      <i class="fa-solid fa-pen-to-square"></i>
+      <input type="text" class="editingProjectTitle" name="editingProjectTitle" value="${projectData.projectTitle}" />
+      <i class="fa-solid fa-check saveEditingProjectTitleBarBtn"></i>
+      <i class="fa-solid fa-xmark abortEditingProjectTitleBarBtn"></i>
+    `;
+  const projectTitleInput = projectTitle.querySelector('.editingProjectTitle');  
+  projectTitleInput.select();  
+  
+  const projectDescription = projectView.querySelector('.projectDescription');
+  projectDescription.innerHTML = 
+  `
+  <input type="text" class="editingProjectDescription" name="editingProjectDescription" value="${projectData.projectDescription}" />
+  `;
+  const projectDescriptionInput = projectDescription.querySelector('.editingProjectDescription');  
+ 
+  // Add listener to saveEditingProjectTitleBarBtn
+  const saveEditingProjectTitleBarBtn = projectTitle.querySelector('.saveEditingProjectTitleBarBtn');
+  saveEditingProjectTitleBarBtn.addEventListener('click', () => {
+    handleSaveEditingProjectTitleBar(projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
+  });
+  
+  // Add listener to abortEditingProjectTitleBarBtn 
+}
+
+function handleSaveEditingProjectTitleBar(projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput) {
+  try {
+    // Change title & description in globalProjectData
+    projectData.projectTitle = projectTitleInput.value;
+    projectData.projectDescription = projectDescriptionInput.value;
+    
+    // Change visible title & description in projectView
+    projectTitle.innerHTML = `
+    <i class="fa-solid fa-folder"></i> ${projectData.projectTitle}
+    `;
+    
+    projectDescription.innerHTML = `
+        ${projectData.projectDescription}
+    `
+    // TO-DO: Update title & description throughout project view
+    // TO-DO: Update title & description for tiles on dashboard
+  } catch (error) {
+    console.error('Updated titleBar not saved. Encountered issue.');
+    return;
+  }
+  console.log('Saved edited title bar!');
+
+  // TO-DO: @14:44 10.14(WED), Need to rename titleBarWrapper to projectViewHeader or sth. Current name TitleBar is wordy? 
+}
+
 
 // Title Bar
 function createProjectViewTitleBar(project) {
