@@ -75,8 +75,7 @@ function enableEditHeader(projectData, projectView) {
   // Add listener to abortEditingProjectTitleBarBtn 
   const abortEditingProjectTitleBarBtn = projectTitle.querySelector('.abortEditingProjectTitleBarBtn');
   abortEditingProjectTitleBarBtn.addEventListener('click', () => {
-    // saveEditing is called and just uses the original data for projectTitle & projectDescription
-    handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
+    handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription);
   });
 }
 
@@ -95,7 +94,7 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
         ${projectData.projectDescription}
     `
     // Update title & description throughout project view
-    reRenderNotesAndTimeLogs();
+    reRenderNotesAndTimeLogs(projectView, projectData);
     
     // Update title & description for tiles on dashboard
     renderProjectsToDash();
@@ -109,7 +108,7 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
   // TO-DO: @14:44 10.14(WED), Need to rename titleBarWrapper to projectViewHeader or sth. Current name TitleBar is wordy? 
 }
 
-function reRenderNotesAndTimeLogs() { 
+function reRenderNotesAndTimeLogs(projectView, projectData) { 
   const updatedTimeWrapper = createTimeWrapper(projectData);
   const updatedNotesWrapper = createNotesWrapper(projectData);
   const locationForReRender = projectView.querySelector('.bottomPanelRight');
@@ -117,6 +116,25 @@ function reRenderNotesAndTimeLogs() {
   locationForReRender.innerHTML = '';
   locationForReRender.appendChild(updatedTimeWrapper);
   locationForReRender.appendChild(updatedNotesWrapper);
+}
+
+function handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription) {
+  try {
+    // Revert visible title & description in projectView
+    projectTitle.innerHTML = `
+    <i class="fa-solid fa-folder"></i> ${projectData.projectTitle}
+    `;
+    
+    projectDescription.innerHTML = `
+        ${projectData.projectDescription}
+    `
+  } catch (error) {
+    console.error('Update titleBar not cancelled correctly. Encountered issue.');
+    return;
+  }
+  console.log('Cancelled edit of title bar!');
+
+  // TO-DO: @14:44 10.14(WED), Need to rename titleBarWrapper to projectViewHeader or sth. Current name TitleBar is wordy? 
 }
 
 // Title Bar
