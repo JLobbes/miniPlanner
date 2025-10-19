@@ -69,13 +69,18 @@ function enableEditHeader(projectData, projectView) {
   // Add listener to saveEditingProjectTitleBarBtn
   const saveEditingProjectTitleBarBtn = projectTitle.querySelector('.saveEditingProjectTitleBarBtn');
   saveEditingProjectTitleBarBtn.addEventListener('click', () => {
-    handleSaveEditingProjectTitleBar(projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
+    handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
   });
   
   // Add listener to abortEditingProjectTitleBarBtn 
+  const abortEditingProjectTitleBarBtn = projectTitle.querySelector('.abortEditingProjectTitleBarBtn');
+  abortEditingProjectTitleBarBtn.addEventListener('click', () => {
+    // saveEditing is called and just uses the original data for projectTitle & projectDescription
+    handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
+  });
 }
 
-function handleSaveEditingProjectTitleBar(projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput) {
+function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput) {
   try {
     // Change title & description in globalProjectData
     projectData.projectTitle = projectTitleInput.value;
@@ -89,8 +94,12 @@ function handleSaveEditingProjectTitleBar(projectData, projectTitle, projectTitl
     projectDescription.innerHTML = `
         ${projectData.projectDescription}
     `
-    // TO-DO: Update title & description throughout project view
-    // TO-DO: Update title & description for tiles on dashboard
+    // Update title & description throughout project view
+    reRenderNotesAndTimeLogs();
+    
+    // Update title & description for tiles on dashboard
+    renderProjectsToDash();
+
   } catch (error) {
     console.error('Updated titleBar not saved. Encountered issue.');
     return;
@@ -100,6 +109,15 @@ function handleSaveEditingProjectTitleBar(projectData, projectTitle, projectTitl
   // TO-DO: @14:44 10.14(WED), Need to rename titleBarWrapper to projectViewHeader or sth. Current name TitleBar is wordy? 
 }
 
+function reRenderNotesAndTimeLogs() { 
+  const updatedTimeWrapper = createTimeWrapper(projectData);
+  const updatedNotesWrapper = createNotesWrapper(projectData);
+  const locationForReRender = projectView.querySelector('.bottomPanelRight');
+  
+  locationForReRender.innerHTML = '';
+  locationForReRender.appendChild(updatedTimeWrapper);
+  locationForReRender.appendChild(updatedNotesWrapper);
+}
 
 // Title Bar
 function createProjectViewTitleBar(project) {
