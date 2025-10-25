@@ -28,6 +28,7 @@
   align-items: center;
   flex-grow: 1;
   margin: 2em 0 0 0;
+  padding: 0 1em 0 1em;
 }
 
 .miniFormMessage {

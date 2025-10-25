@@ -37,7 +37,11 @@ function addTileEventListeners(projectData, projectTile) {
   const deleteBtn = projectTile.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
     e.stopPropagation(); // prevent project from opening
-    await deleteProject(projectData, projectTile)
+    const dataForMiniForm = {
+      formType: 'confirmDeleteParent',
+      projectData: { ... projectData },
+    }
+    await deleteProject(dataForMiniForm, projectTile)
   });
   
 }

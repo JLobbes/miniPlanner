@@ -23,8 +23,8 @@ function createProjectView(project) {
   projectView.setAttribute('projectid', project.uniqueProjectID);
 
   projectView.appendChild(createProjectViewTitleBar(project));
-  projectView.appendChild(createProgressBar(project)); // Defined in renderProjectTiles.js
-  projectView.appendChild(createBottomPanel(project)); // Defined in renderProjectTiles.js
+  projectView.appendChild(createProgressBar(project)); 
+  projectView.appendChild(createBottomPanel(project)); 
 
   addProjectEventListeners(project, projectView) // TO-DO: Group all scattered listeners
 
@@ -36,8 +36,13 @@ function addProjectEventListeners(projectData, projectView) {
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
     try {
-      const deleted = await deleteProject(projectData);
-      if (deleted) closeProjectViews();
+      const dataForMiniForm = {
+        formType: 'confirmDeleteParent',
+        projectData: { ... projectData },
+      }
+
+      await deleteProject(dataForMiniForm);
+      closeProjectViews();
     } catch (err) {
       // user canceled or deletion failed — keep view open
       console.log('Deletion canceled or failed:', err.message);

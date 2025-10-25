@@ -45,11 +45,12 @@ function syncProjectInGlobalData(project) {
 }
 
 
-async function deleteProject(projectData, projectTile) {
+async function deleteProject(dataForMiniForm, projectTile) {
+  const projectData = { ...dataForMiniForm.projectData }
   console.log(`Project ${projectData.uniqueProjectID} is being deleted`);
 
   try {
-    await requestConfirmation(); // Wait for user confirmation
+    await requestConfirmation(dataForMiniForm); // Wait for user confirmation
     console.log('Action confirmed — proceeding with delete.');
 
     // Handle Data Deletion
