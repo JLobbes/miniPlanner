@@ -35,9 +35,9 @@ function addTileEventListeners(projectData, projectTile) {
   projectTile.addEventListener('click', () => openProjectView(projectData));
 
   const deleteBtn = projectTile.querySelector('.projectActionsDropDown button[title="Delete"]');
-  deleteBtn.addEventListener('click', (e) => {
+  deleteBtn.addEventListener('click', async (e) => {
     e.stopPropagation(); // prevent project from opening
-    deleteProject(projectData, projectTile)
+    await deleteProject(projectData, projectTile)
   });
   
 }

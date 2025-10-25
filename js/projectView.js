@@ -34,9 +34,14 @@ function createProjectView(project) {
 function addProjectEventListeners(projectData, projectView) {
 
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
-  deleteBtn.addEventListener('click', (e) => {
-    closeProjectViews(); 
-    deleteProject(projectData); 
+  deleteBtn.addEventListener('click', async (e) => {
+    try {
+      const deleted = await deleteProject(projectData);
+      if (deleted) closeProjectViews();
+    } catch (err) {
+      // user canceled or deletion failed — keep view open
+      console.log('Deletion canceled or failed:', err.message);
+    }
   });
 
   const editButton = projectView.querySelector('.projectActionsDropDown button[title="Edit"]');

@@ -45,30 +45,30 @@ function syncProjectInGlobalData(project) {
 }
 
 
-function deleteProject(projectData, projectTile) {
+async function deleteProject(projectData, projectTile) {
   console.log(`Project ${projectData.uniqueProjectID} is being deleted`);
 
-  // Handle Data Deletion
-  // Find the index of the project with the given ID
-  const index = globalProjectData.findIndex(projectInGlobalData => projectInGlobalData.uniqueProjectID === projectData.uniqueProjectID);
+  try {
+    await requestConfirmation(); // Wait for user confirmation
+    console.log('Action confirmed — proceeding with delete.');
 
-  // If the project exists, remove it
-  if (index !== -1) {
-    globalProjectData.splice(index, 1);
-    console.log(`Project "${projectData.uniqueProjectID}" deleted successfully.`);
-  } else {
-    console.log(`Project "${projectData.uniqueProjectID}" not found.`);
-  }
+    // Handle Data Deletion
+    const index = globalProjectData.findIndex(
+      p => p.uniqueProjectID === projectData.uniqueProjectID
+    );
 
-  console.log("Global Project Data after deletion:", globalProjectData);
-  
-  // Handle tile deletion
-  if(projectTile) {
-    projectTile.remove();
-  } else {
-    const projectTile = document.querySelector(`.projectTile[projectid="${projectData.uniqueProjectID}"]`);
-    console.log('project tile:', projectTile);
-    projectTile.remove();
+    if (index !== -1) {
+      globalProjectData.splice(index, 1);
+      console.log(`Project "${projectData.uniqueProjectID}" deleted successfully.`);
+    }
+
+    // Handle tile deletion
+    const tile = projectTile || document.querySelector(`.projectTile[projectid="${projectData.uniqueProjectID}"]`);
+    if (tile) tile.remove();
+
+    console.log("Global Project Data after deletion:", globalProjectData);
+  } catch (err) {
+    console.log('Deletion canceled:', err.message);
   }
-} 
+}
 
