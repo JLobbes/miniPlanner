@@ -36,12 +36,8 @@ function addProjectEventListeners(projectData, projectView) {
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
     try {
-      const dataForMiniForm = {
-        formType: 'confirmDeleteParent',
-        projectData: { ... projectData },
-      }
 
-      await deleteProject(dataForMiniForm);
+      await triggerDeleteProjectCascade(projectData);
       closeProjectViews();
     } catch (err) {
       // user canceled or deletion failed — keep view open

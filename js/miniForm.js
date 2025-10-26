@@ -9,6 +9,9 @@ function renderMiniForm(dataForMiniForm) {
     confirmDeleteParent: {
       miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.projectData.projectTitle}?`,
     },
+    confirmDeleteChildren: {
+      miniFormMessage: `You must first delete ${dataForMiniForm.quantityOfChildren} child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.projectData.projectTitle}.`,
+    },
     errorInForm: {
       miniFormMessage: 'An error has presented. Press \'x\' to avoid permanent data loss.',
     }
