@@ -55,6 +55,7 @@ function syncProjectInGlobalData(project) {
   } else {
     console.warn(`Project with ID ${project.uniqueProjectID} not found. Cannot sync.`);
   }
+  console.log('globalProjectData after sync', globalProjectData);
 }
 
 function deleteSingleProject(uniqueProjectID, projectTile) {

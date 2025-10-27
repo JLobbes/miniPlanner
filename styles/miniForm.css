@@ -39,7 +39,43 @@
 }
 
 .miniFormInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   height: fit-content;
+  margin: 1em 0 1em 0;
+  gap: 0.5em
+}
+
+.miniForm label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.miniForm .numOfMinutes input {
+  width: 5em;
+}
+
+.miniForm .timeStamp input {
+  width: 8.5em;
+}
+
+.miniForm label span {
+  /* font-weight: bold; */
+}
+
+.miniForm label input {
+  height: 2.5em;
+  text-align: center;
+  border-radius: 0.5em;
+}
+
+.miniForm label input::placeholder {
+  text-align: center;
 }
 
 i.confirmMiniFormRequest,

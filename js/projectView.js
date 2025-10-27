@@ -36,7 +36,6 @@ function addProjectEventListeners(projectData, projectView) {
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
     try {
-
       await triggerDeleteProjectCascade(projectData);
       closeProjectViews();
     } catch (err) {
@@ -49,6 +48,12 @@ function addProjectEventListeners(projectData, projectView) {
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
   });
+
+  const addTimeLogBtn = projectView.querySelector('.addTimeLogBtn');
+  addTimeLogBtn.addEventListener('click', async (e) => {
+    await addTimeLog(projectData, projectView);
+  });
+
 }
 
 function enableEditHeader(projectData, projectView) {
@@ -329,4 +334,35 @@ function triggerDropDown(element, className = 'active', delay = 20) {
   setTimeout(() => {
     element.classList.add(className);
   }, delay);
+}
+
+// Add log to time log
+async function addTimeLog(projectData, projectView) {
+  
+  // TO-DO: Gather time log initial data using mini-form
+  const dataForMiniForm = {
+    formType: 'addTimeLog',
+    timeStamp: new Date(),
+    projectData: { ... projectData },
+  };
+
+  const newTimeLogData = await renderMiniForm(dataForMiniForm); // Gather data via miniForm
+  console.log('collected Time Log Data:', newTimeLogData);
+
+  // Add hrs & minutes to date as to complete timeStamp
+  const combinedTimeStamp = new Date(newTimeLogData.date);
+  const [hours, minutes] = newTimeLogData.timeStamp.split(':').map(Number);
+  combinedTimeStamp.setMinutes(minutes);
+  combinedTimeStamp.setHours(hours);
+  
+  // TO-DO: Update projectData and sync that to GlobalProjectData
+  const dataFormatedForUpdate = {
+    date: combinedTimeStamp.toISOString(),
+    time: Number(newTimeLogData.numOfMinutes),
+  }
+  projectData.timeLog.push(dataFormatedForUpdate)
+  syncProjectInGlobalData(projectData);
+
+  // TO-DO: Render additional log to time log (e.g., just call reRenderNotesAndTimeLogs(projectView, projectData))
+  reRenderNotesAndTimeLogs(projectView, projectData);
 }
