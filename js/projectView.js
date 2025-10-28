@@ -33,6 +33,13 @@ function createProjectView(project) {
 
 function addProjectEventListeners(projectData, projectView) {
 
+  // Listeners are broken out for re-render simplicity.
+  addProjectHeaderListeners(projectData,projectView);
+  addTimeLogListeners(projectData, projectView)
+  
+}
+
+function addProjectHeaderListeners(projectData, projectView) {
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
     try {
@@ -48,12 +55,14 @@ function addProjectEventListeners(projectData, projectView) {
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
   });
+}
+
+function addTimeLogListeners(projectData, projectView) {
 
   const addTimeLogBtn = projectView.querySelector('.addTimeLogBtn');
   addTimeLogBtn.addEventListener('click', async (e) => {
     await addTimeLog(projectData, projectView);
   });
-
 }
 
 function enableEditHeader(projectData, projectView) {
@@ -120,6 +129,9 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
 }
 
 function reRenderNotesAndTimeLogs(projectView, projectData) { 
+  // TO-DO: This function should be split and only re-render where entries are held.
+  //        Writing logic for single entry addition maybe not the best path, low reusability.
+
   const updatedTimeWrapper = createTimeWrapper(projectData);
   const updatedNotesWrapper = createNotesWrapper(projectData);
   const locationForReRender = projectView.querySelector('.bottomPanelRight');
@@ -127,8 +139,9 @@ function reRenderNotesAndTimeLogs(projectView, projectData) {
   locationForReRender.innerHTML = '';
   locationForReRender.appendChild(updatedTimeWrapper);
   locationForReRender.appendChild(updatedNotesWrapper);
+  addTimeLogListeners(projectData, projectView)
 }
-
+ 
 function handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription) {
   try {
     // Revert visible title & description in projectView
@@ -355,7 +368,7 @@ async function addTimeLog(projectData, projectView) {
   combinedTimeStamp.setMinutes(minutes);
   combinedTimeStamp.setHours(hours);
   
-  // TO-DO: Update projectData and sync that to GlobalProjectData
+  // Update projectData and sync that to GlobalProjectData
   const dataFormatedForUpdate = {
     date: combinedTimeStamp.toISOString(),
     time: Number(newTimeLogData.numOfMinutes),
@@ -363,6 +376,6 @@ async function addTimeLog(projectData, projectView) {
   projectData.timeLog.push(dataFormatedForUpdate)
   syncProjectInGlobalData(projectData);
 
-  // TO-DO: Render additional log to time log (e.g., just call reRenderNotesAndTimeLogs(projectView, projectData))
+  // Render additional log to time log (e.g., just call reRenderNotesAndTimeLogs(projectView, projectData))
   reRenderNotesAndTimeLogs(projectView, projectData);
 }
