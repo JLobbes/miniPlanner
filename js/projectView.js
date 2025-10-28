@@ -255,7 +255,10 @@ function createTimeWrapper(project) {
     .map(entry => {
       const dateObj = new Date(entry.date)
       const timeStr = `${entry.time} min`;
-      const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
+      const hours12 = dateObj.getHours() % 12 || 12;
+      const ampm = dateObj.getHours() >= 12 ? 'pm' : 'am';
+      const dateStr = `${hours12}${ampm} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
+      // const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
         <div class="timeLogEntry">
           <p class="timeLogEntrySource" title="${project.projectTitle}">

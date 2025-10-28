@@ -78,6 +78,7 @@
 }
 
 .noteLog p.noteLogEntrySource {
+  min-width: 1em;
   color: #777;
   font-style: italic;
   text-overflow: ellipsis;
@@ -87,6 +88,7 @@
 }
 
 .noteLog .noteLogEntryNote {
+  min-width: 6em;
   width: 10em;
   padding: 0.5em;
   font-weight: bold;

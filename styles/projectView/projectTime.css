@@ -120,6 +120,7 @@
 }
 
 .timeLog p.timeLogEntrySource {
+  min-width: 1em;
   color: #ddd;
   font-style: italic;
   text-overflow: ellipsis;
