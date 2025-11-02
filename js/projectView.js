@@ -1,7 +1,7 @@
-function openProjectView(project) {
+function openProjectView(projectData) {
 
-  if (!project) {
-    console.error('Project not found:', project?.uniqueProjectID);
+  if (!projectData) {
+    console.error('Project not found:', projectData?.uniqueProjectID);
     return;
   }
   // Remove any existing projectView
@@ -9,7 +9,7 @@ function openProjectView(project) {
   if (existing) existing.parentNode.removeChild(existing);
 
   // Create and append new projectView
-  const projectView = createProjectView(project);
+  const projectView = createProjectView(projectData);
   document.body.appendChild(projectView);
 
   // Trigger drop down animation
@@ -17,16 +17,16 @@ function openProjectView(project) {
 }
 
 // Main project view builder
-function createProjectView(project) {
+function createProjectView(projectData) {
   const projectView = document.createElement('div');
   projectView.className = 'projectView';
-  projectView.setAttribute('projectid', project.uniqueProjectID);
+  projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
-  projectView.appendChild(createProjectViewTitleBar(project));
-  projectView.appendChild(createProgressBar(project)); 
-  projectView.appendChild(createBottomPanel(project)); 
+  projectView.appendChild(createProjectViewTitleBar(projectData));
+  projectView.appendChild(createProgressBar(projectData)); 
+  projectView.appendChild(createBottomPanel(projectData, projectView)); 
 
-  addProjectEventListeners(project, projectView) // TO-DO: Group all scattered listeners
+  addProjectEventListeners(projectData, projectView) // TO-DO: Group all scattered listeners
 
   return projectView;
 }
@@ -58,10 +58,12 @@ function addProjectHeaderListeners(projectData, projectView) {
 }
 
 function addTimeLogListeners(projectData, projectView) {
+  // TO-DO: Rename function because it only applies to the addTimeLogBtns. 
+  //        Alternatively, leave it for when search or filter buttons are added later.
 
   const addTimeLogBtn = projectView.querySelector('.addTimeLogBtn');
   addTimeLogBtn.addEventListener('click', async (e) => {
-    await addTimeLog(projectData, projectView);
+    await addTimeLogEntry(projectData, projectView);
   });
 }
 
@@ -129,10 +131,11 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
 }
 
 function reRenderNotesAndTimeLogs(projectView, projectData) { 
+
   // TO-DO: This function should be split and only re-render where entries are held.
   //        Writing logic for single entry addition maybe not the best path, low reusability.
 
-  const updatedTimeWrapper = createTimeWrapper(projectData);
+  const updatedTimeWrapper  = createTimeWrapper(projectData, projectView);
   const updatedNotesWrapper = createNotesWrapper(projectData);
   const locationForReRender = projectView.querySelector('.bottomPanelRight');
   
@@ -162,7 +165,7 @@ function handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDes
 }
 
 // Title Bar
-function createProjectViewTitleBar(project) {
+function createProjectViewTitleBar(projectData) {
   const wrapper = document.createElement('div');
   wrapper.className = 'titleBarWrapper';
 
@@ -171,11 +174,11 @@ function createProjectViewTitleBar(project) {
 
   const projectTitle = document.createElement('h3');
   projectTitle.className = 'projectTitle';
-  projectTitle.innerHTML = `<i class="fa-solid fa-folder"></i> ${project.projectTitle}`;
+  projectTitle.innerHTML = `<i class="fa-solid fa-folder"></i> ${projectData.projectTitle}`;
 
   const projectDescription = document.createElement('div');
   projectDescription.className = 'projectDescription';
-  projectDescription.textContent = project.projectDescription;
+  projectDescription.textContent = projectData.projectDescription;
 
   titleTextWrapper.appendChild(projectTitle);
   titleTextWrapper.appendChild(projectDescription);
@@ -187,18 +190,18 @@ function createProjectViewTitleBar(project) {
 }
 
 // Bottom Panel (tasks, time, notes)
-function createBottomPanel(project) {
+function createBottomPanel(projectData, projectView) {
   const bottomPanel = document.createElement('div');
   bottomPanel.className = 'bottomPanel';
 
   const left = document.createElement('div');
   left.className = 'bottomPanelLeft';
-  left.appendChild(createTasksWrapper(project));
+  left.appendChild(createTasksWrapper(projectData));
 
   const right = document.createElement('div');
   right.className = 'bottomPanelRight';
-  right.appendChild(createTimeWrapper(project));
-  right.appendChild(createNotesWrapper(project));
+  right.appendChild(createTimeWrapper(projectData, projectView));
+  right.appendChild(createNotesWrapper(projectData));
 
   bottomPanel.appendChild(left);
   bottomPanel.appendChild(right);
@@ -207,7 +210,7 @@ function createBottomPanel(project) {
 }
 
 // Tasks Section
-function createTasksWrapper(project) {
+function createTasksWrapper(projectData) {
   const wrapper = document.createElement('div');
   wrapper.className = 'tasksWrapper';
 
@@ -225,7 +228,7 @@ function createTasksWrapper(project) {
   wrapper.appendChild(tasksList);
 
   // Render tasks (immediate children)
-  const tasks = globalProjectData.filter(p => p.parentProjectID === project.uniqueProjectID);
+  const tasks = globalProjectData.filter(p => p.parentProjectID === projectData.uniqueProjectID);
   tasks.forEach(task => {
     const taskDiv = document.createElement('div');
     taskDiv.className = 'task';
@@ -241,17 +244,17 @@ function createTasksWrapper(project) {
 }
 
 // Time Section 
-function createTimeWrapper(project) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'timeWrapper';
+function createTimeWrapper(projectData, projectView) {
+  const timeWrapper = document.createElement('div');
+  timeWrapper.className = 'timeWrapper';
 
   // Calculate total time in minutes
-  const totalMinutes = (project.timeLog || []).reduce((sum, entry) => sum + (entry.time || 0), 0);
+  const totalMinutes = (projectData.timeLog || []).reduce((sum, entry) => sum + (entry.time || 0), 0);
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
   // Build time log entries
-  const timeLogEntries = (project.timeLog || [])
+  const timeLogEntries = (projectData.timeLog || [])
     .map(entry => {
       const dateObj = new Date(entry.date)
       const timeStr = `${entry.time} min`;
@@ -261,12 +264,12 @@ function createTimeWrapper(project) {
       // const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
         <div class="timeLogEntry">
-          <p class="timeLogEntrySource" title="${project.projectTitle}">
+          <p class="timeLogEntrySource" title="${projectData.projectTitle}">
             <i class="fa-solid fa-folder"></i> 
-            ${project.projectTitle}
+            ${projectData.projectTitle}
           </p>
-          <p class="timeLogEntryTime">${timeStr}</p>
-          <p class="timeLogEntryDate">${dateStr}</p>
+          <p class="timeLogEntryTime" originalMinutesLogged="${entry.time}">${timeStr}</p>
+          <p class="timeLogEntryDate" originalDateString="${entry.date}">${dateStr}</p>
           <div class="timeLogEntryEdit">
             <i class="fa-solid fa-pen"></i>
           </div>
@@ -274,7 +277,7 @@ function createTimeWrapper(project) {
       `;
     }).join('');
 
-  wrapper.innerHTML = `
+  timeWrapper.innerHTML = `
     <h2 class="timeWrapperHeader">
       <i class="fa-regular fa-clock"></i> Time
     </h2>
@@ -297,25 +300,40 @@ function createTimeWrapper(project) {
       </div>
     </div>
   `;
-  return wrapper;
+
+  addTimeLogEntryListeners(timeWrapper, projectData, projectView); 
+  return timeWrapper;
+}
+
+function addTimeLogEntryListeners (timeWrapper, projectData, projectView) {
+
+  const timeLogEntries = timeWrapper.querySelectorAll('.timeLogEntry');
+  timeLogEntries.forEach(timeLogEntry => {
+
+    // Attach click listener to editBtn and render miniForm
+    const timeLogEntryEditBtn = timeLogEntry.querySelector('.timeLogEntryEdit');
+    timeLogEntryEditBtn.addEventListener('click', async () => {
+      await updateTimeLogEntry(projectData, timeLogEntry, projectView);
+    });
+  });
 }
 
 // Notes Section 
-function createNotesWrapper(project) {
+function createNotesWrapper(projectData) {
   const wrapper = document.createElement('div');
   wrapper.className = 'notesWrapper';
 
   // Build note log entries
-  const noteLogEntries = (project.noteLog || [])
+  const noteLogEntries = (projectData.noteLog || [])
     .map(entry => {
       const dateObj = new Date(entry.date);
       const noteStr = entry.note;
       const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
         <div class="noteLogEntry">
-          <p class="noteLogEntrySource" title="${project.projectTitle}">
+          <p class="noteLogEntrySource" title="${projectData.projectTitle}">
             <i class="fa-solid fa-folder"></i> 
-            ${project.projectTitle}
+            ${projectData.projectTitle}
           </p>
           <p class="noteLogEntryNote">${noteStr}</p>
           <p class="noteLogEntryDate">${dateStr}</p>
@@ -352,18 +370,18 @@ function triggerDropDown(element, className = 'active', delay = 20) {
   }, delay);
 }
 
-// Add log to time log
-async function addTimeLog(projectData, projectView) {
+// Add new log entry to time log
+async function addTimeLogEntry(projectData, projectView) {
   
-  // TO-DO: Gather time log initial data using mini-form
+  // Gather time log initial data using mini-form
   const dataForMiniForm = {
     formType: 'addTimeLog',
     timeStamp: new Date(),
+    // TO-DO: rename timeStamp to currentTime throughout
     projectData: { ... projectData },
   };
 
   const newTimeLogData = await renderMiniForm(dataForMiniForm); // Gather data via miniForm
-  console.log('collected Time Log Data:', newTimeLogData);
 
   // Add hrs & minutes to date as to complete timeStamp
   const combinedTimeStamp = new Date(newTimeLogData.date);
@@ -380,5 +398,51 @@ async function addTimeLog(projectData, projectView) {
   syncProjectInGlobalData(projectData);
 
   // Render additional log to time log (e.g., just call reRenderNotesAndTimeLogs(projectView, projectData))
+  reRenderNotesAndTimeLogs(projectView, projectData);
+}
+
+// Update existing time log
+async function updateTimeLogEntry(projectData, timeLogEntry, projectView) {
+  
+  // Gather original data to pass to miniForm
+  const originalMinutesLogged = timeLogEntry.querySelector('.timeLogEntryTime').getAttribute('originalMinutesLogged');
+  const originalDateLogged = timeLogEntry.querySelector('.timeLogEntryDate').getAttribute('originalDateString');
+  const dataForMiniForm = {
+    formType: 'deleteOrEditTimeLog',
+    originalMinutesLogged: originalMinutesLogged,
+    originalDate: new Date(originalDateLogged),
+    // TO-DO: rename timeStamp to currentTime throughout.
+    projectData: { ... projectData },
+  };
+
+  const updatedTimeLogData = await renderMiniForm(dataForMiniForm); // Gather new data via miniForm
+
+  // Add hrs & minutes to date as to complete timeStamp
+  const combinedTimeStamp = new Date(updatedTimeLogData.date);
+  const [hours, minutes] = updatedTimeLogData.timeStamp.split(':').map(Number);
+  combinedTimeStamp.setMinutes(minutes);
+  combinedTimeStamp.setHours(hours);
+  
+  // Update projectData and sync that to GlobalProjectData
+  const dataFormatedForUpdate = {
+    date: combinedTimeStamp.toISOString(),
+    time: Number(updatedTimeLogData.numOfMinutes),
+  }
+  // Locate exisiting entry in local project
+  const entryToUpdate = projectData.timeLog.find(
+    log => log.time == originalMinutesLogged && log.date == originalDateLogged
+  );
+
+  if (!entryToUpdate) {
+    throw new Error("No matching time log entry found for update.");
+  }
+
+  // --- Update located entry in place & sync ---
+  entryToUpdate.date = dataFormatedForUpdate.date;
+  entryToUpdate.time = dataFormatedForUpdate.time;
+  syncProjectInGlobalData(projectData);
+  console.log('global data updated:', globalProjectData);
+
+  // TO-DO: Make re-render specific to timeSection only.
   reRenderNotesAndTimeLogs(projectView, projectData);
 }

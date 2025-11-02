@@ -1,5 +1,4 @@
 function renderMiniForm(dataForMiniForm) {
-  console.log('dataForMiniForm:', dataForMiniForm);
 
   const miniFormWrapper = document.createElement('div');
   miniFormWrapper.classList.add('miniFormWrapper');
@@ -30,6 +29,25 @@ function renderMiniForm(dataForMiniForm) {
     },
     confirmDeleteChildren: {
       miniFormMessage: `You must first delete ${dataForMiniForm.quantityOfChildren} child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.projectData.projectTitle}.`,
+    },
+    deleteOrEditTimeLog: {
+      miniFormMessage: `Enter updated time or delete log.`,
+      miniFormInput: `
+        <label class='numOfMinutes'>
+          <span>Minutes</span>
+          <input type="number" name="numOfMinutes" min="0" value=${dataForMiniForm.hasOwnProperty('originalMinutesLogged') ? dataForMiniForm.originalMinutesLogged : '' } required autofocus>
+        </label>
+
+        <label class='date'>
+          <span>Date</span>
+          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toISOString().slice(0, 10) : '' } required>
+        </label>
+
+        <label class='timeStamp'>
+          <span>TimeStamp</span>
+          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toTimeString().slice(0, 5): '' } required>
+        </label>
+      `
     },
     errorInForm: {
       miniFormMessage: 'An error has presented. Press \'x\' to avoid permanent data loss.',
