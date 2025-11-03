@@ -79,6 +79,7 @@
 
 .noteLog p.noteLogEntrySource {
   min-width: 1em;
+  max-width: 6em;
   color: #777;
   font-style: italic;
   text-overflow: ellipsis;
@@ -88,23 +89,36 @@
 }
 
 .noteLog .noteLogEntryNote {
+  position: relative;
+  overflow: hidden;
   min-width: 6em;
   width: 10em;
-  padding: 0.5em;
-  font-weight: bold;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  background-color:#222;
+  flex-grow: 1;
+  background-color: #222;
   border-radius: 0.5em;
+  padding: 0.5em;
   cursor: default;
+  white-space: nowrap;
 }
 
-.noteLog p.noteLogEntryNote {
+.noteLog .noteLogEntryNote span {
+  display: inline-block;
   color: #fff;
   font-weight: bold;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+  transition: transform 0.3s;
+}
+
+.noteLog .noteLogEntryNote:hover span {
+  animation: scrollText 8s linear infinite;
+}
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .noteLog p.noteLogEntryDate {
@@ -122,7 +136,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  flex-grow: 1;
+  /* flex-grow: 1; */
   cursor: pointer;
 }
 

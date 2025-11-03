@@ -16,7 +16,8 @@
   top: 50%;
   transform: translate(-50%, -50%);
   width: 24em;
-  height: 12em;
+  min-height: 12em;
+  height: fit-content;
   border-radius: 0.5em;
   background-color: #fff;
 }
@@ -43,6 +44,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   height: fit-content;
   margin: 1em 0 1em 0;
   gap: 0.5em
@@ -54,6 +56,19 @@
   justify-content: center;
   align-items: center;
   gap: 0.25em;
+}
+
+.miniForm .note input {
+  /* width: 25em; */
+  overflow: visible;
+}
+
+.miniForm .note textarea {
+  width: 25em;
+  border-radius: 0.5em;
+  border: 2px solid #333;
+  resize: none;
+  padding: 0.5em;
 }
 
 .miniForm .numOfMinutes input {

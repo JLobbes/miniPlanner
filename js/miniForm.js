@@ -24,6 +24,25 @@ function renderMiniForm(dataForMiniForm) {
         </label>
       `
     },
+    addNoteLog: {
+      miniFormMessage: `Enter note for new log.`,
+      miniFormInput: `
+        <label class='note'>
+          <span>Note</span>
+          <textarea name="note" rows="3" placeholder="Enter your note" required autofocus></textarea>
+        </label>
+
+        <label class='date'>
+          <span>Date</span>
+          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toISOString().slice(0, 10) : '' } required>
+        </label>
+
+        <label class='timeStamp'>
+          <span>TimeStamp</span>
+          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toTimeString().slice(0, 5): '' } required>
+        </label>
+      `
+    },
     confirmDeleteParent: {
       miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.projectData.projectTitle}?`,
     },
@@ -82,14 +101,8 @@ function addMiniFormListeners(miniFormWrapper) {
     const confirmBtn = miniFormWrapper.querySelector('.confirmMiniFormRequest');
     const rejectBtn = miniFormWrapper.querySelector('.rejectMiniFormRequest');
 
-    // // Only returns 'true'
-    // confirmBtn.addEventListener('click', () => {
-    //   miniFormWrapper.remove();
-    //   resolve(true);
-    // });
-
     confirmBtn.addEventListener('click', () => {
-      const formInputs = miniFormWrapper.querySelectorAll('input');
+      const formInputs = miniFormWrapper.querySelectorAll('input, textarea');
       const formData = {};
 
       formInputs.forEach(input => {

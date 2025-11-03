@@ -4,6 +4,7 @@ function openProjectView(projectData) {
     console.error('Project not found:', projectData?.uniqueProjectID);
     return;
   }
+
   // Remove any existing projectView
   const existing = document.querySelector('.projectView');
   if (existing) existing.parentNode.removeChild(existing);
@@ -35,7 +36,8 @@ function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
   addProjectHeaderListeners(projectData,projectView);
-  addTimeLogListener(projectData, projectView)
+  addAddTimeLogListener(projectData, projectView);
+  addAddNoteLogListener(projectData, projectView);
   
 }
 
@@ -57,7 +59,7 @@ function addProjectHeaderListeners(projectData, projectView) {
   });
 }
 
-function addTimeLogListener(projectData, projectView) {
+function addAddTimeLogListener(projectData, projectView) {
   // Applies only to addTimeLogEntry button.
 
   const addTimeLogBtn = projectView.querySelector('.addTimeLogBtn');
@@ -66,7 +68,7 @@ function addTimeLogListener(projectData, projectView) {
   });
 }
 
-function addTimeLogEntryListeners (timeWrapper, projectData, projectView) {
+function addEditTimeLogEntryListeners (timeWrapper, projectData, projectView) {
   // Applies to edit button found in timeLogEntry.
   // TO-DO: Write delete timeLogEntry logic and add listener below.
 
@@ -78,6 +80,15 @@ function addTimeLogEntryListeners (timeWrapper, projectData, projectView) {
     timeLogEntryEditBtn.addEventListener('click', async () => {
       await updateTimeLogEntry(projectData, timeLogEntry, projectView);
     });
+  });
+}
+
+function addAddNoteLogListener(projectData, projectView) {
+  // Applies only to addNoteLogEntry button.
+
+  const addTimeLogBtn = projectView.querySelector('.addNoteLogBtn');
+  addTimeLogBtn.addEventListener('click', async (e) => {
+    await addNoteLogEntry(projectData, projectView);
   });
 }
 
@@ -300,7 +311,7 @@ function createTimeWrapper(projectData, projectView) {
     </div>
   `;
 
-  addTimeLogEntryListeners(timeWrapper, projectData, projectView); 
+  addEditTimeLogEntryListeners(timeWrapper, projectData, projectView); 
   return timeWrapper;
 }
 
@@ -321,7 +332,7 @@ function createNotesWrapper(projectData) {
             <i class="fa-solid fa-folder"></i> 
             ${projectData.projectTitle}
           </p>
-          <p class="noteLogEntryNote">${noteStr}</p>
+          <p class="noteLogEntryNote"><span>${noteStr}</span></p>
           <p class="noteLogEntryDate">${dateStr}</p>
           <div class="noteLogEntryEdit">
             <i class="fa-solid fa-pen"></i>
@@ -343,6 +354,7 @@ function createNotesWrapper(projectData) {
       </div>
     </div>
   `;
+
   return wrapper;
 }
 
@@ -433,6 +445,37 @@ async function updateTimeLogEntry(projectData, timeLogEntry, projectView) {
   reRenderNotesAndTimeLogs(projectView, projectData);
 }
 
+// Add new log entry to note log
+async function addNoteLogEntry(projectData, projectView) {
+  
+  // Gather time log initial data using mini-form
+  const dataForMiniForm = {
+    formType: 'addNoteLog',
+    timeStamp: new Date(),
+    // TO-DO: rename timeStamp to currentTime throughout
+    projectData: { ... projectData },
+  };
+
+  const newNoteLogData = await renderMiniForm(dataForMiniForm); // Gather data via miniForm
+
+  // Add hrs & minutes to date as to complete timeStamp
+  const combinedTimeStamp = new Date(newNoteLogData.date);
+  const [hours, minutes] = newNoteLogData.timeStamp.split(':').map(Number);
+  combinedTimeStamp.setMinutes(minutes);
+  combinedTimeStamp.setHours(hours);
+  
+  // Update projectData and sync that to GlobalProjectData
+  const dataFormatedForUpdate = {
+    date: combinedTimeStamp.toISOString(),
+    note: newNoteLogData.note,
+  }
+  projectData.noteLog.push(dataFormatedForUpdate)
+  syncProjectInGlobalData(projectData);
+
+  // Render additional log to note log (e.g., just call reRenderNotesAndTimeLogs(projectView, projectData))
+  reRenderNotesAndTimeLogs(projectView, projectData);
+}
+
 function reRenderNotesAndTimeLogs(projectView, projectData) { 
 
   // TO-DO: This function should be split and only re-render where entries are held.
@@ -445,5 +488,6 @@ function reRenderNotesAndTimeLogs(projectView, projectData) {
   locationForReRender.innerHTML = '';
   locationForReRender.appendChild(updatedTimeWrapper);
   locationForReRender.appendChild(updatedNotesWrapper);
-  addTimeLogListener(projectData, projectView)
+  addAddTimeLogListener(projectData, projectView);
+  addAddNoteLogListener(projectData, projectView);
 }
