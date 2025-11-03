@@ -35,7 +35,7 @@ function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
   addProjectHeaderListeners(projectData,projectView);
-  addTimeLogListeners(projectData, projectView)
+  addTimeLogListener(projectData, projectView)
   
 }
 
@@ -57,13 +57,27 @@ function addProjectHeaderListeners(projectData, projectView) {
   });
 }
 
-function addTimeLogListeners(projectData, projectView) {
-  // TO-DO: Rename function because it only applies to the addTimeLogBtns. 
-  //        Alternatively, leave it for when search or filter buttons are added later.
+function addTimeLogListener(projectData, projectView) {
+  // Applies only to addTimeLogEntry button.
 
   const addTimeLogBtn = projectView.querySelector('.addTimeLogBtn');
   addTimeLogBtn.addEventListener('click', async (e) => {
     await addTimeLogEntry(projectData, projectView);
+  });
+}
+
+function addTimeLogEntryListeners (timeWrapper, projectData, projectView) {
+  // Applies to edit button found in timeLogEntry.
+  // TO-DO: Write delete timeLogEntry logic and add listener below.
+
+  const timeLogEntries = timeWrapper.querySelectorAll('.timeLogEntry');
+  timeLogEntries.forEach(timeLogEntry => {
+
+    // Attach click listener to editBtn and render miniForm
+    const timeLogEntryEditBtn = timeLogEntry.querySelector('.timeLogEntryEdit');
+    timeLogEntryEditBtn.addEventListener('click', async () => {
+      await updateTimeLogEntry(projectData, timeLogEntry, projectView);
+    });
   });
 }
 
@@ -129,21 +143,6 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
 
   // TO-DO: @14:44 10.14(WED), Need to rename titleBarWrapper to projectViewHeader or sth. Current name TitleBar is wordy? 
 }
-
-function reRenderNotesAndTimeLogs(projectView, projectData) { 
-
-  // TO-DO: This function should be split and only re-render where entries are held.
-  //        Writing logic for single entry addition maybe not the best path, low reusability.
-
-  const updatedTimeWrapper  = createTimeWrapper(projectData, projectView);
-  const updatedNotesWrapper = createNotesWrapper(projectData);
-  const locationForReRender = projectView.querySelector('.bottomPanelRight');
-  
-  locationForReRender.innerHTML = '';
-  locationForReRender.appendChild(updatedTimeWrapper);
-  locationForReRender.appendChild(updatedNotesWrapper);
-  addTimeLogListeners(projectData, projectView)
-}
  
 function handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription) {
   try {
@@ -154,7 +153,7 @@ function handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDes
     
     projectDescription.innerHTML = `
         ${projectData.projectDescription}
-    `
+    `;
   } catch (error) {
     console.error('Update titleBar not cancelled correctly. Encountered issue.');
     return;
@@ -305,19 +304,6 @@ function createTimeWrapper(projectData, projectView) {
   return timeWrapper;
 }
 
-function addTimeLogEntryListeners (timeWrapper, projectData, projectView) {
-
-  const timeLogEntries = timeWrapper.querySelectorAll('.timeLogEntry');
-  timeLogEntries.forEach(timeLogEntry => {
-
-    // Attach click listener to editBtn and render miniForm
-    const timeLogEntryEditBtn = timeLogEntry.querySelector('.timeLogEntryEdit');
-    timeLogEntryEditBtn.addEventListener('click', async () => {
-      await updateTimeLogEntry(projectData, timeLogEntry, projectView);
-    });
-  });
-}
-
 // Notes Section 
 function createNotesWrapper(projectData) {
   const wrapper = document.createElement('div');
@@ -445,4 +431,19 @@ async function updateTimeLogEntry(projectData, timeLogEntry, projectView) {
 
   // TO-DO: Make re-render specific to timeSection only.
   reRenderNotesAndTimeLogs(projectView, projectData);
+}
+
+function reRenderNotesAndTimeLogs(projectView, projectData) { 
+
+  // TO-DO: This function should be split and only re-render where entries are held.
+  //        Writing logic for single entry addition maybe not the best path, low reusability.
+
+  const updatedTimeWrapper  = createTimeWrapper(projectData, projectView);
+  const updatedNotesWrapper = createNotesWrapper(projectData);
+  const locationForReRender = projectView.querySelector('.bottomPanelRight');
+  
+  locationForReRender.innerHTML = '';
+  locationForReRender.appendChild(updatedTimeWrapper);
+  locationForReRender.appendChild(updatedNotesWrapper);
+  addTimeLogListener(projectData, projectView)
 }
