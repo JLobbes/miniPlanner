@@ -12,7 +12,10 @@ function openProjectView(projectData) {
   // Create and append new projectView
   const projectView = createProjectView(projectData);
   document.body.appendChild(projectView);
-
+  
+  // Dynamically add consistent speed scroll animation for noteLogEntry. 
+  addNoteScrollAnimation();
+  
   // Trigger drop down animation
   triggerDropDown(projectView, 'active', 20);
 }
@@ -490,4 +493,25 @@ function reRenderNotesAndTimeLogs(projectView, projectData) {
   locationForReRender.appendChild(updatedNotesWrapper);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
+}
+
+function addNoteScrollAnimation() {
+  // Dynamically sets consistent speed scroll animation for noteLogEntry. 
+  // If done statically via CSS only, will scroll faster for longer notes.
+  
+  document.querySelectorAll('.noteLogEntryNote span').forEach(span => {
+      const parent = span.parentElement;
+      const textWidth = span.scrollWidth;
+      const containerWidth = parent.clientWidth;
+      const distance = textWidth - containerWidth;
+  
+      if (distance > 0) {
+        const speed = 25; // pixels per second
+        const duration = distance / speed; // seconds
+        span.style.setProperty('--scroll-duration', `${duration}s`);
+      } else {
+        // No need to scroll if it fits
+        span.style.setProperty('--scroll-duration', '0s');
+      }
+    });
 }
