@@ -148,6 +148,7 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
     // Change title & description in globalProjectData
     projectData.projectTitle = projectTitleInput.value;
     projectData.projectDescription = projectDescriptionInput.value;
+    syncProjectInGlobalData(projectData);
     
     // Change visible title & description in projectView
     projectTitle.innerHTML = `

@@ -40,20 +40,21 @@ function addProjectToGlobalData(project) {
 
   if (!exists) {
     globalProjectData.push({ ...project }); // shallow copy for safety
+    console.log('globalProjectData added', globalProjectData);
   } else {
     console.warn(`Project with ID ${project.uniqueProjectID} already exists. Skipped adding.`);
   }
 }
 
-function syncProjectInGlobalData(project) {
+function syncProjectInGlobalData(projectData) {
   const index = globalProjectData.findIndex(
-    (p) => p.uniqueProjectID === project.uniqueProjectID
+    (p) => p.uniqueProjectID === projectData.uniqueProjectID
   );
 
   if (index !== -1) {
-    globalProjectData[index] = { ...project }; // replace with new object
+    globalProjectData[index] = { ...projectData }; // replace with new object
   } else {
-    console.warn(`Project with ID ${project.uniqueProjectID} not found. Cannot sync.`);
+    console.warn(`Project with ID ${projectData.uniqueProjectID} not found. Cannot sync.`);
   }
   console.log('globalProjectData after sync', globalProjectData);
 }
