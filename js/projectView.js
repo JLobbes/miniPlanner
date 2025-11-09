@@ -41,7 +41,6 @@ function addProjectEventListeners(projectData, projectView) {
   addProjectHeaderListeners(projectData,projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
-  
 }
 
 function addProjectHeaderListeners(projectData, projectView) {
@@ -92,6 +91,21 @@ function addAddNoteLogListener(projectData, projectView) {
   const addTimeLogBtn = projectView.querySelector('.addNoteLogBtn');
   addTimeLogBtn.addEventListener('click', async (e) => {
     await addNoteLogEntry(projectData, projectView);
+  });
+}
+
+function addEditNoteLogEntryListeners (notesWrapper, projectData, projectView) {
+  // Applies to edit button found in noteLogEntry.
+  // TO-DO: Write delete noteLogEntry logic and add listener below.
+
+  const noteLogEntries = notesWrapper.querySelectorAll('.noteLogEntry');
+  noteLogEntries.forEach(noteLogEntry => {
+
+    // Attach click listener to editBtn and render miniForm
+    const timeLogEntryEditBtn = noteLogEntry.querySelector('.noteLogEntryEdit');
+    timeLogEntryEditBtn.addEventListener('click', async () => {
+      await updateNoteLogEntry(projectData, noteLogEntry, projectView);
+    });
   });
 }
 
@@ -214,7 +228,7 @@ function createBottomPanel(projectData, projectView) {
   const right = document.createElement('div');
   right.className = 'bottomPanelRight';
   right.appendChild(createTimeWrapper(projectData, projectView));
-  right.appendChild(createNotesWrapper(projectData));
+  right.appendChild(createNotesWrapper(projectData, projectView));
 
   bottomPanel.appendChild(left);
   bottomPanel.appendChild(right);
@@ -319,9 +333,9 @@ function createTimeWrapper(projectData, projectView) {
 }
 
 // Notes Section 
-function createNotesWrapper(projectData) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'notesWrapper';
+function createNotesWrapper(projectData, projectView) {
+  const notesWrapper = document.createElement('div');
+  notesWrapper.className = 'notesWrapper';
 
   // Build note log entries
   const noteLogEntries = (projectData.noteLog || [])
@@ -335,8 +349,8 @@ function createNotesWrapper(projectData) {
             <i class="fa-solid fa-folder"></i> 
             ${projectData.projectTitle}
           </p>
-          <p class="noteLogEntryNote"><span>${noteStr}</span></p>
-          <p class="noteLogEntryDate">${dateStr}</p>
+          <p class="noteLogEntryNote" originalNoteLogged="${entry.note}"><span>${noteStr}</span></p>
+          <p class="noteLogEntryDate" originalDateString="${entry.date}">${dateStr}</p>
           <div class="noteLogEntryEdit">
             <i class="fa-solid fa-pen"></i>
           </div>
@@ -344,7 +358,7 @@ function createNotesWrapper(projectData) {
       `;
     }).join('');
 
-  wrapper.innerHTML = `
+  notesWrapper.innerHTML = `
     <h2 class="notesWrapperHeader">
       <i class="fa-regular fa-note-sticky"></i> Notes
     </h2>
@@ -358,7 +372,8 @@ function createNotesWrapper(projectData) {
     </div>
   `;
 
-  return wrapper;
+  addEditNoteLogEntryListeners(notesWrapper, projectData, projectView); 
+  return notesWrapper;
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.
@@ -479,13 +494,59 @@ async function addNoteLogEntry(projectData, projectView) {
   reRenderNotesAndTimeLogs(projectView, projectData);
 }
 
+// Update existing note log
+async function updateNoteLogEntry(projectData, noteLogEntry, projectView) {
+  
+  // Gather original data to pass to miniForm
+  const originalNoteLogged = noteLogEntry.querySelector('.noteLogEntryNote').getAttribute('originalNoteLogged');
+  const originalDateLogged = noteLogEntry.querySelector('.noteLogEntryDate').getAttribute('originalDateString');
+  const dataForMiniForm = {
+    formType: 'editNoteLog',
+    originalNoteLogged: originalNoteLogged,
+    originalDate: new Date(originalDateLogged),
+    // TO-DO: rename timeStamp to currentTime throughout.
+    projectData: { ... projectData },
+  };
+
+  const updatedNoteLogData = await renderMiniForm(dataForMiniForm); // Gather new data via miniForm
+
+  // Add hrs & minutes to date as to complete timeStamp
+  const combinedTimeStamp = new Date(updatedNoteLogData.date);
+  const [hours, minutes] = updatedNoteLogData.timeStamp.split(':').map(Number);
+  combinedTimeStamp.setMinutes(minutes);
+  combinedTimeStamp.setHours(hours);
+  
+  // Update projectData and sync that to GlobalProjectData
+  const dataFormatedForUpdate = {
+    date: combinedTimeStamp.toISOString(),
+    note: updatedNoteLogData.note,
+  }
+  // Locate exisiting entry in local project
+  const entryToUpdate = projectData.noteLog.find(
+    log => log.note == originalNoteLogged && log.date == originalDateLogged
+  );
+
+  if (!entryToUpdate) {
+    throw new Error("No matching time log entry found for update.");
+  }
+
+  // --- Update located entry in place & sync ---
+  entryToUpdate.date = dataFormatedForUpdate.date;
+  entryToUpdate.note = dataFormatedForUpdate.note;
+  syncProjectInGlobalData(projectData);
+  console.log('global data updated:', globalProjectData);
+
+  // TO-DO: Make re-render specific to timeSection only.
+  reRenderNotesAndTimeLogs(projectView, projectData);
+}
+
 function reRenderNotesAndTimeLogs(projectView, projectData) { 
 
   // TO-DO: This function should be split and only re-render where entries are held.
   //        Writing logic for single entry addition maybe not the best path, low reusability.
 
   const updatedTimeWrapper  = createTimeWrapper(projectData, projectView);
-  const updatedNotesWrapper = createNotesWrapper(projectData);
+  const updatedNotesWrapper = createNotesWrapper(projectData, projectView);
   const locationForReRender = projectView.querySelector('.bottomPanelRight');
   
   locationForReRender.innerHTML = '';

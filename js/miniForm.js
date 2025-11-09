@@ -68,6 +68,25 @@ function renderMiniForm(dataForMiniForm) {
         </label>
       `
     },
+    editNoteLog: {
+      miniFormMessage: `Enter updated note log.`,
+      miniFormInput: `
+        <label class='note'>
+          <span>Note</span>
+          <textarea name="note" rows="3" placeholder="Enter your note" required autofocus>${dataForMiniForm.hasOwnProperty('originalNoteLogged') ? dataForMiniForm.originalNoteLogged : '' }</textarea>
+        </label>
+
+        <label class='date'>
+          <span>Date</span>
+          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toISOString().slice(0, 10) : '' } required>
+        </label>
+
+        <label class='timeStamp'>
+          <span>TimeStamp</span>
+          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toTimeString().slice(0, 5): '' } required>
+        </label>
+      `
+    },
     errorInForm: {
       miniFormMessage: 'An error has presented. Press \'x\' to avoid permanent data loss.',
     }
