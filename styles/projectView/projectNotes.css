@@ -105,13 +105,11 @@
   display: inline-block;
   color: #fff;
   font-weight: bold;
-  /* transition: transform 0.3s; */
   transform: translateX(0);
 }
 
 .noteLog .noteLogEntryNote:hover span {
   animation: scrollText var(--scroll-duration) linear forwards;
-  /* animation: scrollText 8s linear infinite; */
 }
 
 @keyframes scrollText {
