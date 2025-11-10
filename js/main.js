@@ -1,3 +1,5 @@
+// js/main.js
+
 // Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
   loadDataToGlobalProjects();
