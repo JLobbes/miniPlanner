@@ -21,28 +21,6 @@ newProjBtn.addEventListener('click', (e) => {
   openNewProject();
 });
 
-function closeProjectViews() {
-  projectViews = document.getElementsByClassName('projectView');
-
-  for (let i = 0; i < projectViews.length; i++) {
-    const openProject = projectViews[i];
-    
-    if (openProject.classList.contains('active')) {
-      openProject.classList.remove('active');
-    }
-  }
-} 
-
-function openNewProject() {
-  const newProj = createBlankProject();
-  console.log('newProj created in openNewProj():', newProj);
-  addProjectToGlobalData(newProj);
-  renderProjectsToDash();
-
-  // Trigger drop down animation
-  openProjectView(newProj);
-}
-
 const globalProjectData = [];
 
 function loadDataToGlobalProjects() {

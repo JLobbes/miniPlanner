@@ -1,5 +1,17 @@
 // js/projectView/main.js
 
+function closeProjectViews() {
+  projectViews = document.getElementsByClassName('projectView');
+
+  for (let i = 0; i < projectViews.length; i++) {
+    const openProject = projectViews[i];
+    
+    if (openProject.classList.contains('active')) {
+      openProject.classList.remove('active');
+    }
+  }
+} 
+
 function openProjectView(projectData) {
 
   if (!projectData) {

@@ -42,7 +42,6 @@ function addTileEventListeners(projectData, projectTile) {
   
 }
 
-
 // Title section
 function createProjectTitle(titleText) {
   const title = document.createElement('h3');

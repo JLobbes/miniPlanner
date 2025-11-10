@@ -7,7 +7,7 @@ function generateUniqueProjectID() {
   return id;
 }
 
-function createBlankProject() {
+function createBlankProject(parentProjectID) {
   return {
     uniqueProjectID: generateUniqueProjectID(),
     projectTitle: 'New Project',
@@ -16,8 +16,16 @@ function createBlankProject() {
     created: new Date().toISOString(),
     timeLog: [],
     noteLog: [],
-    parentProjectID: null,
+    parentProjectID: parentProjectID,
   };
+}
+
+function openNewProject(parentProjectID) {
+  const newProj = createBlankProject(parentProjectID || null);
+  console.log('newProj created in openNewProj():', newProj);
+  addProjectToGlobalData(newProj);
+  renderProjectsToDash();
+  openProjectView(newProj);
 }
 
 function getAllChildren(parentID) {
