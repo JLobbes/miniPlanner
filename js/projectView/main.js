@@ -12,16 +12,18 @@ function closeProjectViews() {
   }
 } 
 
-function openProjectView(projectData) {
+function openProjectView(projectData, hasParent) {
 
   if (!projectData) {
     console.error('Project not found:', projectData?.uniqueProjectID);
     return;
   }
 
-  // Remove any existing projectView
-  const existing = document.querySelector('.projectView');
-  if (existing) existing.parentNode.removeChild(existing);
+  // Remove any existing projectView if starting from dashboard
+  if(!hasParent) {
+    const existing = document.querySelector('.projectView');
+    if (existing) existing.parentNode.removeChild(existing);
+  } 
 
   // Create and append new projectView
   const projectView = createProjectView(projectData);
@@ -55,6 +57,7 @@ function addProjectEventListeners(projectData, projectView) {
   addProjectHeaderListeners(projectData,projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
+  addNewTaskListener(projectData, projectView);
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.

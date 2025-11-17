@@ -41,6 +41,11 @@ function getAllChildren(parentID) {
   return allChildren;
 }
 
+function getSingleProject(projectID) {
+  const singleProject = globalProjectData.filter(p => p.uniqueProjectID === projectID)[0];
+  return singleProject;
+}
+
 function addProjectToGlobalData(project) {
   const exists = globalProjectData.some(
     (p) => p.uniqueProjectID === project.uniqueProjectID
