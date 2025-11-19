@@ -6,22 +6,22 @@ function addNewTaskListener(projectData, projectView) {
 
   const addNewTaskBtn = projectView.querySelector('.newTaskBtn');
   addNewTaskBtn.addEventListener('click', () => {
-    const parentID = projectData.uniqueProjectID;
-    openNewProject(parentID);
+    openNewProject({ parentID: projectData.uniqueProjectID, hasParent: true });
+
+    // TO-DO: Re-render tasksWrapper
+    //        Ensure render includes back button
+    reRenderTaskList(projectView, projectData)
   });
 }
 
 function addOpenTaskListener (task, taskUniqueID) {
   // Applies to large task buttons in tasksList
 
-  // TO-DO: Add Listeners to individual task <elem>
+  // Add Listeners to individual task <elem>
   task.addEventListener('click', () => {
     const projectData = getSingleProject(taskUniqueID);
     openProjectView(projectData, true);
   });
-
-  // TO-DO: Re-render tasksWrapper
-  //        Ensure render includes back button
 }
 
 // Element construction
@@ -52,7 +52,7 @@ function createTasksWrapper(projectData, projectView) {
       <h3 class="taskName" taskID="${task.uniqueProjectID}">${task.projectTitle}</h3>
       <div class="taskStatusBubble statusShowing${task.projectStatus.replace(' ', '')}">${task.projectStatus}</div>
     `;
-    addOpenTaskListener(taskDiv, task.uniqueProjectID);
+    addOpenTaskListener(taskDiv, task.uniqueProjectID, projectData, projectView);
     tasksList.appendChild(taskDiv);
   });
 

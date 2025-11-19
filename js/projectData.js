@@ -20,12 +20,12 @@ function createBlankProject(parentProjectID) {
   };
 }
 
-function openNewProject(parentProjectID) {
-  const newProj = createBlankProject(parentProjectID || null);
+function openNewProject({ parentID , hasParent}) {
+  const newProj = createBlankProject(parentID || null);
   console.log('newProj created in openNewProj():', newProj);
   addProjectToGlobalData(newProj);
   renderProjectsToDash();
-  openProjectView(newProj);
+  openProjectView(newProj, hasParent);
 }
 
 function getAllChildren(parentID) {

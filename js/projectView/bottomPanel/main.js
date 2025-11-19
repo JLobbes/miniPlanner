@@ -37,3 +37,13 @@ function reRenderNotesAndTimeLogs(projectView, projectData) {
   addNoteScrollAnimation();
 }
 
+function reRenderTaskList(projectView, projectData) {
+
+  const updatedTasksWrapper = createTasksWrapper(projectData, projectView);
+  const locationForReRender = projectView.querySelector('.bottomPanelLeft');
+  
+  locationForReRender.innerHTML = '';
+  locationForReRender.appendChild(updatedTasksWrapper);
+  addNewTaskListener(projectData, projectView);
+}
+
