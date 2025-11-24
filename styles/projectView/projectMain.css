@@ -13,9 +13,9 @@
   border-radius: 0.5em;
   background-color: #fff;
   box-shadow: 
-    0 0 3.5em 3.5em rgba(255, 255, 255, 0.95),  
-    0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
-    0 0.25em 0.75em rgba(0, 0, 0, 0.15);          
+    0.25em 0.25em 0em rgb(221, 221, 221),
+    0 -3.5em 0em rgba(255,255,255,0.4),
+    10em -3.5em 0em  rgba(255,255,255,1);
   transition: transform 0.5s ease;
   z-index: 10;
 }
@@ -30,6 +30,11 @@
 .projectView.active {
   transform: translateY(5%);
 }
+
+.projectView.active ~ #homeView #homeViewTitle {
+  color: pink;
+}
+
 
 .projectView .bottomPanel {
   position: relative;
@@ -64,4 +69,44 @@
   width: 50%;
   gap: 0.5em;
   height: 100%;
+}
+
+.minimizeProjectBtn {
+  position: absolute;
+  right: 1em;
+  top: -2em;
+  height: 2em;
+  width: fit-content;
+  margin: 0;
+  border: 1px solid #111;
+  background-color: #333;
+  border-top-left-radius: 0.75em;
+  border-top-right-radius: 0.75em;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  z-index: 0;
+  transition: 
+    border-bottom-left-radius 0.3s,
+    border-bottom-right-radius 0.3s,
+    top 0.3s, 
+    background-color 0.3s
+  ;
+}
+
+.minimizeProjectBtn i {
+  color: #eee;
+  font-size: 1.25em;
+  padding: 0 0.5em;
+}
+
+.minimizeProjectBtn:hover {
+  cursor: pointer; 
+  background-color: #fff;
+  border-bottom-left-radius: 0.75em;
+  border-bottom-right-radius: 0.75em;
+  top: -2.10em;
+}
+
+.minimizeProjectBtn:hover  i {
+  color: #111;
 }

@@ -5,7 +5,7 @@ function addProjectHeaderListeners(projectData, projectView) {
   deleteBtn.addEventListener('click', async (e) => {
     try {
       await triggerDeleteProjectCascade(projectData);
-      closeProjectViews();
+      closeAllProjectViews(); // TO-DO: This call should close single project view. 
     } catch (err) {
       // user canceled or deletion failed — keep view open
       console.log('Deletion canceled or failed:', err.message);

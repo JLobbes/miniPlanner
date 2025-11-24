@@ -1,7 +1,7 @@
 // js/projectView/main.js
 
-function closeProjectViews() {
-  projectViews = document.getElementsByClassName('projectView');
+function closeAllProjectViews() {
+  const projectViews = document.getElementsByClassName('projectView');
 
   for (let i = 0; i < projectViews.length; i++) {
     const openProject = projectViews[i];
@@ -10,7 +10,11 @@ function closeProjectViews() {
       openProject.classList.remove('active');
     }
   }
-} 
+}
+
+function closeSingleProjectView(projectView) {
+  projectView.classList.remove('active');
+}
 
 function openProjectView(projectData, hasParent) {
 
@@ -25,6 +29,9 @@ function openProjectView(projectData, hasParent) {
     if (existing) existing.parentNode.removeChild(existing);
   } 
 
+  // Simply add 'active' class if projectView already rendered but hidden.
+  const projectViews = document.getElementsByClassName('projectView');
+  
   // Create and append new projectView
   const projectView = createProjectView(projectData);
   document.body.appendChild(projectView);
@@ -42,6 +49,7 @@ function createProjectView(projectData) {
   projectView.className = 'projectView';
   projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
+  projectView.appendChild(createMinimizeButton(projectData))
   projectView.appendChild(createProjectViewTitleBar(projectData));
   projectView.appendChild(createProgressBar(projectData)); 
   projectView.appendChild(createBottomPanel(projectData, projectView)); 
@@ -54,6 +62,7 @@ function createProjectView(projectData) {
 function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
+  addMinimizeProjectViewListener(projectView);
   addProjectHeaderListeners(projectData,projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
@@ -70,3 +79,16 @@ function triggerDropDown(element, className = 'active', delay = 20) {
   }, delay);
 }
 
+function createMinimizeButton(projectData) {
+  const minimizeProjectButton = document.createElement('button');
+  minimizeProjectButton.innerHTML = `<i class="fa-solid fa-caret-left"></i>`;
+  minimizeProjectButton.classList.add('minimizeProjectBtn');
+  return minimizeProjectButton; 
+}
+
+function addMinimizeProjectViewListener(projectView) {
+  const minimizeProjectBtn = projectView.querySelector('.minimizeProjectBtn');
+  minimizeProjectBtn.addEventListener('click', () => {
+    closeSingleProjectView(projectView);
+  });
+}

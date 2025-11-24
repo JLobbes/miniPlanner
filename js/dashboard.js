@@ -13,7 +13,7 @@ let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
 homeView.addEventListener('click', () => {
-  closeProjectViews();
+  closeAllProjectViews();
 });
 
 newProjBtn.addEventListener('click', (e) => {
