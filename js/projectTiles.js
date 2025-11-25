@@ -137,8 +137,8 @@ function createProjectActions() {
     <div class="projectActions">
       <span>...</span>
       <div class="projectActionsDropDown">
-        <button title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
         <button title="Delete"><i class="fa-solid fa-trash"></i></button>
+        <button title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
       </div>
     </div>
   `;
