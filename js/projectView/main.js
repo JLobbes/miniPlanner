@@ -30,17 +30,26 @@ function openProjectView(projectData, hasParent) {
   } 
 
   // Simply add 'active' class if projectView already rendered but hidden.
-  const projectViews = document.getElementsByClassName('projectView');
-  
-  // Create and append new projectView
-  const projectView = createProjectView(projectData);
-  document.body.appendChild(projectView);
-  
-  // Dynamically add consistent speed scroll animation for noteLogEntry. 
-  addNoteScrollAnimation();
-  
-  // Trigger drop down animation
-  triggerDropDown(projectView, 'active', 20);
+  const openedProjectViews = [...document.querySelectorAll('.projectView')];
+  const matchToOpenedView = openedProjectViews.find(
+    projView => projView.getAttribute('projectid') === projectData.uniqueProjectID
+  );
+  // const openedProjectViews = document.getElementsByClassName('projectView');
+  console.log('already opened', openedProjectViews);
+
+  if(matchToOpenedView) {
+    matchToOpenedView.classList.add('active');
+  } else {
+    // Create and append new projectView
+    const projectView = createProjectView(projectData);
+    document.body.appendChild(projectView);
+    
+    // Dynamically add consistent speed scroll animation for noteLogEntry. 
+    addNoteScrollAnimation();
+    
+    // Trigger drop down animation
+    triggerDropDown(projectView, 'active', 20);
+  }
 }
 
 // Main project view builder
