@@ -25,7 +25,7 @@ function openNewProject({ parentID , hasParent}) {
   console.log('newProj created in openNewProj():', newProj);
   addProjectToGlobalData(newProj);
   renderProjectsToDash();
-  openProjectView(newProj, hasParent);
+  openProjectView(newProj, hasParent || null);
 }
 
 function getAllChildren(parentID) {

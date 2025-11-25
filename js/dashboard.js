@@ -18,7 +18,7 @@ homeView.addEventListener('click', () => {
 
 newProjBtn.addEventListener('click', (e) => {
   e.stopPropagation(); // Prevents the event from bubbling up to homeView
-  openNewProject();
+  openNewProject({});
 });
 
 const globalProjectData = [];
