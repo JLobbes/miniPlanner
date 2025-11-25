@@ -34,8 +34,6 @@ function openProjectView(projectData, hasParent) {
   const matchToOpenedView = openedProjectViews.find(
     projView => projView.getAttribute('projectid') === projectData.uniqueProjectID
   );
-  // const openedProjectViews = document.getElementsByClassName('projectView');
-  console.log('already opened', openedProjectViews);
 
   if(matchToOpenedView) {
     matchToOpenedView.classList.add('active');
