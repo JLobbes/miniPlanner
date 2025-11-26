@@ -12,10 +12,6 @@ function closeAllProjectViews() {
   }
 }
 
-function closeSingleProjectView(projectView) {
-  projectView.classList.remove('active');
-}
-
 function openProjectView(projectData, hasParent) {
 
   if (!projectData) {
@@ -30,10 +26,7 @@ function openProjectView(projectData, hasParent) {
   } 
 
   // Simply add 'active' class if projectView already rendered but hidden.
-  const openedProjectViews = [...document.querySelectorAll('.projectView')];
-  const matchToOpenedView = openedProjectViews.find(
-    projView => projView.getAttribute('projectid') === projectData.uniqueProjectID
-  );
+  const matchToOpenedView = findOpenedProjectView(projectData.uniqueProjectID);
 
   if(matchToOpenedView) {
     matchToOpenedView.classList.add('active');
@@ -48,6 +41,15 @@ function openProjectView(projectData, hasParent) {
     // Trigger drop down animation
     triggerDropDown(projectView, 'active', 20);
   }
+}
+
+function closeSingleProjectView(projectView) {
+  projectView.classList.remove('active');
+}
+
+function findOpenedProjectView(projectID) {
+  const allViews = [...document.querySelectorAll('.projectView')];
+  return allViews.find(view => view.getAttribute('projectid') === projectID);
 }
 
 // Main project view builder
