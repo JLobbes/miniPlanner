@@ -15,6 +15,9 @@ function closeAllProjectViews() {
       }, 300);
     }
   }
+
+  // Ensure project on dash are reRender to reflect edits. 
+  renderProjectsToDash();
 }
 
 function openProjectView(projectData, hasParent) {
