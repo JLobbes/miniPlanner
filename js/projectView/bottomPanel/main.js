@@ -46,4 +46,3 @@ function reRenderTaskList(projectView, projectData) {
   locationForReRender.appendChild(updatedTasksWrapper);
   addNewTaskListener(projectData, projectView);
 }
-

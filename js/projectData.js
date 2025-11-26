@@ -59,6 +59,22 @@ function addProjectToGlobalData(project) {
   }
 }
 
+// TO-DO: Implement getAncestorsOfProject() in reRendering
+//        This will also have to happen downstream to
+//        If you update a project, you need to check if openProjectViews of children
+//        or parents are open.
+function getAncestorsOfProject(projectID) {
+  const ancestors = [];
+  let current = getSingleProject(projectID);
+
+  while (current?.parentProjectID) {
+    ancestors.push(current.parentProjectID);
+    current = getProjectByID(current.parentProjectID);
+  }
+
+  return ancestors;
+}
+
 function syncProjectInGlobalData(projectData) {
   const index = globalProjectData.findIndex(
     (p) => p.uniqueProjectID === projectData.uniqueProjectID
