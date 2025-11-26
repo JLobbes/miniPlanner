@@ -131,7 +131,7 @@
 }
 
 .projectView .task .taskStatusBubble.statusShowingComplete {
-  background-color: #76e255;
+  background-color: #b3f69f;
 }
 
 .projectView .task .taskStatusBubble.statusShowingPlanned {
@@ -140,15 +140,15 @@
 }
 
 .projectView .task .taskStatusBubble.statusShowingInProgress {
-  background-color: #dcee37;
+  background-color: #e7f661;
 }
 
 .projectView .task .taskStatusBubble.statusShowingPaused {
-  background-color: #ee9f37;
+  background-color: #ffbb61;
 }
 
 .projectView .task .taskStatusBubble.statusShowingDelayed {
-  background-color: #ee4426;
+  background-color: #e95e45;
 }
 
 .projectView .task .taskStatusBubble.statusShowingDead {

@@ -167,7 +167,7 @@
 }
 
 .projectStatusBubble.statusShowingComplete {
-  background-color: #76e255;
+  background-color: #b3f69f;
 }
 
 .projectStatusBubble.statusShowingPlanned {
@@ -179,15 +179,15 @@ p.projectStatusBubble.statusShowingPlanned {
 }
 
 .projectStatusBubble.statusShowingInProgress {
-  background-color: #dcee37af;
+  background-color: #e7f661;
 }
 
 .projectStatusBubble.statusShowingPaused {
-  background-color: #ee9f37;
+  background-color: #ffbb61;
 }
 
 .projectStatusBubble.statusShowingDelayed {
-  background-color: #ee4426;
+  background-color: #e95e45;
 }
 
 .projectStatusBubble.statusShowingDead {

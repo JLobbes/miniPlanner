@@ -122,7 +122,7 @@
 }
 
 .projectView .projectStatusBubble.statusShowingComplete {
-  background-color: #76e255;
+  background-color: #b3f69f;
 }
 
 .projectView .projectStatusBubble.statusShowingPlanned {
@@ -134,15 +134,15 @@
 }
 
 .projectView .projectStatusBubble.statusShowingInProgress {
-  background-color: #dcee37;
+  background-color: #e7f661;
 }
 
 .projectView .projectStatusBubble.statusShowingPaused {
-  background-color: #ee9f37;
+  background-color: #ffbb61;
 }
 
 .projectView .projectStatusBubble.statusShowingDelayed {
-  background-color: #ee4426;
+  background-color: #e95e45;
 }
 
 .projectView .projectStatusBubble.statusShowingDead {
