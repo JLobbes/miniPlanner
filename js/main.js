@@ -12,6 +12,7 @@ const homeView = document.getElementById('homeView');
 let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
+
 homeView.addEventListener('click', () => {
   closeAllProjectViews();
 });
@@ -21,6 +22,7 @@ newProjBtn.addEventListener('click', (e) => {
   openNewProject({});
 });
 
+let draggedItem = null; // Used globally
 const globalProjectData = [];
 
 function loadDataToGlobalProjects() {

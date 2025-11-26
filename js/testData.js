@@ -16,6 +16,9 @@ const testData = [
       { date: '2023-07-17T17:38:22Z', note: 'Don\'t forget to turn off the lights.' },
     ],
     parentProjectID: null,
+    placement: {
+      dashboardOrder: 2,   
+    }
   },
   { 
     uniqueProjectID: "proj_mickey1234",
@@ -32,6 +35,9 @@ const testData = [
       { date: '2025-09-03T16:00:00Z', note: "Try adding some fairy dust next time!" },
     ],
     parentProjectID: null,
+    placement: {
+      dashboardOrder: 1,   
+    }
   },
 
   // Child projects for "Test Project 1"
@@ -44,6 +50,9 @@ const testData = [
     timeLog: [{ date: '2023-07-10T09:00:00Z', time: 15 }],
     noteLog: [{ date: '2023-07-10T09:15:00Z', note: "Intro written and reviewed." }],
     parentProjectID: "proj_7f9b3d21e0c4",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
   {
     uniqueProjectID: "proj_child1b",
@@ -54,6 +63,9 @@ const testData = [
     timeLog: [{ date: '2023-07-12T14:00:00Z', time: 20 }],
     noteLog: [{ date: '2023-07-12T14:20:00Z', note: "Chart styles not finalized." }],
     parentProjectID: "proj_7f9b3d21e0c4",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
 
   // Additional child projects for Mickey’s project
@@ -66,6 +78,9 @@ const testData = [
     timeLog: [{ date: '2025-09-02T12:00:00Z', time: 25 }],
     noteLog: [{ date: '2025-09-02T12:30:00Z', note: "Used spells from 'Ye Olde Magic Book'." }],
     parentProjectID: "proj_mickey1234",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
   {
     uniqueProjectID: "proj_child2b",
@@ -76,6 +91,9 @@ const testData = [
     timeLog: [{ date: '2025-09-04T10:00:00Z', time: 35 }],
     noteLog: [{ date: '2025-09-04T11:00:00Z', note: "Lights too bright—scared Pluto." }],
     parentProjectID: "proj_mickey1234",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
   { 
     uniqueProjectID: "proj_bugs5678",
@@ -92,6 +110,9 @@ const testData = [
       { date: '2025-09-07T13:00:00Z', note: "Need to hide from Elmer before testing again." },
     ],
     parentProjectID: "proj_mickey1234",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
   {
     uniqueProjectID: "proj_child2c",
@@ -106,6 +127,9 @@ const testData = [
       { date: '2025-09-05T09:45:00Z', note: "Too much sparkle—sounds like a firework show." },
     ],
     parentProjectID: "proj_mickey1234",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
   {
     uniqueProjectID: "proj_child2d",
@@ -118,6 +142,9 @@ const testData = [
       { date: '2025-09-06T13:45:00Z', note: "Idea: use enchanted wood from the Sorcerer’s Tree." },
     ],
     parentProjectID: "proj_mickey1234",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
   {
     uniqueProjectID: "proj_child2e",
@@ -132,6 +159,9 @@ const testData = [
       { date: '2025-09-07T08:55:00Z', note: "Added straps. Still needs a magic failsafe." },
     ],
     parentProjectID: "proj_mickey1234",
+    placement: {
+      dashboardOrder: null,   
+    }
   },
 
 ];

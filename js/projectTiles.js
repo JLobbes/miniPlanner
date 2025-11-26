@@ -6,18 +6,25 @@ function renderProjectsToDash() {
   container.innerHTML = '';
   container.appendChild(newProjBtn);
 
-  // Filter and render top-level projects
-  const topLevelProjects = globalProjectData.filter(p => p.parentProjectID === null);
+  // Filter and sort top-level projects
+  const topLevelProjects = globalProjectData
+    .filter(p => p.parentProjectID === null)
+    .sort((a, b) => (a.placement.dashboardOrder ?? 0) - (b.placement.dashboardOrder ?? 0));
+
+  console.log('topLevelProjects', topLevelProjects);
   topLevelProjects.forEach(project => {
     const tile = createProjectTile(project);
     container.appendChild(tile);
   });
+
+  addDragLogicForTiles()
 }
 
 // Create the full project tile element
 function createProjectTile(project) {
   const tile = document.createElement('div');
   tile.className = 'projectTile';
+  tile.draggable = 'true';
   tile.setAttribute('projectid', project.uniqueProjectID); // ID gets converted to lowercase during setAttribute() call
 
   tile.appendChild(createProjectTitle(project.projectTitle));
@@ -145,3 +152,47 @@ function createProjectActions() {
 
   return wrapper;
 }
+
+// Drag Logic for Tile Rearrangment
+
+function addDragLogicForTiles() {
+
+  const projectTiles = document.querySelectorAll('.projectTile');
+  
+  projectTiles.forEach(item => {
+    item.addEventListener('dragstart', handleDragStart);
+    item.addEventListener('dragover', handleDragOver);
+    item.addEventListener('drop', handleDrop);
+  });
+  
+  let draggedItem = null;
+  
+  function handleDragStart(e) {
+    draggedItem = this; // store reference
+  }
+  
+  function handleDragOver(e) {
+    e.preventDefault(); // REQUIRED to allow drop
+  }
+  
+  function handleDrop(e) {
+    e.preventDefault();
+    if (this !== draggedItem) {
+      // swap elements
+      const list = this.parentNode;
+      list.insertBefore(draggedItem, this);
+    }
+
+    updateDashboardOrder();
+  }
+  
+  function updateDashboardOrder() {
+    const tiles = Array.from(document.querySelectorAll('.projectTile'));
+    tiles.forEach((tile, index) => {
+      const projectID = tile.getAttribute('projectid');
+      const singleProject = globalProjectData.find(p => p.uniqueProjectID === projectID);
+      if (singleProject) singleProject.placement.dashboardOrder = index + 1;
+    });
+  }
+}
+

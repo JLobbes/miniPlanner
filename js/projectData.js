@@ -17,6 +17,9 @@ function createBlankProject(parentProjectID) {
     timeLog: [],
     noteLog: [],
     parentProjectID: parentProjectID,
+    placement: {
+      dashboardPlacement: null,
+    }
   };
 }
 
