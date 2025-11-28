@@ -25,7 +25,6 @@ function createBlankProject(parentProjectID) {
 
 function openNewProject({ parentID , hasParent}) {
   const newProj = createBlankProject(parentID || null);
-  console.log('newProj created in openNewProj():', newProj);
   addProjectToGlobalData(newProj);
   renderProjectsToDash();
   openProjectView(newProj, hasParent || null);
@@ -62,20 +61,23 @@ function addProjectToGlobalData(project) {
   }
 }
 
-// TO-DO: Implement getAncestorsOfProject() in reRendering
-//        This will also have to happen downstream to
-//        If you update a project, you need to check if openProjectViews of children
-//        or parents are open.
 function getAncestorsOfProject(projectID) {
   const ancestors = [];
   let current = getSingleProject(projectID);
 
   while (current?.parentProjectID) {
     ancestors.push(current.parentProjectID);
-    current = getProjectByID(current.parentProjectID);
+    current = getSingleProject(current.parentProjectID);
   }
 
   return ancestors;
+}
+
+function findDepth(projectID) {
+  const numOfAncestors = getAncestorsOfProject(projectID);
+  const depth = numOfAncestors.length + 1;
+
+  return depth;
 }
 
 function syncProjectInGlobalData(projectData) {
