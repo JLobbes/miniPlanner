@@ -27,7 +27,7 @@ function openProjectView(projectData, hasParent) {
     return;
   } else {
     // Update global depth variable. 
-    depth = findDepth(); 
+    depth = findDepth(projectData.uniqueProjectID); 
   }
 
   // Close all project views to allow them to reRender given changes in child
@@ -68,7 +68,7 @@ function createProjectView(projectData) {
   projectView.className = 'projectView';
   projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
-  projectView.appendChild(createMinimizeButton(projectData))
+  if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
   projectView.appendChild(createProjectViewTitleBar(projectData));
   projectView.appendChild(createProgressBar(projectData)); 
   projectView.appendChild(createBottomPanel(projectData, projectView)); 
@@ -81,7 +81,7 @@ function createProjectView(projectData) {
 function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
-  addMinimizeProjectViewListener(projectData, projectView);
+  if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
   addProjectHeaderListeners(projectData,projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
