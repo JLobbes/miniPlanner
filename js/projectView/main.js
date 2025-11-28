@@ -33,22 +33,15 @@ function openProjectView(projectData, hasParent) {
   // Close all project views to allow them to reRender given changes in child
   closeAllProjectViews();
 
-  // Simply add 'active' class if projectView already rendered but hidden.
-  const matchToOpenedView = findOpenedProjectView(projectData.uniqueProjectID);
-
-  if(matchToOpenedView) {
-    matchToOpenedView.classList.add('active');
-  } else {
-    // Create and append new projectView
-    const projectView = createProjectView(projectData);
-    document.body.appendChild(projectView);
-    
-    // Dynamically add consistent speed scroll animation for noteLogEntry. 
-    addNoteScrollAnimation();
-    
-    // Trigger drop down animation
-    triggerDropDown(projectView, 'active', 20);
-  }
+  // Create and append new projectView
+  const projectView = createProjectView(projectData);
+  document.body.appendChild(projectView);
+  
+  // Dynamically add consistent speed scroll animation for noteLogEntry. 
+  addNoteScrollAnimation();
+  
+  // Trigger drop down animation
+  triggerDropDown(projectView, 'active', 20);
 }
 
 function closeSingleProjectView(projectData, projectView) {
