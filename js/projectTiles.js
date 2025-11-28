@@ -163,9 +163,7 @@ function addDragLogicForTiles() {
     item.addEventListener('dragover', handleDragOver);
     item.addEventListener('drop', handleDrop);
   });
-  
-  let draggedItem = null;
-  
+
   function handleDragStart(e) {
     draggedItem = this; // store reference
   }

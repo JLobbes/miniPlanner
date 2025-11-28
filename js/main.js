@@ -23,6 +23,7 @@ newProjBtn.addEventListener('click', (e) => {
 });
 
 let draggedItem = null; // Used globally
+let depth = null; // Used globally
 const globalProjectData = [];
 
 function loadDataToGlobalProjects() {

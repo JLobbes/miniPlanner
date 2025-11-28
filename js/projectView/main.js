@@ -25,6 +25,9 @@ function openProjectView(projectData, hasParent) {
   if (!projectData) {
     console.error('Project not found:', projectData?.uniqueProjectID);
     return;
+  } else {
+    // Update global depth variable. 
+    depth = findDepth(); 
   }
 
   // Close all project views to allow them to reRender given changes in child
