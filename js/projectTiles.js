@@ -11,7 +11,6 @@ function renderProjectsToDash() {
     .filter(p => p.parentProjectID === null)
     .sort((a, b) => (a.placement.dashboardOrder ?? 0) - (b.placement.dashboardOrder ?? 0));
 
-  console.log('topLevelProjects', topLevelProjects);
   topLevelProjects.forEach(project => {
     const tile = createProjectTile(project);
     container.appendChild(tile);
