@@ -20,18 +20,18 @@ function renderProjectsToDash() {
 }
 
 // Create the full project tile element
-function createProjectTile(project) {
+function createProjectTile(projectData) {
   const tile = document.createElement('div');
   tile.className = 'projectTile';
   tile.draggable = 'true';
-  tile.setAttribute('projectid', project.uniqueProjectID); // ID gets converted to lowercase during setAttribute() call
+  tile.setAttribute('projectid', projectData.uniqueProjectID); // ID gets converted to lowercase during setAttribute() call
 
-  tile.appendChild(createProjectTitle(project.projectTitle));
-  tile.appendChild(createProjectDescription(project.projectDescription));
-  tile.appendChild(createProgressBar(project));
+  tile.appendChild(createProjectTitle(projectData.projectTitle));
+  tile.appendChild(createProjectDescription(projectData.projectDescription));
+  tile.appendChild(createProgressBar({ projectData, editable: false }));
   tile.appendChild(createProjectActions());
 
-  addTileEventListeners(project, tile) // TO-DO: Group all scattered listeners
+  addTileEventListeners(projectData, tile) // TO-DO: Group all scattered listeners
 
   return tile;
 }
@@ -68,40 +68,8 @@ function createProjectDescription(descText) {
 }
 
 // Progress bar + task info
-function createProgressBar(project) {
-  const progressWrapper = document.createElement('div');
-  progressWrapper.className = 'progressBarWrapper';
-
-  const percent = calculateProjectProgress(globalProjectData, project.uniqueProjectID);
-  const taskCount = calculateProjectTaskCount(globalProjectData, project.uniqueProjectID);
-  const status = project.projectStatus;
-
-  progressWrapper.innerHTML = `
-    <div class="progressBarDetailsWrapper">
-      <div class="progressBarLabelWrapper">
-        <p class="progressBarLabel">Progress</p>
-      </div>
-      <div class="projectBarPercentageWrapper">
-        <p class="projectBarPercentage">${percent} %</p>
-      </div>
-    </div>
-    <div class="progressBar">
-      <div class="progressBarBackground">
-        <div class="progressBarFill" style="width: ${percent}%"></div>
-      </div>
-    </div>
-    <div class="progressBarDetailsWrapper">
-      <div class="taskQuantityWrapper">
-        <p class="taskQuantity">${taskCount} Task${taskCount !== 1 ? 's' : ''}</p>
-      </div>
-      <div class="projectStatusWrapper">
-        <p class="projectStatusBubble statusShowing${status.replace(' ', '')}">${status}</p>
-      </div>
-    </div>
-  `;
-
-  return progressWrapper;
-}
+//    Logic reused from projectView
+//    Logic can be found in /js/projectView/topPanel/progressBar.js
 
 // Calculate percent complete based on immediate subProjects found via parentProjectID
 function calculateProjectProgress(globalProjectData, projectID) {

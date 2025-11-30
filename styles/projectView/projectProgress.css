@@ -103,6 +103,7 @@
 }
 
 .projectView .projectStatusWrapper {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -112,13 +113,32 @@
 }
 
 .projectView .projectStatusBubble {
+  position: relative;
   display: inline-block;
   padding: 0.3em 0.6em;
   margin: 0;
   font-size: 0.9em;
-  color:#333;
+  color: #333;
+  text-align: center;
   border-radius: 1em;
   border: #eee solid 2px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s;
+}
+
+.projectView .projectStatusBubble:hover {
+  animation: rotateWiggle 0.5s ease-in-out;
+}
+
+/* Rotate wiggle animation */
+@keyframes rotateWiggle {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-3deg); }
+  40%  { transform: rotate(3deg); }
+  60%  { transform: rotate(-2deg); }
+  80%  { transform: rotate(2deg); }
+  100% { transform: rotate(0deg); }
 }
 
 .projectView .projectStatusBubble.statusShowingComplete {
@@ -151,4 +171,24 @@
 
 .projectView p.projectStatusBubble.statusShowingDead {
   color: #fff;
+}
+
+.updateStatusList {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  top: 2.25em;
+  right: -0.5em;
+  padding: 0.5em 0.25em;
+  background-color: #333;
+  border-radius: 0.5em;
+  box-shadow: 
+  0 0.125em 0.375em rgba(255, 255, 255, 0.2),         
+  0 0.25em 0.75em rgba(255, 255, 255, 0.35); 
+  z-index: 100;
+}
+
+.updateStatusList.hidden {
+  display: none;
 }

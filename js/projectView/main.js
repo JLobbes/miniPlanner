@@ -70,7 +70,7 @@ function createProjectView(projectData) {
 
   if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
   projectView.appendChild(createProjectViewTitleBar(projectData));
-  projectView.appendChild(createProgressBar(projectData)); 
+  projectView.appendChild(createProgressBar({ projectData, projectView, editable: true })); 
   projectView.appendChild(createBottomPanel(projectData, projectView)); 
 
   addProjectEventListeners(projectData, projectView) // TO-DO: Group all scattered listeners
