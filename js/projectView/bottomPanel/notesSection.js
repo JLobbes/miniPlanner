@@ -147,7 +147,7 @@ async function updateNoteLogEntry(projectData, noteLogEntry, projectView) {
   }
   // Locate exisiting entry in local project
   const entryToUpdate = projectData.noteLog.find(
-    log => log.note == originalNoteLogged && log.date == originalDateLogged
+    log => log.uniqueEntryID == noteLogEntry.getAttribute('uniqueEntryID')
   );
 
   if (!entryToUpdate) {
