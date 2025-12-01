@@ -11,7 +11,6 @@ function addAddNoteLogListener(projectData, projectView) {
 
 function addEditNoteLogEntryListeners (notesWrapper, projectData, projectView) {
   // Applies to edit button found in noteLogEntry.
-  // TO-DO: Write delete noteLogEntry logic and add listener below.
 
   const noteLogEntries = notesWrapper.querySelectorAll('.noteLogEntry');
   noteLogEntries.forEach(noteLogEntry => {
@@ -20,6 +19,20 @@ function addEditNoteLogEntryListeners (notesWrapper, projectData, projectView) {
     const timeLogEntryEditBtn = noteLogEntry.querySelector('.noteLogEntryEdit');
     timeLogEntryEditBtn.addEventListener('click', async () => {
       await updateNoteLogEntry(projectData, noteLogEntry, projectView);
+    });
+  });
+}
+
+function addDeleteNoteLogEntryListeners (notesWrapper, projectData, projectView) {
+  // Applies to delete button found in noteLogEntry.
+
+  const noteLogEntries = notesWrapper.querySelectorAll('.noteLogEntry');
+  noteLogEntries.forEach(noteLogEntry => {
+
+    // Attach click listener to deleteBtn and render miniForm
+    const noteLogEntryDeleteBtn = noteLogEntry.querySelector('.noteLogEntryDelete');
+    noteLogEntryDeleteBtn.addEventListener('click', async () => {
+      await deleteNoteLogEntry(projectData, noteLogEntry, projectView);
     });
   });
 }
@@ -37,7 +50,7 @@ function createNotesWrapper(projectData, projectView) {
       const noteStr = entry.note;
       const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
-        <div class="noteLogEntry">
+        <div class="noteLogEntry" uniqueEntryID="${entry.uniqueEntryID}">
           <p class="noteLogEntrySource" title="${projectData.projectTitle}">
             <i class="fa-solid fa-folder"></i> 
             ${projectData.projectTitle}
@@ -46,6 +59,9 @@ function createNotesWrapper(projectData, projectView) {
           <p class="noteLogEntryDate" originalDateString="${entry.date}">${dateStr}</p>
           <div class="noteLogEntryEdit">
             <i class="fa-solid fa-pen"></i>
+          </div>
+          <div class="noteLogEntryDelete">
+            <i class="fa-solid fa-trash"></i>
           </div>
         </div>
       `;
@@ -66,6 +82,7 @@ function createNotesWrapper(projectData, projectView) {
   `;
 
   addEditNoteLogEntryListeners(notesWrapper, projectData, projectView); 
+  addDeleteNoteLogEntryListeners(notesWrapper, projectData, projectView); 
   return notesWrapper;
 }
 
@@ -90,6 +107,7 @@ async function addNoteLogEntry(projectData, projectView) {
   
   // Update projectData and sync that to GlobalProjectData
   const dataFormatedForUpdate = {
+    uniqueEntryID: generateUniqueEntryID(),
     date: combinedTimeStamp.toISOString(),
     note: newNoteLogData.note,
   }
@@ -144,6 +162,31 @@ async function updateNoteLogEntry(projectData, noteLogEntry, projectView) {
 
   // TO-DO: Make re-render specific to timeSection only.
   reRenderNotesAndTimeLogs(projectView, projectData);
+}
+
+async function deleteNoteLogEntry(projectData, noteLogEntry, projectView) {
+  
+  try {
+    const dataForMiniForm = {
+      formType: 'confirmDeleteNoteLogEntry',
+      projectData: { ... projectData },
+    };
+
+    await requestConfirmation(dataForMiniForm);
+
+    // Filter time log array for entries that don't have deleted entry uniqueEntryID
+    projectData.noteLog = projectData.noteLog.filter(
+      e => e.uniqueEntryID !== noteLogEntry.getAttribute('uniqueEntryID')
+    );
+    syncProjectInGlobalData(projectData);
+
+    // TO-DO: Delete entry from time-log in visible projectView
+    noteLogEntry.remove();
+
+  } catch (error) {
+    console.log('Deletion of entry in note-log canceled:', error.message);
+    return; // End process if children are not handled.
+  }
 }
 
 function addNoteScrollAnimation() {

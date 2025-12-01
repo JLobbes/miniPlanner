@@ -60,7 +60,7 @@
   justify-content: flex-start;
   height: 2.25em;
   flex-shrink: 0;
-  gap: 1em;
+  gap: 0.25em;
   padding: 0em 0.5em;
   border-radius: 0.5em;
   background-color: #fff;
@@ -133,7 +133,8 @@
   cursor: default;
 }
 
-.noteLog .noteLogEntryEdit {
+.noteLog .noteLogEntryEdit,
+.noteLog .noteLogEntryDelete {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -143,14 +144,16 @@
   cursor: pointer;
 }
 
-.noteLog .noteLogEntryEdit .fa-pen {
+.noteLog .noteLogEntryEdit .fa-pen,
+.noteLog .noteLogEntryDelete .fa-trash {
   padding: 0.25em;
   color: #aaa;
   border-radius: 0.5em;
   transition: color 0.2s, background-color 0.2s;
 }
 
-.noteLog .noteLogEntryEdit:hover .fa-pen {
+.noteLog .noteLogEntryEdit:hover .fa-pen,
+.noteLog .noteLogEntryDelete:hover .fa-trash {
   background-color: #333;
   color: #fff;
   transition: color 0.2s, background-color 0.2s;

@@ -49,8 +49,11 @@ function renderMiniForm(dataForMiniForm) {
     confirmDeleteParent: {
       miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.projectData.projectTitle}?`,
     },
+    confirmDeleteNoteLogEntry: {
+      miniFormMessage: `Are you sure you want to delete note?`,
+    },
     confirmDeleteTimeLogEntry: {
-      miniFormMessage: `Are you sure you want to delete this time-log entry?`,
+      miniFormMessage: `Are you sure you want to delete logged time?`,
     },
     editTimeLogEntry: {
       miniFormMessage: `Enter updated time or delete log.`,
