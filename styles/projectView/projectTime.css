@@ -93,7 +93,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  gap: 0.75em;
+  gap: 0.25em;
   padding: 0em 0.5em;
   flex-shrink: 0;
   height: 2.25em;
@@ -152,7 +152,8 @@
   color: #ccc;
 }
 
-.timeLog .timeLogEntryEdit {
+.timeLog .timeLogEntryEdit,
+.timeLog .timeLogEntryDelete {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -162,14 +163,16 @@
   cursor: pointer;
 }
 
-.timeLog .timeLogEntryEdit .fa-pen {
+.timeLog .timeLogEntryEdit .fa-pen,
+.timeLog .timeLogEntryDelete .fa-trash {
   padding: 0.25em;
   color: #eee;
   border-radius: 0.5em;
   transition: color 0.2s, background-color 0.2s;
 }
 
-.timeLog .timeLogEntryEdit:hover .fa-pen {
+.timeLog .timeLogEntryEdit:hover .fa-pen,
+.timeLog .timeLogEntryDelete:hover .fa-trash {
   background-color: #222;
   color: #fff;
   transition: color 0.2s, background-color 0.2s;

@@ -11,8 +11,7 @@ function addAddTimeLogListener(projectData, projectView) {
 
 function addEditTimeLogEntryListeners (timeWrapper, projectData, projectView) {
   // Applies to edit button found in timeLogEntry.
-  // TO-DO: Write delete timeLogEntry logic and add listener below.
-
+  
   const timeLogEntries = timeWrapper.querySelectorAll('.timeLogEntry');
   timeLogEntries.forEach(timeLogEntry => {
 
@@ -23,6 +22,21 @@ function addEditTimeLogEntryListeners (timeWrapper, projectData, projectView) {
     });
   });
 }
+
+function addDeleteTimeLogEntryListeners (timeWrapper, projectData, projectView) {
+  // Applies to delete button found in timeLogEntry.
+
+  const timeLogEntries = timeWrapper.querySelectorAll('.timeLogEntry');
+  timeLogEntries.forEach(timeLogEntry => {
+
+    // Attach click listener to deleteBtn and render miniForm
+    const timeLogEntryEditBtn = timeLogEntry.querySelector('.timeLogEntryDelete');
+    timeLogEntryEditBtn.addEventListener('click', async () => {
+      await deleteTimeLogEntry(projectData, timeLogEntry, projectView);
+    });
+  });
+}
+
 
 // Time Section 
 function createTimeWrapper(projectData, projectView) {
@@ -44,7 +58,7 @@ function createTimeWrapper(projectData, projectView) {
       const dateStr = `${hours12}${ampm} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       // const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
-        <div class="timeLogEntry">
+        <div class="timeLogEntry" uniqueEntryID="${entry.uniqueEntryID}">
           <p class="timeLogEntrySource" title="${projectData.projectTitle}">
             <i class="fa-solid fa-folder"></i> 
             ${projectData.projectTitle}
@@ -53,6 +67,9 @@ function createTimeWrapper(projectData, projectView) {
           <p class="timeLogEntryDate" originalDateString="${entry.date}">${dateStr}</p>
           <div class="timeLogEntryEdit">
             <i class="fa-solid fa-pen"></i>
+          </div>
+          <div class="timeLogEntryDelete">
+            <i class="fa-solid fa-trash"></i>
           </div>
         </div>
       `;
@@ -83,6 +100,7 @@ function createTimeWrapper(projectData, projectView) {
   `;
 
   addEditTimeLogEntryListeners(timeWrapper, projectData, projectView); 
+  addDeleteTimeLogEntryListeners(timeWrapper, projectData, projectView); 
   return timeWrapper;
 }
 
@@ -108,6 +126,7 @@ async function addTimeLogEntry(projectData, projectView) {
   
   // Update projectData and sync that to GlobalProjectData
   const dataFormatedForUpdate = {
+    uniqueEntryID: generateUniqueEntryID(),
     date: combinedTimeStamp.toISOString(),
     time: Number(newTimeLogData.numOfMinutes),
   }
@@ -125,7 +144,7 @@ async function updateTimeLogEntry(projectData, timeLogEntry, projectView) {
   const originalMinutesLogged = timeLogEntry.querySelector('.timeLogEntryTime').getAttribute('originalMinutesLogged');
   const originalDateLogged = timeLogEntry.querySelector('.timeLogEntryDate').getAttribute('originalDateString');
   const dataForMiniForm = {
-    formType: 'deleteOrEditTimeLog',
+    formType: 'editTimeLogEntry',
     originalMinutesLogged: originalMinutesLogged,
     originalDate: new Date(originalDateLogged),
     // TO-DO: rename timeStamp to currentTime throughout.
@@ -147,7 +166,7 @@ async function updateTimeLogEntry(projectData, timeLogEntry, projectView) {
   }
   // Locate exisiting entry in local project
   const entryToUpdate = projectData.timeLog.find(
-    log => log.time == originalMinutesLogged && log.date == originalDateLogged
+    log => log.uniqueEntryID == timeLogEntry.getAttribute('uniqueEntryID')
   );
 
   if (!entryToUpdate) {
@@ -162,4 +181,29 @@ async function updateTimeLogEntry(projectData, timeLogEntry, projectView) {
 
   // TO-DO: Make re-render specific to timeSection only.
   reRenderNotesAndTimeLogs(projectView, projectData);
+}
+
+async function deleteTimeLogEntry(projectData, timeLogEntry, projectView) {
+  
+  try {
+    const dataForMiniForm = {
+      formType: 'confirmDeleteTimeLogEntry',
+      projectData: { ... projectData },
+    };
+
+    await requestConfirmation(dataForMiniForm);
+
+    // Filter time log array for entries that don't have deleted entry uniqueEntryID
+    projectData.timeLog = projectData.timeLog.filter(
+      e => e.uniqueEntryID !== timeLogEntry.getAttribute('uniqueEntryID')
+    );
+    syncProjectInGlobalData(projectData);
+
+    // TO-DO: Delete entry from time-log in visible projectView
+    timeLogEntry.remove();
+
+  } catch (error) {
+    console.log('Deletion of entry in time-log canceled:', error.message);
+    return; // End process if children are not handled.
+  }
 }

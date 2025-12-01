@@ -7,6 +7,18 @@ function generateUniqueProjectID() {
   return id;
 }
 
+function generateUniqueEntryID() {
+  let id;
+  const existingIDs = globalProjectData.flatMap(p =>
+    [...p.timeLog, ...p.noteLog].map(e => e.uniqueEntryID)
+  );
+
+  do {
+    id = 'entry_' + Math.random().toString(36).slice(2, 12);
+  } while (existingIDs.includes(id));
+  return id;
+}
+
 function createBlankProject(parentProjectID) {
   return {
     uniqueProjectID: generateUniqueProjectID(),
@@ -24,10 +36,10 @@ function createBlankProject(parentProjectID) {
 }
 
 function openNewProject({ parentID , hasParent}) {
-  const newProj = createBlankProject(parentID || null);
-  addProjectToGlobalData(newProj);
+  const newProjectData = createBlankProject(parentID || null);
+  addProjectToGlobalData(newProjectData);
   renderProjectsToDash();
-  openProjectView(newProj, hasParent || null);
+  openProjectView(structuredClone(newProjectData), hasParent || null);
 }
 
 function getAllChildren(parentID) {
@@ -44,7 +56,10 @@ function getAllChildren(parentID) {
 }
 
 function getSingleProject(projectID) {
-  const singleProject = globalProjectData.filter(p => p.uniqueProjectID === projectID)[0];
+  // Make Deep Copy
+  const singleProject = structuredClone(
+    globalProjectData.find(p => p.uniqueProjectID === projectID)
+  );
   return singleProject;
 }
 
@@ -90,7 +105,6 @@ function syncProjectInGlobalData(projectData) {
   } else {
     console.warn(`Project with ID ${projectData.uniqueProjectID} not found. Cannot sync.`);
   }
-  console.log('globalProjectData after sync', globalProjectData);
 }
 
 function deleteSingleProject(uniqueProjectID, projectTile) {

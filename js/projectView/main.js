@@ -82,7 +82,7 @@ function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
   if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
-  addProjectHeaderListeners(projectData,projectView);
+  addProjectActionListeners(projectData,projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
   addNewTaskListener(projectData, projectView);

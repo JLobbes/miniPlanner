@@ -12,7 +12,7 @@ function renderProjectsToDash() {
     .sort((a, b) => (a.placement.dashboardOrder ?? 0) - (b.placement.dashboardOrder ?? 0));
 
   topLevelProjects.forEach(project => {
-    const tile = createProjectTile(project);
+    const tile = createProjectTile(structuredClone(project));
     container.appendChild(tile);
   });
 

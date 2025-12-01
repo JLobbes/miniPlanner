@@ -1,6 +1,6 @@
 // js/projectView/header.js
 
-function addProjectHeaderListeners(projectData, projectView) {
+function addProjectActionListeners(projectData, projectView) {
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
     try {
@@ -17,7 +17,6 @@ function addProjectHeaderListeners(projectData, projectView) {
     enableEditHeader(projectData, projectView); 
   });
 }
-
 
 function enableEditHeader(projectData, projectView) {
 

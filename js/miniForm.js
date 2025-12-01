@@ -43,13 +43,16 @@ function renderMiniForm(dataForMiniForm) {
         </label>
       `
     },
-    confirmDeleteParent: {
-      miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.projectData.projectTitle}?`,
-    },
     confirmDeleteChildren: {
       miniFormMessage: `You must first delete ${dataForMiniForm.quantityOfChildren} child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.projectData.projectTitle}.`,
     },
-    deleteOrEditTimeLog: {
+    confirmDeleteParent: {
+      miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.projectData.projectTitle}?`,
+    },
+    confirmDeleteTimeLogEntry: {
+      miniFormMessage: `Are you sure you want to delete this time-log entry?`,
+    },
+    editTimeLogEntry: {
       miniFormMessage: `Enter updated time or delete log.`,
       miniFormInput: `
         <label class='numOfMinutes'>
