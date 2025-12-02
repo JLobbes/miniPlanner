@@ -50,6 +50,7 @@ function createTimeWrapper(projectData, projectView) {
 
   // Build time log entries
   const timeLogEntries = (projectData.timeLog || [])
+    .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date)
       const timeStr = `${entry.time} min`;

@@ -45,6 +45,7 @@ function createNotesWrapper(projectData, projectView) {
 
   // Build note log entries
   const noteLogEntries = (projectData.noteLog || [])
+    .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date);
       const noteStr = entry.note;
