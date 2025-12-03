@@ -4,6 +4,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadDataToGlobalProjects();
   renderProjectsToDash();
+  addDownloadProjectDataListener();
   console.log('Page loaded and ready!');
   
 });
@@ -24,14 +25,6 @@ newProjBtn.addEventListener('click', (e) => {
 let draggedItem = null; // Used globally
 let depth = null; // Used globally
 const globalProjectData = [];
-
-// function loadDataToGlobalProjects() {
-//   globalProjectData.length = 0; // clear existing
-
-//   // Add test data during development
-//   globalProjectData.push(...testData.map(project => ({ ...project })));
-//   console.log('globalProjectData:', globalProjectData);
-// }
 
 function loadDataToGlobalProjects() {
   globalProjectData.length = 0; // clear existing
