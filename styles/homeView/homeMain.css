@@ -16,13 +16,80 @@
   }
 }
 
-#homeViewTitle {
-  display: block;
+#homeViewHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  height: 1em;
-  margin: 0.5em 0; 
-  font-size: 1.5em;  
-  text-align: left;
+}
+
+#homeViewTitle {
+  margin: 0.5em 0;
+  font-size: 1.5em;
+}
+
+#dashboardActionsWrapper {
+  display: flex;
+  align-items: center;
+}
+
+#dashboardActions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  margin: 0.5em 0;
+  cursor: pointer;
+  color: #333;
+}
+
+#dashboardActions span {
+  font-size: 1.4em;
+  font-weight: bold;
+  padding-bottom: 25%;
+  color: #888;
+}
+
+#dashboardActionsDropDown {
+  position: absolute;
+  top: 0.2em;
+  right: 0;
+  display: none;
+  flex-direction: row;
+  background: #fff;
+  border: 1px solid #111;
+  border-radius: 0.6em;
+  z-index: 100;
+}
+
+#dashboardActions:hover #dashboardActionsDropDown {
+  display: flex;
+}
+
+#dashboardActionsDropDown button {
+  padding: 0.3em 0.6em;
+  background: #fff;
+  border: none;
+  border-radius: 0.5em;
+  font-size: 1em;
+}
+
+#dashboardActionsDropDown button:hover {
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+#homeViewProjectsWrapper {
+  margin-top: 1em;
+}
+
+.newProjectButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  cursor: pointer;
 }
 
 hr {
@@ -41,6 +108,6 @@ hr {
   gap: 1em;
   height: calc(100% - 1em);
   width: 100%;
-  padding: 1em 1em 0 1em;
+  padding: 0em 1em 0 1em;
   overflow: auto;
 }

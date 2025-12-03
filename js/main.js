@@ -12,7 +12,6 @@ const homeView = document.getElementById('homeView');
 let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
-
 homeView.addEventListener('click', () => {
   closeAllProjectViews();
 });
@@ -26,11 +25,23 @@ let draggedItem = null; // Used globally
 let depth = null; // Used globally
 const globalProjectData = [];
 
+// function loadDataToGlobalProjects() {
+//   globalProjectData.length = 0; // clear existing
+
+//   // Add test data during development
+//   globalProjectData.push(...testData.map(project => ({ ...project })));
+//   console.log('globalProjectData:', globalProjectData);
+// }
+
 function loadDataToGlobalProjects() {
   globalProjectData.length = 0; // clear existing
 
-  // Add test data during development
-  globalProjectData.push(...testData.map(project => ({ ...project })));
-  console.log('globalProjectData:', globalProjectData);
+  const storedData = loadProjectsFromLocalStorage();
+
+  if (storedData.length > 0) {
+    globalProjectData.push(...storedData);
+  }
+
+  console.log('Loaded project data:', globalProjectData);
 }
 

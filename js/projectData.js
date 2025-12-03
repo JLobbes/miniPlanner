@@ -69,7 +69,8 @@ function addProjectToGlobalData(project) {
   );
 
   if (!exists) {
-    globalProjectData.push({ ...project }); // shallow copy for safety
+    globalProjectData.push({ ...project });
+    saveProjectsToLocalStorage();   
     console.log('globalProjectData added', globalProjectData);
   } else {
     console.warn(`Project with ID ${project.uniqueProjectID} already exists. Skipped adding.`);
@@ -101,9 +102,33 @@ function syncProjectInGlobalData(projectData) {
   );
 
   if (index !== -1) {
-    globalProjectData[index] = { ...projectData }; // replace with new object
+    globalProjectData[index] = { ...projectData };
+    saveProjectsToLocalStorage();    
   } else {
     console.warn(`Project with ID ${projectData.uniqueProjectID} not found. Cannot sync.`);
+  }
+}
+
+function saveProjectsToLocalStorage() {
+  try {
+    localStorage.setItem('projectData', JSON.stringify(globalProjectData));
+    console.log('%cSaved to localStorage', 'color: green;');
+  } catch (err) {
+    console.error('Error saving to localStorage:', err);
+  }
+}
+
+function loadProjectsFromLocalStorage() {
+  try {
+    const stored = localStorage.getItem('projectData');
+    if (!stored) return [];
+
+    const parsed = JSON.parse(stored);
+    console.log('%cLoaded from localStorage', 'color: green;');
+    return parsed;
+  } catch (err) {
+    console.error('Error loading from localStorage:', err);
+    return [];
   }
 }
 
@@ -116,6 +141,7 @@ function deleteSingleProject(uniqueProjectID, projectTile) {
 
   if (index !== -1) {
     globalProjectData.splice(index, 1);
+    saveProjectsToLocalStorage();  
     console.log(`Project "${uniqueProjectID}" deleted successfully.`);
   }
 

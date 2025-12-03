@@ -22,21 +22,35 @@
 </head>
 <body>
   <div id="homeView">
-    <h1 id="homeViewTitle">
-      Dashboard
-    </h1>
-    <hr />
-    <div id="homeViewProjectsWrapper">
-            
-      <div class="newProjectButton">
-        <h1>
-          <i class="fa-solid fa-folder" ></i> New Project
-        </h1>
-          <i class="fa-solid fa-plus"></i>
+    <div id="homeViewHeader">
+      <h1 id="homeViewTitle">Dashboard</h1>
+
+      <div id="dashboardActionsWrapper">
+        <div id="dashboardActions">
+          <span>...</span>
+
+          <div id="dashboardActionsDropDown">
+            <button title="Download Data">
+              <i class="fa-solid fa-download"></i>
+            </button>
+            <button title="Upload Data">
+              <i class="fa-solid fa-upload"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
+    <hr />
+
+    <div id="homeViewProjectsWrapper">
+      <div class="newProjectButton">
+        <h1><i class="fa-solid fa-folder"></i> New Project</h1>
+        <i class="fa-solid fa-plus"></i>
+      </div>
+    </div>
   </div>
+
   <script src="/js/miniForm.js"></script>
   <script src="/js/testData.js"></script>
   <script src="/js/projectView/bottomPanel/timeSection.js"></script>

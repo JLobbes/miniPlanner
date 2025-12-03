@@ -102,7 +102,7 @@ function calculateProjectTaskCount(globalProjectData, projectID) {
   }
 }
 
-// Ellipsis action menu (currently static)
+// Ellipsis action menu 
 function createProjectActions() {
   const wrapper = document.createElement('div');
   wrapper.className = 'projectActionsWrapper';
