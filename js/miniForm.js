@@ -63,6 +63,9 @@ function renderMiniForm(dataForMiniForm) {
     confirmDeleteTimeLogEntry: {
       miniFormMessage: `Are you sure you want to delete logged time?`,
     },
+    confirmUploadData: {
+      miniFormMessage: `Uploading this file will overwrite your current data. Would you like to proceed?`,
+    },
     editTimeLogEntry: {
       miniFormMessage: `Enter updated time or delete log.`,
       miniFormInput: `

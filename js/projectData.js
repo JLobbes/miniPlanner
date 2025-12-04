@@ -199,7 +199,7 @@ async function triggerDeleteProjectCascade(projectData, projectTile) {
   }
 }
 
-function triggerUploadProjectData() {
+async function triggerUploadProjectData() {
   const input = document.getElementById('uploadProjectDataInput');
   
   // open file picker
@@ -216,6 +216,11 @@ function triggerUploadProjectData() {
 
       if (!Array.isArray(parsed)) throw new Error("Uploaded data must be an array of projects.");
 
+      dataForMiniForm = {
+        formType: 'confirmUploadData',
+      }
+      await renderMiniForm(dataForMiniForm);
+
       // overwrite globalProjectData
       globalProjectData.length = 0;
       globalProjectData.push(...parsed);
@@ -226,7 +231,6 @@ function triggerUploadProjectData() {
       console.log("%cData uploaded successfully!", "color: green;");
     } catch (err) {
       console.error("Invalid JSON upload:", err);
-      alert("Upload failed — invalid JSON format.");
     }
 
     input.value = ""; // reset so same file can be uploaded again
