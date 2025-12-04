@@ -12,6 +12,7 @@ function closeAllProjectViews() {
       setTimeout(() => {
         // Allow for slide up animation
         openProject.remove();
+        showDashboardActions();
       }, 300);
     }
   }
@@ -91,6 +92,7 @@ function addProjectEventListeners(projectData, projectView) {
 // Handles delays dropDown of projectView to allow for drop down effect.
 // Will be a pop-up if not used.
 function triggerDropDown(element, className = 'active', delay = 20) {
+  hideDashboardActions();
   element.classList.remove(className);
   void element.offsetWidth;
   setTimeout(() => {
