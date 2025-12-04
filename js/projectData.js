@@ -199,7 +199,42 @@ async function triggerDeleteProjectCascade(projectData, projectTile) {
   }
 }
 
+function triggerUploadProjectData() {
+  const input = document.getElementById('uploadProjectDataInput');
+  
+  // open file picker
+  input.click();
+
+  // once a file is selected, call your uploadProjectData function
+  input.onchange = async () => {
+    const file = input.files[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+
+      if (!Array.isArray(parsed)) throw new Error("Uploaded data must be an array of projects.");
+
+      // overwrite globalProjectData
+      globalProjectData.length = 0;
+      globalProjectData.push(...parsed);
+
+      saveProjectsToLocalStorage();
+      renderProjectsToDash();
+
+      console.log("%cData uploaded successfully!", "color: green;");
+    } catch (err) {
+      console.error("Invalid JSON upload:", err);
+      alert("Upload failed — invalid JSON format.");
+    }
+
+    input.value = ""; // reset so same file can be uploaded again
+  };
+}
+
 async function downloadProjectData() {
+
   const data = JSON.stringify(globalProjectData, null, 2);
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);

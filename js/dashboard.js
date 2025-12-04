@@ -1,12 +1,20 @@
 // /js/dashboard.js
 
+
+function addUploadProjectDataListener() {
+
+  const uploadProjectDataBtn = document.querySelector('#uploadDataBtn');
+  uploadProjectDataBtn.addEventListener('click', () => {
+    triggerUploadProjectData();
+  });
+}
+
 function addDownloadProjectDataListener() {
 
-  downloadProjectDataBtn = document.querySelector('#downloadDataBtn');
+  const downloadProjectDataBtn = document.querySelector('#downloadDataBtn');
   downloadProjectDataBtn.addEventListener('click', () => {
     downloadProjectData();
   });
-  
 }
 
 function hideDashboardActions() {

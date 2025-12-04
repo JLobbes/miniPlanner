@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Project</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-  <link rel="stylesheet" href="/styles/main.css" />
+  <link rel="stylesheet" href="styles/main.css" />
   
-  <link rel="stylesheet" href="/styles/homeView/homeMain.css" />
-  <link rel="stylesheet" href="/styles/homeView/projectTiles.css" />
-  <link rel="stylesheet" href="/styles/homeView/newProjectButton.css" />
+  <link rel="stylesheet" href="styles/homeView/homeMain.css" />
+  <link rel="stylesheet" href="styles/homeView/projectTiles.css" />
+  <link rel="stylesheet" href="styles/homeView/newProjectButton.css" />
   
-  <link rel="stylesheet" href="/styles/projectView/projectMain.css" />
-  <link rel="stylesheet" href="/styles/projectView/projectHeader.css" />
-  <link rel="stylesheet" href="/styles/projectView/projectProgress.css" />
-  <link rel="stylesheet" href="/styles/projectView/projectTasks.css" />
-  <link rel="stylesheet" href="/styles/projectView/projectTime.css" />
-  <link rel="stylesheet" href="/styles/projectView/projectNotes.css" />
+  <link rel="stylesheet" href="styles/projectView/projectMain.css" />
+  <link rel="stylesheet" href="styles/projectView/projectHeader.css" />
+  <link rel="stylesheet" href="styles/projectView/projectProgress.css" />
+  <link rel="stylesheet" href="styles/projectView/projectTasks.css" />
+  <link rel="stylesheet" href="styles/projectView/projectTime.css" />
+  <link rel="stylesheet" href="styles/projectView/projectNotes.css" />
 
-  <link rel="stylesheet" href="/styles/miniForm.css" />
+  <link rel="stylesheet" href="styles/miniForm.css" />
 </head>
 <body>
   <div id="homeView">
@@ -33,11 +33,17 @@
             <button id="downloadDataBtn" title="Download Data">
               <i class="fa-solid fa-download"></i>
             </button>
-            <button id="downloadDataBtn" title="Upload Data">
+            <button id="uploadDataBtn" title="Upload Data">
               <i class="fa-solid fa-upload"></i>
             </button>
           </div>
         </div>
+        <input 
+          type="file" 
+          id="uploadProjectDataInput" 
+          accept="application/json" 
+          style="display:none"
+        />
       </div>
     </div>
 
@@ -51,19 +57,19 @@
     </div>
   </div>
 
-  <script src="/js/miniForm.js"></script>
-  <script src="/js/testData.js"></script>
-  <script src="/js/projectView/bottomPanel/timeSection.js"></script>
-  <script src="/js/projectView/bottomPanel/tasksSection.js"></script>
-  <script src="/js/projectView/bottomPanel/notesSection.js"></script>
-  <script src="/js/projectView/bottomPanel/main.js"></script>
-  <script src="/js/projectView/header.js"></script>
-  <script src="/js/projectView/progressBar.js"></script>  
-  <script src="/js/projectView/main.js"></script>
+  <script src="js/miniForm.js"></script>
+  <script src="js/testData.js"></script>
+  <script src="js/projectView/bottomPanel/timeSection.js"></script>
+  <script src="js/projectView/bottomPanel/tasksSection.js"></script>
+  <script src="js/projectView/bottomPanel/notesSection.js"></script>
+  <script src="js/projectView/bottomPanel/main.js"></script>
+  <script src="js/projectView/header.js"></script>
+  <script src="js/projectView/progressBar.js"></script>  
+  <script src="js/projectView/main.js"></script>
   
-  <script src="/js/projectTiles.js"></script>
-  <script src="/js/projectData.js"></script>
-  <script src="/js/dashboard.js"></script>
-  <script src="/js/main.js"></script>
+  <script src="js/projectTiles.js"></script>
+  <script src="js/projectData.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>

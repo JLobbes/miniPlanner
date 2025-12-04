@@ -4,7 +4,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   loadDataToGlobalProjects();
   renderProjectsToDash();
+
+  // TO-DO: decide wethere these two should be in dashboard.js or not.
   addDownloadProjectDataListener();
+  addUploadProjectDataListener();
   console.log('Page loaded and ready!');
   
 });
