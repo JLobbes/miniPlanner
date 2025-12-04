@@ -199,14 +199,19 @@ async function triggerDeleteProjectCascade(projectData, projectTile) {
   }
 }
 
-function downloadProjectData() {
+async function downloadProjectData() {
   const data = JSON.stringify(globalProjectData, null, 2);
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
 
+  const dataForMiniForm = {
+    formType: 'collectDownloadTitle',
+    dateForDownload: `${(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][new Date().getMonth()])+String(new Date().getDate()).padStart(2,"0")}`,
+  };
+  const requestConfirmation = await renderMiniForm(dataForMiniForm);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "projectData.json";
+  a.download = `${requestConfirmation.downloadTitle}`;
   a.click();
 
   URL.revokeObjectURL(url);

@@ -79,6 +79,12 @@
   width: 8.5em;
 }
 
+.miniForm .downloadTitle input {
+  font-size: 1em;
+  text-align: left;
+  padding-left: 1em;
+}
+
 .miniForm label span {
   /* font-weight: bold; */
 }

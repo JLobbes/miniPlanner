@@ -43,11 +43,19 @@ function renderMiniForm(dataForMiniForm) {
         </label>
       `
     },
+    collectDownloadTitle: {
+      miniFormMessage: `Name your download file.`,
+      miniFormInput: `
+        <label class='downloadTitle'>
+          <input type name="downloadTitle" value="${dataForMiniForm.hasOwnProperty('dateForDownload') ? `miniPlannerData_${dataForMiniForm.dateForDownload}` : 'miniFormData'}" required autofocus></textarea>
+        </label>
+      `
+    },
     confirmDeleteChildren: {
-      miniFormMessage: `You must first delete ${dataForMiniForm.quantityOfChildren} child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.projectData.projectTitle}.`,
+      miniFormMessage: `You must first delete ${dataForMiniForm.quantityOfChildren} child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.hasOwnProperty('projectData') ? dataForMiniForm.projectData.projectTitle : ''}.`,
     },
     confirmDeleteParent: {
-      miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.projectData.projectTitle}?`,
+      miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.hasOwnProperty('projectData') ? dataForMiniForm.projectData.projectTitle : ''}?`,
     },
     confirmDeleteNoteLogEntry: {
       miniFormMessage: `Are you sure you want to delete note?`,
