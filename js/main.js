@@ -16,7 +16,11 @@ const homeView = document.getElementById('homeView');
 let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
-homeView.addEventListener('click', () => {
+homeView.addEventListener('click', (e) => {
+  // Exclude project tiles from this listener.
+  if (e.target.closest('.projectTile')) return;
+
+  // Otherwise
   closeAllProjectViews({});
 });
 

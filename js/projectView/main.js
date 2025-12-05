@@ -14,7 +14,7 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
       setTimeout(() => {
         // Allow for slide up animation
         openProject.remove();
-      }, 200);
+      }, 300);
     }
   }
   // Ensure project on dash are reRender to reflect edits. 
