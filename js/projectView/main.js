@@ -1,22 +1,22 @@
 // js/projectView/main.js
 
-function closeAllProjectViews() {
+function closeAllProjectViews({ reFreshBetweenViews }) {
   const projectViews = document.getElementsByClassName('projectView');
 
   for (let i = 0; i < projectViews.length; i++) {
     const openProject = projectViews[i];
     
+    if(!reFreshBetweenViews) showDashboardActions();
+
     if (openProject.classList.contains('active')) {
       openProject.classList.remove('active');
 
       setTimeout(() => {
         // Allow for slide up animation
         openProject.remove();
-        showDashboardActions();
-      }, 300);
+      }, 200);
     }
   }
-
   // Ensure project on dash are reRender to reflect edits. 
   renderProjectsToDash();
 }
@@ -32,7 +32,7 @@ function openProjectView(projectData, hasParent) {
   }
 
   // Close all project views to allow them to reRender given changes in child
-  closeAllProjectViews();
+  if(depth > 1) closeAllProjectViews({ reFreshBetweenViews: true });
 
   // Create and append new projectView
   const projectView = createProjectView(projectData);

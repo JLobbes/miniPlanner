@@ -18,13 +18,14 @@ function addDownloadProjectDataListener() {
 }
 
 function hideDashboardActions() {
-  console.log("hideDashboardActionsDropDown called");
-
+  console.log("hideDashboardActions called");
+  
   const dashboardActionsDropDownBtn = document.querySelector('#dashboardActions');
   dashboardActionsDropDownBtn.style.display = 'none';
 }
 
 function showDashboardActions() {
+  console.log("showDashboardActions called");
 
   const dashboardActionsDropDownBtn = document.querySelector('#dashboardActions');
   dashboardActionsDropDownBtn.style.display = '';
