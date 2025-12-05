@@ -18,7 +18,6 @@ function addDownloadProjectDataListener() {
 }
 
 function hideDashboardActions() {
-  console.log("hideDashboardActions called");
   
   const dashboardActionsDropDownBtn = document.querySelector('#dashboardActions');
   dashboardActionsDropDownBtn.style.display = 'none';
