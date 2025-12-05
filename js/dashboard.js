@@ -24,7 +24,6 @@ function hideDashboardActions() {
 }
 
 function showDashboardActions() {
-  console.log("showDashboardActions called");
 
   const dashboardActionsDropDownBtn = document.querySelector('#dashboardActions');
   dashboardActionsDropDownBtn.style.display = '';

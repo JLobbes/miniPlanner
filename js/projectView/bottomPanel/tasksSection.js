@@ -60,6 +60,7 @@ function addDragLogicForTask(taskDiv) {
       const singleProject = globalProjectData.find(p => p.uniqueProjectID === projectID);
       if (singleProject) singleProject.placement[`level${depth}Task`] = index + 1; // depth is a global variable, found in js/main.js
     });
+    saveProjectsToLocalStorage();
   }
 }
 
