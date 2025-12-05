@@ -83,9 +83,12 @@ function createTasksWrapper(projectData, projectView) {
   wrapper.appendChild(tasksList);
 
   // Render tasks (immediate children)
-  const tasks = globalProjectData
+  const clonedData = structuredClone(globalProjectData);
+  
+  const tasks = clonedData
     .filter(p => p.parentProjectID === projectData.uniqueProjectID)
     .sort((a, b) => (a.placement[`level${depth}Task`] ?? 0) - (b.placement[`level${depth}Task`] ?? 0)); // depth is a global variable, found in js/main.js
+  
   tasks.forEach(task => {
     const taskDiv = document.createElement('div');
     taskDiv.className = 'task';
