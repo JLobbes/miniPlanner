@@ -43,13 +43,24 @@ function createTimeWrapper(projectData, projectView) {
   const timeWrapper = document.createElement('div');
   timeWrapper.className = 'timeWrapper';
 
-  // Calculate total time in minutes
-  const totalMinutes = (projectData.timeLog || []).reduce((sum, entry) => sum + (entry.time || 0), 0);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+  // Get all time logs from all children
+  const allTimeLogs = [];
+  const allChildren = getAllChildren(projectData.uniqueProjectID);
+  allChildren.forEach((child) => {
+    child.timeLog.forEach((childTimeLogEntry) => {
+      childTimeLogEntry.projectTitle = child.projectTitle;
+      allTimeLogs.push(structuredClone(childTimeLogEntry));
+    })
+  });
+
+  // Add immediate time logs to allTimeLogs array
+  projectData.timeLog.forEach((immediateTimeLogEntry) => {
+    immediateTimeLogEntry.projectTitle = projectData.projectTitle;
+    allTimeLogs.push(structuredClone(immediateTimeLogEntry));
+  })
 
   // Build time log entries
-  const timeLogEntries = (projectData.timeLog || [])
+  const timeLogEntries = allTimeLogs
     .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date)
@@ -60,9 +71,9 @@ function createTimeWrapper(projectData, projectView) {
       // const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
         <div class="timeLogEntry" uniqueEntryID="${entry.uniqueEntryID}">
-          <p class="timeLogEntrySource" title="${projectData.projectTitle}">
+          <p class="timeLogEntrySource" title="${entry.projectTitle}">
             <i class="fa-solid fa-folder"></i> 
-            ${projectData.projectTitle}
+            ${entry.projectTitle}
           </p>
           <p class="timeLogEntryTime" originalMinutesLogged="${entry.time}">${timeStr}</p>
           <p class="timeLogEntryDate" originalDateString="${entry.date}">${dateStr}</p>
@@ -74,8 +85,16 @@ function createTimeWrapper(projectData, projectView) {
           </div>
         </div>
       `;
-    }).join('');
+    })
+    .join('')
+  ;
 
+  // Calculate total time in minutes
+  const totalMinutes = (allTimeLogs || []).reduce((sum, entry) => sum + (entry.time || 0), 0);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  
+  // Build out proper time wrapper
   timeWrapper.innerHTML = `
     <h2 class="timeWrapperHeader">
       <i class="fa-regular fa-clock"></i> Time

@@ -45,7 +45,7 @@ function openNewProject({ parentID , hasParent}) {
 function getAllChildren(parentID) {
   // Includes nested
 
-  const directChildren = globalProjectData.filter(p => p.parentProjectID === parentID);
+  const directChildren = structuredClone(globalProjectData).filter(p => p.parentProjectID === parentID);
   const allChildren = [...directChildren];
   
   for (const child of directChildren) {
