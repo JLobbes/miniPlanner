@@ -158,6 +158,8 @@ function addDragLogicForTiles() {
       const singleProject = globalProjectData.find(p => p.uniqueProjectID === projectID);
       if (singleProject) singleProject.placement.dashboardOrder = index + 1;
     });
+
+    saveProjectsToLocalStorage();
   }
 }
 
