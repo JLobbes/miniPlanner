@@ -43,8 +43,24 @@ function createNotesWrapper(projectData, projectView) {
   const notesWrapper = document.createElement('div');
   notesWrapper.className = 'notesWrapper';
 
+  // Get all note logs from all children
+  const allNoteLogs = [];
+  const allChildren = getAllChildren(projectData.uniqueProjectID);
+  allChildren.forEach((child) => {
+    child.noteLog.forEach((childNoteLogEntry) => {
+      childNoteLogEntry.projectTitle = child.projectTitle;
+      allNoteLogs.push(structuredClone(childNoteLogEntry));
+    })
+  });
+
+  // Add immediate time logs to allTimeLogs array
+  projectData.noteLog.forEach((immediateNoteLogEntry) => {
+    immediateNoteLogEntry.projectTitle = projectData.projectTitle;
+    allNoteLogs.push(structuredClone(immediateNoteLogEntry));
+  })
+
   // Build note log entries
-  const noteLogEntries = (projectData.noteLog || [])
+  const noteLogEntries = allNoteLogs
     .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date);
@@ -52,9 +68,9 @@ function createNotesWrapper(projectData, projectView) {
       const dateStr = `${dateObj.getHours()}${dateObj.getHours() >= 12 ? 'pm' : 'am'} | ${dateObj.toLocaleString('default', { month: 'short' })} ${String(dateObj.getDate()).padStart(2, '0')}`;
       return `
         <div class="noteLogEntry" uniqueEntryID="${entry.uniqueEntryID}">
-          <p class="noteLogEntrySource" title="${projectData.projectTitle}">
+          <p class="noteLogEntrySource" title="${entry.projectTitle}">
             <i class="fa-solid fa-folder"></i> 
-            ${projectData.projectTitle}
+            ${entry.projectTitle}
           </p>
           <p class="noteLogEntryNote" originalNoteLogged="${entry.note}"><span>${noteStr}</span></p>
           <p class="noteLogEntryDate" originalDateString="${entry.date}">${dateStr}</p>
