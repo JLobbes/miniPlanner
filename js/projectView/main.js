@@ -14,7 +14,7 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
       setTimeout(() => {
         // Allow for slide up animation
         openProject.remove();
-      }, 300);
+      }, 1500);
     }
   }
   // Ensure project on dash are reRender to reflect edits. 
@@ -50,7 +50,7 @@ function closeSingleProjectView(projectData, projectView) {
   setTimeout(() => {
     // Allow for slide up animation
     projectView.remove();
-  }, 200);
+  }, 1500);
 
   if(projectData.parentProjectID) {
     const parentProjectData = getSingleProject(projectData.parentProjectID);
