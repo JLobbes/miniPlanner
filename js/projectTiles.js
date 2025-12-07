@@ -8,7 +8,7 @@ function renderProjectsToDash() {
 
   // Filter and sort top-level projects
   const topLevelProjects = globalProjectData
-    .filter(p => p.parentProjectID === null)
+    .filter(p => p.parentProjectID === null || p.pinToDash === true)
     .sort((a, b) => (a.placement.dashboardOrder ?? 0) - (b.placement.dashboardOrder ?? 0));
 
   topLevelProjects.forEach(project => {
@@ -29,7 +29,7 @@ function createProjectTile(projectData) {
   tile.appendChild(createProjectTitle(projectData.projectTitle));
   tile.appendChild(createProjectDescription(projectData.projectDescription));
   tile.appendChild(createProgressBar({ projectData, editable: false }));
-  tile.appendChild(createProjectActions());
+  tile.appendChild(createProjectActions({}));
 
   addTileEventListeners(projectData, tile) // TO-DO: Group all scattered listeners
 
@@ -102,23 +102,8 @@ function calculateProjectTaskCount(globalProjectData, projectID) {
   }
 }
 
-// Ellipsis action menu 
-function createProjectActions() {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'projectActionsWrapper';
-
-  wrapper.innerHTML = `
-    <div class="projectActions">
-      <span>...</span>
-      <div class="projectActionsDropDown">
-        <button title="Delete"><i class="fa-solid fa-trash"></i></button>
-        <button title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>
-      </div>
-    </div>
-  `;
-
-  return wrapper;
-}
+// Ellipsis action menu (i.e, projectActions)
+//    was moved to /js/projectView/header.js
 
 // Drag Logic for Tile Rearrangment
 

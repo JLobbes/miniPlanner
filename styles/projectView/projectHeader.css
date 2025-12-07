@@ -170,3 +170,23 @@
   cursor: pointer;
 }
 
+.projectActionsDropDown button.unPinActionBtn::after,
+.projectActionsDropDown button.unPinActionBtn::before {
+  content: "";
+  position: absolute;
+  width: 1.5em;
+  height: 0.1em;
+  background: red;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+}
+
+
+.projectActionsDropDown button.unPinActionBtn::after {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.projectActionsDropDown button.unPinActionBtn::before {
+  transform: translate(-50%, -50%) rotate(-45deg);
+} 

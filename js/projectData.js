@@ -255,3 +255,10 @@ async function downloadProjectData() {
 
   URL.revokeObjectURL(url);
 }
+
+function setProjectPinned(projectData, pinToDash) {
+
+  // Assign pinToDash value
+  projectData.pinToDash = Boolean(pinToDash);
+  syncProjectInGlobalData(projectData);
+}

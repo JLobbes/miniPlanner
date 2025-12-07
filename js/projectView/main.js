@@ -70,7 +70,7 @@ function createProjectView(projectData) {
   projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
   if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
-  projectView.appendChild(createProjectViewTitleBar(projectData));
+  projectView.appendChild(createProjectViewTitleBar(projectData, projectView));
   projectView.appendChild(createProgressBar({ projectData, projectView, editable: true })); 
   projectView.appendChild(createBottomPanel(projectData, projectView)); 
 
@@ -84,6 +84,7 @@ function addProjectEventListeners(projectData, projectView) {
   // Listeners are broken out for re-render simplicity.
   if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
   addProjectActionListeners(projectData,projectView);
+  if (projectData.parentProjectID !== null)  addProjectPinActionListeners(projectData, projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
   addNewTaskListener(projectData, projectView);
