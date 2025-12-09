@@ -22,7 +22,7 @@ function generateUniqueEntryID() {
 function createBlankProject(parentProjectID) {
   return {
     uniqueProjectID: generateUniqueProjectID(),
-    projectTitle: 'New Project',
+    projectTitle: null,
     projectDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     projectStatus: 'Planned',
     created: new Date().toISOString(),
@@ -53,6 +53,10 @@ function getAllChildren(parentID) {
   }
 
   return allChildren;
+}
+
+function hasChildren(targetProjectID) {
+  return globalProjectData.some(p => p.parentProjectID === targetProjectID);
 }
 
 function getSingleProject(projectID) {

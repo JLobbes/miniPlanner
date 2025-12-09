@@ -90,13 +90,21 @@ function createTasksWrapper(projectData, projectView) {
     .sort((a, b) => (a.placement[`level${depth}Task`] ?? 0) - (b.placement[`level${depth}Task`] ?? 0)); // depth is a global variable, found in js/main.js
   
   tasks.forEach(task => {
+    const renderAsSingleTask = !hasChildren(task.uniqueProjectID);
+
     const taskDiv = document.createElement('div');
     taskDiv.className = 'task';
     taskDiv.draggable = 'true';
     taskDiv.setAttribute('taskID', `${task.uniqueProjectID}`);
     taskDiv.innerHTML = `
-      <i class="fa-regular fa-rectangle-list"></i>
-      <h3 class="taskName">${task.projectTitle}</h3>
+      ${ renderAsSingleTask ? 
+        '<i class="fa-regular fa-rectangle-list"></i>' :
+        '<i class="fa-solid fa-folder"></i>'
+      }
+      ${ renderAsSingleTask ?
+        `<h3 class="taskName">${task.projectTitle ? task.projectTitle : 'New Task'}</h3>` :
+        `<h3 class="taskName">${task.projectTitle ? task.projectTitle : 'New Project'}</h3>` 
+      }
       <div class="taskStatusBubble statusShowing${task.projectStatus.replace(' ', '')}">${task.projectStatus}</div>
     `;
     addOpenTaskListener(taskDiv, task.uniqueProjectID, projectData, projectView);

@@ -1,0 +1,65 @@
+.promoteBtnWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  height: 100%;
+  width: 100%;
+}
+
+.promoteBtnWrapper .promoteBtn {
+  background-color: rgb(66, 222, 146, 0.85);
+  height: 3em;
+  width: 3em;
+  border-radius: 3em;
+  border: none;
+  cursor: pointer;
+  transition: 
+    background-color 0.4s, 
+    box-shadow 0.3s
+  ;
+  animation: jiggle 2s ease-in-out infinite;
+}
+
+.promoteBtnWrapper .callToPromote {
+  font-size: 1.45em;
+  color: rgb(66, 222, 146, 0.5);
+  transition: color 0.4s;
+  user-select: none;
+}
+
+.promoteBtnWrapper .callToPromote.darker {
+  color: #333;
+}
+
+.promoteBtnWrapper .promoteBtn i {
+  color: #eee;
+  font-size: 2.75em;
+}
+
+.promoteBtnWrapper .promoteBtn:hover {
+  background-color: #333;
+  border-radius: 3em;
+  /* box-shadow: 
+    0.25em 0em 0.175em rgba(159, 20, 20, 0.4),         
+    -0.25em 0.125em 0.25em rgba(161, 42, 42, 0.7);  */
+  animation: jiggle-hover 0.25s ease-in-out infinite;
+}
+
+/* subtle constant jiggle */
+@keyframes jiggle {
+  0%, 40% { transform: rotate(0deg); }
+  8% { transform: rotate(3deg); }
+  16% { transform: rotate(-3deg); }
+  24% { transform: rotate(3deg); }
+  36% { transform: rotate(-3deg); }
+}
+
+/* bigger hover jiggle */
+@keyframes jiggle-hover {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(3deg); }
+  75% { transform: rotate(-3deg); }
+}

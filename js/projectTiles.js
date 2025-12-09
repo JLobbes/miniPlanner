@@ -26,9 +26,11 @@ function createProjectTile(projectData) {
   tile.draggable = 'true';
   tile.setAttribute('projectid', projectData.uniqueProjectID); // ID gets converted to lowercase during setAttribute() call
 
-  tile.appendChild(createProjectTitle(projectData.projectTitle));
+  const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID) || !projectData.parentProjectID === null;
+
+  tile.appendChild(createProjectTitle({ titleText: projectData.projectTitle, renderAsSingleTask}));
   tile.appendChild(createProjectDescription(projectData.projectDescription));
-  tile.appendChild(createProgressBar({ projectData, editable: false }));
+  tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask }));
   tile.appendChild(createProjectActions({}));
 
   addTileEventListeners(projectData, tile) // TO-DO: Group all scattered listeners
@@ -49,11 +51,12 @@ function addTileEventListeners(projectData, projectTile) {
 }
 
 // Title section
-function createProjectTitle(titleText) {
+function createProjectTitle({ titleText, renderAsSingleTask }) {
   const title = document.createElement('h3');
   title.className = 'projectTitle';
-  title.innerHTML = `<i class="fa-solid fa-folder"></i> ${titleText}`;
-  if(titleText.length > 15) title.title = titleText; // A tooltip for long titles
+  if(renderAsSingleTask) title.innerHTML = `<i class="fa-solid fa-rectangle-list"></i> ${titleText ? titleText : 'New Task'}`;
+  if(!renderAsSingleTask) title.innerHTML = `<i class="fa-solid fa-folder"></i> ${titleText ? titleText : 'New Project'}`;
+  if(titleText && titleText.length > 15) title.title = titleText; // A tooltip for long titles
   return title;
 }
 
@@ -70,37 +73,6 @@ function createProjectDescription(descText) {
 // Progress bar + task info
 //    Logic reused from projectView
 //    Logic can be found in /js/projectView/topPanel/progressBar.js
-
-// Calculate percent complete based on immediate subProjects found via parentProjectID
-function calculateProjectProgress(globalProjectData, projectID) {
-  try {
-    if (!projectID) return 0;
-
-    const tasks = globalProjectData.filter(p => p.parentProjectID === projectID);
-    if (tasks.length === 0) return 0;
-
-    const completeCount = tasks.filter(t => t.projectStatus.toLowerCase() === 'complete').length;
-    return Math.round((completeCount / tasks.length) * 100);
-  } catch (error) {
-    console.error('Error calculating project progress:', error);
-    return 0;
-  }
-}
-
-// Calculate number of immediate subProjects/Tasks (one level deep, excluding nested children)
-function calculateProjectTaskCount(globalProjectData, projectID) {
-  try {
-    if (!projectID) return 0;
-
-    // Find direct children of the project
-    const children = globalProjectData.filter(p => p.parentProjectID === projectID);
-
-    return children.length;
-  } catch (error) {
-    console.error('Error calculating task count:', error);
-    return 0;
-  }
-}
 
 // Ellipsis action menu (i.e, projectActions)
 //    was moved to /js/projectView/header.js

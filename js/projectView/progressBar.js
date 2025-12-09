@@ -62,7 +62,7 @@ function addCloseUpdateStatusListListener(updateStatusList) {
   document.addEventListener('click', handleOutsideClick);
 }
 
-function createProgressBar({ projectData, projectView, editable }) {
+function createProgressBar({ projectData, projectView, editable, renderAsSingleTask }) {
   // TO-DO: make funtion take options, as tiles won't be updatable. 
 
   const progressWrapper = document.createElement('div');
@@ -78,17 +78,20 @@ function createProgressBar({ projectData, projectView, editable }) {
         <p class="progressBarLabel">Progress</p>
       </div>
       <div class="projectBarPercentageWrapper">
-        <p class="projectBarPercentage">${percent} %</p>
+        ${ renderAsSingleTask ? `<p class="projectBarPercentage">${(projectData.projectStatus == 'Complete') ? '100%' : '0%'}</p>` :
+        `<p class="projectBarPercentage">${percent} %</p>` }
       </div>
     </div>
     <div class="progressBar">
       <div class="progressBarBackground">
-        <div class="progressBarFill" style="width: ${percent}%"></div>
+        ${ renderAsSingleTask ? `<div class="progressBarFill" style="width: ${ (projectData.projectStatus == 'Complete') ? '100%' : '0%' }"></div>` :
+        `<div class="progressBarFill" style="width: ${percent}%"></div>` }
       </div>
     </div>
     <div class="progressBarDetailsWrapper">
       <div class="taskQuantityWrapper">
-        <p class="taskQuantity">${taskCount} Task${taskCount !== 1 ? 's' : ''}</p>
+        ${ renderAsSingleTask ? '<p class="taskQuantity">Single Task</p>' :
+        `<p class="taskQuantity">${taskCount} Task${taskCount !== 1 ? 's' : ''}</p>` }
       </div>
       <div class="projectStatusWrapper">
         <p class="projectStatusBubble statusShowing${status.replace(' ', '')}">${status}</p>
@@ -100,11 +103,43 @@ function createProgressBar({ projectData, projectView, editable }) {
   return progressWrapper;
 }
 
+// Calculate percent complete based on immediate subProjects found via parentProjectID
+function calculateProjectProgress(globalProjectData, projectID) {
+  try {
+    if (!projectID) return 0;
+
+    const tasks = globalProjectData.filter(p => p.parentProjectID === projectID);
+    if (tasks.length === 0) return 0;
+
+    const completeCount = tasks.filter(t => t.projectStatus.toLowerCase() === 'complete').length;
+    return Math.round((completeCount / tasks.length) * 100);
+  } catch (error) {
+    console.error('Error calculating project progress:', error);
+    return 0;
+  }
+}
+
+// Calculate number of immediate subProjects/Tasks (one level deep, excluding nested children)
+function calculateProjectTaskCount(globalProjectData, projectID) {
+  try {
+    if (!projectID) return 0;
+
+    // Find direct children of the project
+    const children = globalProjectData.filter(p => p.parentProjectID === projectID);
+
+    return children.length;
+  } catch (error) {
+    console.error('Error calculating task count:', error);
+    return 0;
+  }
+}
+
 function reRenderProgressBar(projectData) {
 
   const projectView = findOpenedProjectView(projectData.uniqueProjectID);
   const oldProgressWrapper = projectView.querySelector('.progressBarWrapper');
-  const updatedProgressWrapper = createProgressBar({projectData, projectView, editable: true});
+  const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID);
+  const updatedProgressWrapper = createProgressBar({projectData, projectView, editable: true, renderAsSingleTask});
 
   const locationForReRender = projectView.querySelector('.titleBarWrapper');
   oldProgressWrapper.remove();

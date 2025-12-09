@@ -1,13 +1,17 @@
 // projectView/bottomPanel/main.js
 
 // Bottom Panel (tasks, time, notes)
-function createBottomPanel(projectData, projectView) {
+function createBottomPanel({ projectData, projectView, renderAsSingleTask }) {
   const bottomPanel = document.createElement('div');
   bottomPanel.className = 'bottomPanel';
 
   const left = document.createElement('div');
   left.className = 'bottomPanelLeft';
-  left.appendChild(createTasksWrapper(projectData));
+  if(renderAsSingleTask) {
+    left.appendChild(createPromoteToProjectBtn(projectData, projectView));
+  } else {
+    left.appendChild(createTasksWrapper(projectData));
+  }
 
   const right = document.createElement('div');
   right.className = 'bottomPanelRight';

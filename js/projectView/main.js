@@ -65,21 +65,25 @@ function findOpenedProjectView(projectID) {
 
 // Main project view builder
 function createProjectView(projectData) {
+
+  // Projects that top level or have no children are 'Tasks'
+  const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID) && projectData.parentProjectID !== null;
+
   const projectView = document.createElement('div');
   projectView.className = 'projectView';
   projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
   if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
-  projectView.appendChild(createProjectViewTitleBar(projectData, projectView));
-  projectView.appendChild(createProgressBar({ projectData, projectView, editable: true })); 
-  projectView.appendChild(createBottomPanel(projectData, projectView)); 
+  projectView.appendChild(createProjectViewTitleBar({ projectData, projectView, renderAsSingleTask: renderAsSingleTask }));
+  projectView.appendChild(createProgressBar({ projectData, projectView, editable: true, renderAsSingleTask: renderAsSingleTask })); 
+  projectView.appendChild(createBottomPanel({projectData, projectView, renderAsSingleTask})); 
 
-  addProjectEventListeners(projectData, projectView) // TO-DO: Group all scattered listeners
+  addProjectEventListeners(projectData, projectView, renderAsSingleTask) // TO-DO: Group all scattered listeners
 
   return projectView;
 }
 
-function addProjectEventListeners(projectData, projectView) {
+function addProjectEventListeners(projectData, projectView, renderAsSingleTask) {
 
   // Listeners are broken out for re-render simplicity.
   if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
@@ -87,7 +91,7 @@ function addProjectEventListeners(projectData, projectView) {
   if (projectData.parentProjectID !== null)  addProjectPinActionListeners(projectData, projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
-  addNewTaskListener(projectData, projectView);
+  if(!renderAsSingleTask) addNewTaskListener(projectData, projectView);
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.

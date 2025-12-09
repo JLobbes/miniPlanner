@@ -52,10 +52,10 @@ function renderMiniForm(dataForMiniForm) {
       `
     },
     confirmDeleteChildren: {
-      miniFormMessage: `You must first delete ${dataForMiniForm.quantityOfChildren} child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.hasOwnProperty('projectData') ? dataForMiniForm.projectData.projectTitle : ''}.`,
+      miniFormMessage: `You must first delete (${dataForMiniForm.quantityOfChildren}) child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.hasOwnProperty('projectData') && dataForMiniForm.projectData.projectTitle ? dataForMiniForm.projectData.projectTitle : 'this project.'}`,
     },
     confirmDeleteParent: {
-      miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.hasOwnProperty('projectData') ? dataForMiniForm.projectData.projectTitle : ''}?`,
+      miniFormMessage: `Are you sure you want to delete ${dataForMiniForm.hasOwnProperty('projectData') && dataForMiniForm.projectData.projectTitle ? dataForMiniForm.projectData.projectTitle : 'this'}?`,
     },
     confirmDeleteNoteLogEntry: {
       miniFormMessage: `Are you sure you want to delete note?`,

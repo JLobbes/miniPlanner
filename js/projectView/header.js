@@ -32,7 +32,7 @@ function addProjectPinActionListeners(projectData, projectView) {
 }
 
 // Title Bar
-function createProjectViewTitleBar(projectData, projectView) {
+function createProjectViewTitleBar({ projectData, projectView, renderAsSingleTask }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'titleBarWrapper';
 
@@ -41,7 +41,9 @@ function createProjectViewTitleBar(projectData, projectView) {
 
   const projectTitle = document.createElement('h3');
   projectTitle.className = 'projectTitle';
-  projectTitle.innerHTML = `<i class="fa-solid fa-folder"></i> ${projectData.projectTitle}`;
+  
+  if(!renderAsSingleTask) projectTitle.innerHTML = `<i class="fa-solid fa-folder"></i> ${projectData.projectTitle === null ? 'New Project' : projectData.projectTitle}`;
+  if(renderAsSingleTask) projectTitle.innerHTML = `<i class="fa-solid fa-rectangle-list"></i> ${projectData.projectTitle === null ? 'New Task' : projectData.projectTitle}`;
 
   const projectDescription = document.createElement('div');
   projectDescription.className = 'projectDescription';
@@ -106,7 +108,7 @@ function enableEditHeader(projectData, projectView) {
   projectTitle.innerHTML = 
     `
       <i class="fa-solid fa-pen-to-square"></i>
-      <input type="text" class="editingProjectTitle" name="editingProjectTitle" value="${projectData.projectTitle}" />
+      <input type="text" class="editingProjectTitle" name="editingProjectTitle" value="${projectData.projectTitle ? projectData.projectTitle : ''}" />
       <i class="fa-solid fa-check saveEditingProjectTitleBarBtn"></i>
       <i class="fa-solid fa-xmark abortEditingProjectTitleBarBtn"></i>
     `;
