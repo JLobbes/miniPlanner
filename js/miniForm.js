@@ -137,25 +137,57 @@ function renderMiniForm(dataForMiniForm) {
 function addMiniFormListeners(miniFormWrapper) {
   return new Promise((resolve, reject) => {
     const confirmBtn = miniFormWrapper.querySelector('.confirmMiniFormRequest');
-    const rejectBtn = miniFormWrapper.querySelector('.rejectMiniFormRequest');
+    const rejectBtn  = miniFormWrapper.querySelector('.rejectMiniFormRequest');
+
+    const escHandler = addMiniFormEscapePressListener(rejectBtn);
+    const enterHandler = addMiniFormEnterPressListener(confirmBtn);
 
     confirmBtn.addEventListener('click', () => {
       const formInputs = miniFormWrapper.querySelectorAll('input, textarea');
       const formData = {};
 
-      formInputs.forEach(input => {
-        formData[input.name] = input.value;
-      });
+      formInputs.forEach(input => formData[input.name] = input.value);
 
+      clearMiniFormKeyPressListeners(escHandler, enterHandler);
       miniFormWrapper.remove();
-      resolve(formData); 
+      resolve(formData);
     });
 
     rejectBtn.addEventListener('click', () => {
+      clearMiniFormKeyPressListeners(escHandler, enterHandler);
       miniFormWrapper.remove();
       reject(new Error('User rejected the confirmation.'));
     });
   });
+}
+
+function addMiniFormEscapePressListener(rejectBtn) {
+
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      rejectBtn.click();   
+    }
+  };
+
+  document.addEventListener('keydown', escHandler);
+  return escHandler;
+}
+
+function addMiniFormEnterPressListener(confirmBtn) {
+
+  const enterHandler = (e) => {
+    if (e.key === 'Enter') {
+      confirmBtn.click();   
+    }
+  };
+
+  document.addEventListener('keydown', enterHandler);
+  return enterHandler;
+}
+
+function clearMiniFormKeyPressListeners(escHandler, enterHandler) {
+  document.removeEventListener('keydown', escHandler);
+  document.removeEventListener('keydown', enterHandler);
 }
 
 function requestConfirmation(dataForMiniForm) {
