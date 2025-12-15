@@ -163,7 +163,7 @@ function addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn) {
   return enterHandler;
 }
 
-function clearEditingHeaderKeyPressListener(escapeHandler, enterHandler) {
+function clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler) {
   document.removeEventListener('keydown', escapeHandler);
   document.removeEventListener('keydown', enterHandler);
 }
