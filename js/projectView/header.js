@@ -124,15 +124,48 @@ function enableEditHeader(projectData, projectView) {
  
   // Add listener to saveEditingProjectTitleBarBtn
   const saveEditingProjectTitleBarBtn = projectTitle.querySelector('.saveEditingProjectTitleBarBtn');
-  saveEditingProjectTitleBarBtn.addEventListener('click', () => {
-    handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
-  });
+  const abortEditingProjectTitleBarBtn = projectTitle.querySelector('.abortEditingProjectTitleBarBtn');
+  
+  const enterHandler = addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn);
+  const escapeHandler = addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn);
   
   // Add listener to abortEditingProjectTitleBarBtn 
-  const abortEditingProjectTitleBarBtn = projectTitle.querySelector('.abortEditingProjectTitleBarBtn');
+  
+  saveEditingProjectTitleBarBtn.addEventListener('click', () => {
+    handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
+    clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler);
+  });
   abortEditingProjectTitleBarBtn.addEventListener('click', () => {
     handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription);
+    clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler);
   });
+}
+
+function addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn) {
+  const escapeHandler = (e) => {
+    if(e.key === 'Escape') {
+      abortEditingProjectTitleBarBtn.click();
+    }
+  }  
+
+  document.addEventListener('keydown', escapeHandler);
+  return escapeHandler;
+}
+
+function addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn) {
+  const enterHandler = (e) => {
+    if(e.key === 'Enter') {
+      saveEditingProjectTitleBarBtn.click();
+    }
+  }  
+
+  document.addEventListener('keydown', enterHandler);
+  return enterHandler;
+}
+
+function clearEditingHeaderKeyPressListener(escapeHandler, enterHandler) {
+  document.removeEventListener('keydown', escapeHandler);
+  document.removeEventListener('keydown', enterHandler);
 }
 
 function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput) {
@@ -146,6 +179,7 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
     projectTitle.innerHTML = `
     <i class="fa-solid fa-folder"></i> ${projectData.projectTitle}
     `;
+    const escHandler = addEditingHeaderEscapePressListener()
     
     projectDescription.innerHTML = `
         ${projectData.projectDescription}
