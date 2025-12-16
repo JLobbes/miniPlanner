@@ -153,6 +153,7 @@ function addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn) {
 }
 
 function addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn) {
+
   const enterHandler = (e) => {
     if(e.key === 'Enter') {
       saveEditingProjectTitleBarBtn.click();

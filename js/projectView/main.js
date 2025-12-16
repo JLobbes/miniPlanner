@@ -14,6 +14,7 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
       setTimeout(() => {
         // Allow for slide up animation
         openProject.remove();
+        clearProjectViewKeyPressListeners();
       }, 1500);
     }
   }
@@ -73,6 +74,7 @@ function createProjectView(projectData) {
   projectView.className = 'projectView';
   projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
+
   if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
   projectView.appendChild(createProjectViewTitleBar({ projectData, projectView, renderAsSingleTask: renderAsSingleTask }));
   projectView.appendChild(createProgressBar({ projectData, projectView, editable: true, renderAsSingleTask: renderAsSingleTask })); 
@@ -87,11 +89,36 @@ function addProjectEventListeners(projectData, projectView, renderAsSingleTask) 
 
   // Listeners are broken out for re-render simplicity.
   if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
-  addProjectActionListeners(projectData,projectView);
+  addProjectActionListeners(projectData, projectView);
   if (projectData.parentProjectID !== null)  addProjectPinActionListeners(projectData, projectView);
   addAddTimeLogListener(projectData, projectView);
   addAddNoteLogListener(projectData, projectView);
   if(!renderAsSingleTask) addNewTaskListener(projectData, projectView);
+
+  handleProjViewEscape = addProjectViewEscapeKeyPressListener();
+
+}
+
+function addProjectViewEscapeKeyPressListener() {
+  handleProjViewEscape = (e) => {
+    if (e.key === 'Escape') {
+      
+      const editingProjectHeader = document.querySelector('.editingProjectTitle');
+      if(editingProjectHeader) return;
+
+      const usingMiniForm = document.querySelector('.miniForm');
+      if(usingMiniForm) return;
+
+      // Return to dashboard
+      homeView.click();
+    }
+  }
+
+  document.addEventListener('keydown', handleProjViewEscape);
+}
+
+function clearProjectViewKeyPressListeners() {
+  document.removeEventListener('keydown', handleProjViewEscape);
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.

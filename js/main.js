@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
 });
 
-const homeView = document.getElementById('homeView');
+const homeView = document.getElementById('homeView'); // Used Globally
 let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
@@ -31,6 +31,7 @@ newProjBtn.addEventListener('click', (e) => {
 
 let draggedItem = null; // Used globally
 let depth = null; // Used globally
+let handleProjViewEscape = null; //Used globally 
 const globalProjectData = [];
 
 function loadDataToGlobalProjects() {
