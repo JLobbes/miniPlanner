@@ -16,6 +16,7 @@ function addProjectActionListeners(projectData, projectView) {
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
   });
+  addEnableEditHeaderKeyPressListener(editButton);
 }
 
 function addProjectPinActionListeners(projectData, projectView) {
@@ -138,6 +139,18 @@ function enableEditHeader(projectData, projectView) {
     handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription);
     clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler);
   });
+}
+
+function addEnableEditHeaderKeyPressListener(editButton) {
+  const ctrlEHandler = (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'e') {
+      e.preventDefault();
+      editButton.click();
+    }
+  };
+
+  document.addEventListener('keydown', ctrlEHandler);
+  return ctrlEHandler;
 }
 
 function addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn) {
