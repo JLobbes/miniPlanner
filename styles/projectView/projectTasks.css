@@ -109,8 +109,9 @@
   height: 4.5em;
   width: 100%;
   padding: 0 1em;
+  color: #333;
   background-color: #fff;
-  border: #111 solid 1px;
+  border: #333 solid 1px;
   border-radius: 0.5em;
 }
 
