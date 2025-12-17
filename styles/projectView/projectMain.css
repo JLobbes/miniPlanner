@@ -98,6 +98,7 @@
   padding: 0 0.5em;
 }
 
+.minimizeProjectBtn:focus,
 .minimizeProjectBtn:hover {
   cursor: pointer; 
   background-color: #fff;
@@ -106,6 +107,12 @@
   transform: translateY(-0.1em);
 }
 
+.minimizeProjectBtn:focus  i,
 .minimizeProjectBtn:hover  i {
   color: #111;
 }
+
+.minimizeProjectBtn:focus-visible {
+  outline: none;
+}
+

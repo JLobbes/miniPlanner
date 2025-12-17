@@ -113,9 +113,9 @@ function createTimeWrapper(projectData, projectView) {
       <div class="timeLog">
         ${timeLogEntries}
       </div>
-      <div class="addTimeLogBtn">
+      <button class="addTimeLogBtn" tabIndex="5">
         <i class="fa-solid fa-plus"></i>
-      </div>
+      </button>
     </div>
   `;
 

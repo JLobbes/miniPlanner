@@ -5,6 +5,7 @@ function addNewTaskListener(projectData, projectView) {
   // Applies to large add 'New Task' button in tasksSection
 
   const addNewTaskBtn = projectView.querySelector('.newTaskBtn');
+  addNewTaskBtn.tabIndex = '3';
   addNewTaskBtn.addEventListener('click', () => {
     openNewProject({ parentID: projectData.uniqueProjectID, hasParent: true });
 
@@ -73,7 +74,7 @@ function createTasksWrapper(projectData, projectView) {
   header.textContent = 'Tasks';
   wrapper.appendChild(header);
 
-  const newTaskBtn = document.createElement('div');
+  const newTaskBtn = document.createElement('button');
   newTaskBtn.className = 'newTaskBtn';
   newTaskBtn.innerHTML = `<h3><i class="fa-regular fa-rectangle-list"></i> New Task</h3>`;
   wrapper.appendChild(newTaskBtn);

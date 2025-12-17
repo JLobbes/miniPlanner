@@ -3,8 +3,8 @@
 function addAddNoteLogListener(projectData, projectView) {
   // Applies only to addNoteLogEntry button.
 
-  const addTimeLogBtn = projectView.querySelector('.addNoteLogBtn');
-  addTimeLogBtn.addEventListener('click', async (e) => {
+  const addNoteLogBtn = projectView.querySelector('.addNoteLogBtn');
+  addNoteLogBtn.addEventListener('click', async (e) => {
     await addNoteLogEntry(projectData, projectView);
   });
 }
@@ -16,8 +16,8 @@ function addEditNoteLogEntryListeners (notesWrapper, projectData, projectView) {
   noteLogEntries.forEach(noteLogEntry => {
 
     // Attach click listener to editBtn and render miniForm
-    const timeLogEntryEditBtn = noteLogEntry.querySelector('.noteLogEntryEdit');
-    timeLogEntryEditBtn.addEventListener('click', async () => {
+    const noteLogEntryEditBtn = noteLogEntry.querySelector('.noteLogEntryEdit');
+    noteLogEntryEditBtn.addEventListener('click', async () => {
       await updateNoteLogEntry(projectData, noteLogEntry, projectView);
     });
   });
@@ -53,7 +53,7 @@ function createNotesWrapper(projectData, projectView) {
     })
   });
 
-  // Add immediate time logs to allTimeLogs array
+  // Add immediate note logs to allNoteLogs array
   projectData.noteLog.forEach((immediateNoteLogEntry) => {
     immediateNoteLogEntry.projectTitle = projectData.projectTitle;
     allNoteLogs.push(structuredClone(immediateNoteLogEntry));
@@ -92,9 +92,9 @@ function createNotesWrapper(projectData, projectView) {
       <div class="noteLog">
         ${noteLogEntries}
       </div>
-      <div class="addNoteLogBtn">
+      <button class="addNoteLogBtn" tabIndex="6">
         <i class="fa-solid fa-plus"></i>
-      </div>
+      </button>
     </div>
   `;
 
@@ -106,7 +106,7 @@ function createNotesWrapper(projectData, projectView) {
 // Add new log entry to note log
 async function addNoteLogEntry(projectData, projectView) {
   
-  // Gather time log initial data using mini-form
+  // Gather note log initial data using mini-form
   const dataForMiniForm = {
     formType: 'addNoteLog',
     timeStamp: new Date(),

@@ -126,6 +126,7 @@
   transition: transform 0.1s;
 }
 
+.projectView .projectStatusBubble:focus,
 .projectView .projectStatusBubble:hover {
   animation: rotateWiggle 0.5s ease-in-out;
 }
@@ -148,7 +149,7 @@
   background-color: #4a97ca;
 }
 
-.projectView p.projectStatusBubble.statusShowingPlanned {
+.projectView button.projectStatusBubble.statusShowingPlanned {
   color: #fff;
 }
 
@@ -168,7 +169,7 @@
   background-color: #111;
 }
 
-.projectView p.projectStatusBubble.statusShowingDead {
+.projectView button.projectStatusBubble.statusShowingDead {
   color: #fff;
 }
 

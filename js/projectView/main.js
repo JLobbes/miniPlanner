@@ -134,6 +134,7 @@ function triggerDropDown(element, className = 'active', delay = 20) {
 
 function createMinimizeButton() {
   const minimizeProjectButton = document.createElement('button');
+  minimizeProjectButton.tabIndex = '1';
   minimizeProjectButton.innerHTML = `<i class="fa-solid fa-caret-left"></i>`;
   minimizeProjectButton.classList.add('minimizeProjectBtn');
   return minimizeProjectButton; 

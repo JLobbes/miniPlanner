@@ -165,8 +165,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 2em;
-  width: 2em;
+  height: 2.25em;
+  width: 2.25em;
+  padding: 0.5em;
+  background-color: #333;
   border: #fff 1px solid;
   border-radius: 0.5em;
   transition: background-color 0.2s;
@@ -174,19 +176,25 @@
 
 .addNoteLogBtn .fa-plus {
   display: block;
-  margin: 0.05em 0.25em 0 0.25em;
+  margin: 0 0 0.1em 0;
   color: #fff;
-  font-size: 1.3em;
+  font-size: 1.5em;
   transition: color 0.2s;
 }
 
+.addNoteLogBtn:focus,
 .addNoteLogBtn:hover {
   background-color: #fff;
   transition: color 0.2s;
   cursor: pointer;
 }
 
+.addNoteLogBtn:focus .fa-plus,
 .addNoteLogBtn:hover .fa-plus {
   color: #333;
   transition: color 0.2s;
+}
+
+.addNoteLogBtn:focus-visible {
+  outline: none;
 }

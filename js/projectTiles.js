@@ -30,7 +30,7 @@ function createProjectTile(projectData) {
 
   tile.appendChild(createProjectTitle({ titleText: projectData.projectTitle, renderAsSingleTask}));
   tile.appendChild(createProjectDescription(projectData.projectDescription));
-  tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask }));
+  tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask, forProjectTile: true }));
   tile.appendChild(createProjectActions({}));
 
   addTileEventListeners(projectData, tile) // TO-DO: Group all scattered listeners

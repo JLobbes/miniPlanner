@@ -3,6 +3,7 @@
 function addOpenUpdateStatusListListeners(projectData, progressWrapper) {
 
   const statusBubbleBtn = progressWrapper.querySelector('.projectStatusBubble');
+  statusBubbleBtn.tabIndex = '3';
   statusBubbleBtn.addEventListener('click', () => {
     
     let updateStatusList = document.querySelector('.updateStatusList');
@@ -10,12 +11,12 @@ function addOpenUpdateStatusListListeners(projectData, progressWrapper) {
       updateStatusList = document.createElement('div');
       updateStatusList.classList.add('updateStatusList')
       updateStatusList.innerHTML = `
-        <p class="projectStatusBubble statusShowingPlanned">Planned</p>
-        <p class="projectStatusBubble statusShowingComplete">Complete</p>
-        <p class="projectStatusBubble statusShowingInProgress">In Progress</p>
-        <p class="projectStatusBubble statusShowingPaused">Paused</p>
-        <p class="projectStatusBubble statusShowingDelayed">Delayed</p>
-        <p class="projectStatusBubble statusShowingDead">Dead</p>
+        <button class="projectStatusBubble statusShowingPlanned" tabIndex="3">Planned</button>
+        <button class="projectStatusBubble statusShowingComplete" tabIndex="3">Complete</button>
+        <button class="projectStatusBubble statusShowingInProgress" tabIndex="3">In Progress</button>
+        <button class="projectStatusBubble statusShowingPaused" tabIndex="3">Paused</button>
+        <button class="projectStatusBubble statusShowingDelayed" tabIndex="3">Delayed</button>
+        <button class="projectStatusBubble statusShowingDead" tabIndex="3">Dead</button>
       `;
     }
         
@@ -62,7 +63,7 @@ function addCloseUpdateStatusListListener(updateStatusList) {
   document.addEventListener('click', handleOutsideClick);
 }
 
-function createProgressBar({ projectData, projectView, editable, renderAsSingleTask }) {
+function createProgressBar({ projectData, projectView, editable, renderAsSingleTask, forProjectTile = false }) {
   // TO-DO: make funtion take options, as tiles won't be updatable. 
 
   const progressWrapper = document.createElement('div');
@@ -94,7 +95,7 @@ function createProgressBar({ projectData, projectView, editable, renderAsSingleT
         `<p class="taskQuantity">${taskCount} Task${taskCount !== 1 ? 's' : ''}</p>` }
       </div>
       <div class="projectStatusWrapper">
-        <p class="projectStatusBubble statusShowing${status.replace(' ', '')}">${status}</p>
+        <${forProjectTile ? 'p' : 'button' } class="projectStatusBubble statusShowing${status.replace(' ', '')}">${status}</ ${forProjectTile ? 'p' : 'button'}>
       </div>
     </div>
   `;

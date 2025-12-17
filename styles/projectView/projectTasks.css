@@ -34,9 +34,8 @@
   border-radius: 0.5em;
 }
 
-.newTaskBtn h1 {
-  margin: 0;
-  font-size: 1.2em;
+.newTaskBtn h3 {
+  font-size: 1.3em;
   color: #777;
   transition: font-size 0.2s;
 }
@@ -53,20 +52,35 @@
   transition: font-size 0.2s;
 }
 
+.newTaskBtn:focus,
 .newTaskBtn:hover {
   background-color: #f8f8f8;
   cursor: pointer;
 }
 
-.newTaskBtn:hover h1 {
-  margin: 0;
-  font-size: 1.4em;
-  transition: font-size 0.2s;
-}
-
+.newTaskBtn:focus i.fa-plus,
 .newTaskBtn:hover i.fa-plus { 
   font-size: 3em;
   transition: font-size 0.2s;
+}
+
+.newTaskBtn:focus h3 {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+.newTaskBtn:focus-visible {
+  outline: none;
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+}
+
+.wiggle {
+  animation: wiggle 0.3s ease-in-out infinite;
 }
 
 .projectView .tasksList {

@@ -16,7 +16,6 @@ function addProjectActionListeners(projectData, projectView) {
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
   });
-  
 }
 
 function addProjectPinActionListeners(projectData, projectView) {
