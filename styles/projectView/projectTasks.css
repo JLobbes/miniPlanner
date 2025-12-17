@@ -65,22 +65,18 @@
 }
 
 .newTaskBtn:focus h3 {
-  animation: wiggle 0.3s ease-in-out;
+  animation: wiggleNewTaskBtn 0.3s ease-in-out;
 }
 
 .newTaskBtn:focus-visible {
   outline: none;
 }
 
-@keyframes wiggle {
+@keyframes wiggleNewTaskBtn {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-3px); }
   50% { transform: translateX(3px); }
   75% { transform: translateX(-3px); }
-}
-
-.wiggle {
-  animation: wiggle 0.3s ease-in-out infinite;
 }
 
 .projectView .tasksList {
@@ -92,8 +88,8 @@
   gap: 0.5em;
   width: 100%;
   flex-grow: 1; /* growing vertically */
+  padding: 0.5em 0.25em 0.5em 0.25em;
   overflow: scroll;
-  padding: 0.5em 0 0.5em 0;
   border-bottom: #111 1px dashed;
   border-top: #111 1px dashed;
 }
@@ -110,7 +106,7 @@
   justify-content: flex-start;
   flex-shrink: 0;
   gap: 0.5em;
-  height: 4em;
+  height: 4.5em;
   width: 100%;
   padding: 0 1em;
   background-color: #fff;
@@ -118,6 +114,7 @@
   border-radius: 0.5em;
 }
 
+.projectView .task:focus,
 .projectView .task:hover {
   box-shadow: 
   0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
@@ -125,11 +122,26 @@
   cursor: pointer;
 }
 
+.projectView .task:focus {
+  animation: wiggleTask 0.3s ease-in-out;
+}
+
+@keyframes wiggleTask {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+}
+
+.projectView .task .fa-folder,
 .projectView .task .fa-rectangle-list {
-  margin: 0 0 0 0;
+  font-size: 1.3em;
+  margin: 0;
 }
 
 .projectView .task .taskName {
+  text-align: left;
+  font-size: 1.4em;
   flex-grow: 1;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -139,7 +151,7 @@
 .projectView .task .taskStatusBubble {
   display: inline-block;
   padding: 0.3em 0.6em;
-  font-size: 0.8em;
+  font-size: 1em;
   color:#333;
   white-space: nowrap;
   border-radius: 1em;

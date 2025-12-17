@@ -93,7 +93,8 @@ function createTasksWrapper(projectData, projectView) {
   tasks.forEach(task => {
     const renderAsSingleTask = !hasChildren(task.uniqueProjectID);
 
-    const taskDiv = document.createElement('div');
+    const taskDiv = document.createElement('button');
+    taskDiv.tabIndex = '7';
     taskDiv.className = 'task';
     taskDiv.draggable = 'true';
     taskDiv.setAttribute('taskID', `${task.uniqueProjectID}`);
