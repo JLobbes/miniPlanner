@@ -10,17 +10,17 @@ function renderMiniForm(dataForMiniForm) {
       miniFormInput: `
         <label class='numOfMinutes'>
           <span>Minutes</span>
-          <input type="number" name="numOfMinutes" min="0" value="30" required autofocus>
+          <input tabIndex="5" type="number" name="numOfMinutes" min="0" value="30" required autofocus>
         </label>
 
         <label class='date'>
           <span>Date</span>
-          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toISOString().slice(0, 10) : '' } required>
+          <input tabIndex="5" type="date" name="date" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toISOString().slice(0, 10) : '' } required>
         </label>
 
         <label class='timeStamp'>
           <span>TimeStamp</span>
-          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toTimeString().slice(0, 5): '' } required>
+          <input tabIndex="5" type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toTimeString().slice(0, 5): '' } required>
         </label>
       `
     },
@@ -29,17 +29,17 @@ function renderMiniForm(dataForMiniForm) {
       miniFormInput: `
         <label class='note'>
           <span>Note</span>
-          <textarea name="note" rows="3" placeholder="Enter your note" required autofocus></textarea>
+          <textarea tabIndex="6" name="note" rows="3" placeholder="Enter your note" required autofocus></textarea>
         </label>
 
         <label class='date'>
           <span>Date</span>
-          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toISOString().slice(0, 10) : '' } required>
+          <input tabIndex="6" type="date" name="date" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toISOString().slice(0, 10) : '' } required>
         </label>
 
         <label class='timeStamp'>
           <span>TimeStamp</span>
-          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toTimeString().slice(0, 5): '' } required>
+          <input tabIndex="6" type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('timeStamp') ? dataForMiniForm.timeStamp.toTimeString().slice(0, 5): '' } required>
         </label>
       `
     },
@@ -73,17 +73,17 @@ function renderMiniForm(dataForMiniForm) {
       miniFormInput: `
         <label class='numOfMinutes'>
           <span>Minutes</span>
-          <input type="number" name="numOfMinutes" min="0" value=${dataForMiniForm.hasOwnProperty('originalMinutesLogged') ? dataForMiniForm.originalMinutesLogged : '' } required autofocus>
+          <input tabIndex="5" type="number" name="numOfMinutes" min="0" value=${dataForMiniForm.hasOwnProperty('originalMinutesLogged') ? dataForMiniForm.originalMinutesLogged : '' } required autofocus>
         </label>
 
         <label class='date'>
           <span>Date</span>
-          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toISOString().slice(0, 10) : '' } required>
+          <input tabIndex="5" type="date" name="date" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toISOString().slice(0, 10) : '' } required>
         </label>
 
         <label class='timeStamp'>
           <span>TimeStamp</span>
-          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toTimeString().slice(0, 5): '' } required>
+          <input tabIndex="5" type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toTimeString().slice(0, 5): '' } required>
         </label>
       `
     },
@@ -92,17 +92,17 @@ function renderMiniForm(dataForMiniForm) {
       miniFormInput: `
         <label class='note'>
           <span>Note</span>
-          <textarea name="note" rows="3" placeholder="Enter your note" required autofocus>${dataForMiniForm.hasOwnProperty('originalNoteLogged') ? dataForMiniForm.originalNoteLogged : '' }</textarea>
+          <textarea tabIndex="6" name="note" rows="3" placeholder="Enter your note" required autofocus>${dataForMiniForm.hasOwnProperty('originalNoteLogged') ? dataForMiniForm.originalNoteLogged : '' }</textarea>
         </label>
 
         <label class='date'>
           <span>Date</span>
-          <input type="date" name="date" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toISOString().slice(0, 10) : '' } required>
+          <input tabIndex="6" type="date" name="date" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toISOString().slice(0, 10) : '' } required>
         </label>
 
         <label class='timeStamp'>
           <span>TimeStamp</span>
-          <input type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toTimeString().slice(0, 5): '' } required>
+          <input tabIndex="6" type="time" name="timeStamp" value=${dataForMiniForm.hasOwnProperty('originalDate') ? dataForMiniForm.originalDate.toTimeString().slice(0, 5): '' } required>
         </label>
       `
     },
