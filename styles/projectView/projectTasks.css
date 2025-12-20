@@ -37,7 +37,7 @@
 .newTaskBtn h3 {
   font-size: 1.3em;
   color: #777;
-  transition: font-size 0.2s;
+  transition: font-size 0.3s, color 0.3s;
 }
 
 .newTaskBtn .fa-folder {
@@ -54,7 +54,7 @@
 
 .newTaskBtn:focus,
 .newTaskBtn:hover {
-  background-color: #f8f8f8;
+  background-color: #333;
   cursor: pointer;
 }
 
@@ -64,7 +64,9 @@
   transition: font-size 0.2s;
 }
 
-.newTaskBtn:focus h3 {
+.newTaskBtn:focus h3,
+.newTaskBtn:hover h3 {
+  color: #fff;
   animation: wiggleNewTaskBtn 0.3s ease-in-out;
 }
 
