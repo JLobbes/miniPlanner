@@ -40,4 +40,14 @@ function addPromoteBtnListener(projectData, projectView, promoteBtnWrapper, prom
     // Remove darken h3 call to promate above button
     promoteBtnWrapper.firstElementChild.classList.remove('darker');
   })
+
+  promoteBtn.addEventListener('focus', () => {
+    // Darken h3 call to promate above button
+    promoteBtnWrapper.firstElementChild.classList.add('darker');
+  })
+  
+  promoteBtn.addEventListener('blur', () => {
+    // Remove darken h3 call to promate above button
+    promoteBtnWrapper.firstElementChild.classList.remove('darker');
+  })
 }
