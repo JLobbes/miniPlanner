@@ -53,7 +53,7 @@
 }
 
 .newTaskBtn:focus,
-.newTaskBtn:hover {
+.newTaskBtn:hover { 
   background-color: #333;
   cursor: pointer;
 }
@@ -125,7 +125,8 @@
   cursor: pointer;
 }
 
-.projectView .task:focus {
+.projectView .task:focus,
+.projectView .task:hover {
   animation: wiggleTask 0.3s ease-in-out;
 }
 
