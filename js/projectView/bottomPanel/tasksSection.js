@@ -35,6 +35,8 @@ function addDragLogicForTask(taskDiv) {
   draggedItem = null;
 
   function handleDragStart(e) {
+    createTaskDropZone({ top: true });
+    createTaskDropZone({ bottom: true });
     draggedItem = this; // global variable, found in /js/main.js
   }
   
@@ -43,7 +45,9 @@ function addDragLogicForTask(taskDiv) {
   }
   
   function handleDrop(e) {
+    removeDropZones();
     e.preventDefault();
+
     if (this !== draggedItem) {
       // swap elements
       const list = this.parentNode;
@@ -53,16 +57,17 @@ function addDragLogicForTask(taskDiv) {
     updateTaskOrder();
   }
   
-  function updateTaskOrder() {
-    const tasks = Array.from(document.querySelectorAll('.task'));
-    
-    tasks.forEach((task, index) => {
-      const projectID = task.getAttribute('taskid');
-      const singleProject = globalProjectData.find(p => p.uniqueProjectID === projectID);
-      if (singleProject) singleProject.placement[`level${depth}Task`] = index + 1; // depth is a global variable, found in js/main.js
-    });
-    saveProjectsToLocalStorage();
-  }
+}
+
+function updateTaskOrder() {
+  const tasks = Array.from(document.querySelectorAll('.task'));
+  
+  tasks.forEach((task, index) => {
+    const projectID = task.getAttribute('taskid');
+    const singleProject = globalProjectData.find(p => p.uniqueProjectID === projectID);
+    if (singleProject) singleProject.placement[`level${depth}Task`] = index + 1; // depth is a global variable, found in js/main.js
+  });
+  saveProjectsToLocalStorage();
 }
 
 // Element construction
@@ -117,4 +122,70 @@ function createTasksWrapper(projectData, projectView) {
   return wrapper;
 }
 
+function createTaskDropZone({ top = false, bottom = false }) {
+  if (!top && !bottom) {
+    console.error('You have not chosen a drop zone location.');
+    throw new Error('No drop zone location chosen.');
+  };
+  
+  function getDropZoneSpecs() {
+    const elemToCover = document.querySelector(
+      top ? '.timeWrapper' : bottom ? '.notesWrapper' : 'error'
+    );
+    const rect = elemToCover.getBoundingClientRect();
+
+    return {
+      elemToCover,
+      rect,
+      width: rect.width,
+      height: rect.height,
+      topLeftCoord: { x: rect.left, y: rect.top },
+    };
+  }
+
+  const dropZoneSpecs = getDropZoneSpecs();
+  const dropZone = document.createElement('div');
+  dropZone.style.width = `${dropZoneSpecs.width}px`;
+  dropZone.style.height = `${dropZoneSpecs.height}px`;
+
+  dropZone.classList.add('dropZone');
+  if(top) dropZone.classList.add('sendToTop');
+  if(bottom) dropZone.classList.add('sendToBottom');
+
+  dropZone.innerHTML = `
+      <h3>${ bottom ? 'Send to Bottom <i class="fa-solid fa-down-long"></i>' : top ? 'Send to Top <i class="fa-solid fa-up-long"></i>' : 'error'}</h3>
+    `
+  ;
+
+  dropZone.addEventListener('dragover', e => e.preventDefault());
+  dropZone.addEventListener('drop', (e) => {
+    const landedOnDropZone = e.target.closest('.dropZone');
+    if(landedOnDropZone) {
+      const tasksList = document.querySelector('.tasksList');
+
+
+      if(landedOnDropZone.classList.contains('sendToTop')) {
+        tasksList.insertBefore(draggedItem, tasksList.firstChild);
+        tasksList.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      if(landedOnDropZone.classList.contains('sendToBottom')) {
+        tasksList.appendChild(draggedItem);
+        tasksList.scrollTo({ top: tasksList.scrollHeight, behavior: 'smooth' });
+      }
+      updateTaskOrder();
+      removeDropZones();
+    }
+  })
+
+  dropZoneSpecs.elemToCover.appendChild(dropZone);
+}
+
+function removeDropZones() {
+  const dropZones = document.querySelectorAll('.dropZone');
+  dropZones.forEach((dropZone) => {
+      dropZone.remove();
+    }
+  );
+}
 
