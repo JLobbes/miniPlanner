@@ -6,6 +6,7 @@ function createSearchProjectTreeView() {
   searchProjectTreeView.className = 'searchProjectTreeView';
 
   createSearchProjectTreeViewHeader(searchProjectTreeView);
+  createSearchProjectTreeViewport(searchProjectTreeView);
 
   return searchProjectTreeView;
 }
@@ -24,6 +25,21 @@ function createSearchProjectTreeViewHeader(searchProjectTreeView) {
   addCloseSearchProjectTreeListener(searchProjectTreeView, escapeSearchViewBtn);
 
   return header;
+}
+
+function createSearchProjectTreeViewport(searchProjectTreeView) {
+  const viewport = document.createElement('div');
+  viewport.className = 'searchProjectTreeViewport';
+
+  const canvas = document.createElement('div');
+  canvas.className = 'searchProjectTreeCanvas';
+
+  viewport.append(canvas);
+  searchProjectTreeView.append(viewport);
+
+  addSearchProjectTreePanZoom(viewport, canvas);
+
+  return viewport;
 }
 
 function addCloseSearchProjectTreeListener(searchProjectTreeView, escapeSearchViewBtn) {
@@ -67,4 +83,169 @@ function closeSearchProjectTreeView(searchProjectTreeView, escHandler) {
     document.removeEventListener('keydown', escHandler);
     searchProjectTreeView.remove();
   }, 1500);
+}
+
+function addSearchProjectTreePanZoom(viewport, canvas) {
+  let x = 0, y = 0, scale = 1;
+  let isPanning = false;
+  let startX, startY;
+
+  const updateTransform = () => {
+    // canvas.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    const svg = canvas.querySelector('svg');
+    if(svg) {
+      svg.setAttribute('transform', `translate(${x}, ${y}) scale(${scale})`);
+    }
+  };
+
+  // PAN
+  viewport.addEventListener('mousedown', e => {
+    isPanning = true;
+    startX = e.clientX - x;
+    startY = e.clientY - y;
+    viewport.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!isPanning) return;
+    x = e.clientX - startX;
+    y = e.clientY - startY;
+    updateTransform();
+  });
+
+  document.addEventListener('mouseup', () => {
+    isPanning = false;
+    viewport.style.cursor = 'grab';
+  });
+
+  // ZOOM (wheel)
+  viewport.addEventListener('wheel', e => {
+    e.preventDefault();
+
+    const zoomIntensity = 0.1;
+    const direction = e.deltaY > 0 ? -1 : 1;
+    const factor = 1 + zoomIntensity * direction;
+
+    scale = Math.min(Math.max(scale * factor, 0.2), 5);
+    updateTransform();
+  }, { passive: false });
+}
+
+function renderSearchProjectTree() {
+  const canvas = document.querySelector('.searchProjectTreeCanvas');
+  canvas.innerHTML = '';
+
+  const tree = buildGlobalProjectTree();
+  tree.forEach(node => {
+    canvas.append(renderTreeNode(node));
+  });
+}
+
+function renderTreeNode(node) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'treeNode';
+  wrapper.textContent = node.projectTitle || 'Untitled';
+
+  if (node.children.length) {
+    const children = document.createElement('div');
+    children.className = 'treeChildren';
+
+    node.children.forEach(child => {
+      children.append(renderTreeNode(child));
+    });
+
+    wrapper.append(children);
+  }
+
+  return wrapper;
+}
+
+function renderRadialProjectTree() {
+  const canvas = document.querySelector('.searchProjectTreeCanvas');
+  canvas.innerHTML = '';
+
+  const tree = buildGlobalProjectTree(); // Array of root nodes
+  const layout = [];
+
+  // Canvas center
+  const centerX = canvas.offsetWidth / 2;
+  const centerY = canvas.offsetHeight / 2;
+
+  const virtualRoot = {
+    children: tree,
+    uniqueProjectID: 'virtualRoot'
+  };
+  layoutRadial(virtualRoot, centerX, centerY, 0, 2 * Math.PI, 0, layout);
+
+
+  drawRadialTree(layout, canvas);
+  // drawRadialLines(layout, canvas);
+  // drawRadialNodes(layout, canvas);
+}
+
+function drawRadialTree(layout, canvas) {
+  const minX = Math.min(...layout.map(n => n.x)) - 50;
+  const maxX = Math.max(...layout.map(n => n.x)) + 50;
+  const minY = Math.min(...layout.map(n => n.y)) - 50;
+  const maxY = Math.max(...layout.map(n => n.y)) + 50;
+
+  const byId = Object.fromEntries(layout.map(n => [n.node.uniqueProjectID, n]));
+
+  let svgContent = '';
+
+  // Lines
+  layout.forEach(({ node }) => {
+    node.children.forEach(child => {
+      const parent = byId[node.uniqueProjectID];
+      const kid = byId[child.uniqueProjectID];
+      svgContent += `<line x1="${parent.x}" y1="${parent.y}" x2="${kid.x}" y2="${kid.y}" stroke="black" stroke-width="2" />`;
+    });
+  });
+
+  // Nodes (dots)
+  layout.forEach(({ node, x, y }) => {
+    svgContent += `<circle cx="${x}" cy="${y}" r="5" fill="black" />`;
+  });
+
+  // Single SVG container
+  canvas.innerHTML = `<svg width="100%" height="100%" viewBox="${minX} ${minY} ${maxX - minX} ${maxY - minY}">${svgContent}</svg>`;
+}
+
+function layoutRadial(node, centerX, centerY, startAngle, endAngle, depth, layout) {
+  const radius = depth * 300; // distance per level
+  const angle = (startAngle + endAngle) / 2;
+
+  const x = centerX + radius * Math.cos(angle);
+  const y = centerY + radius * Math.sin(angle);
+
+  layout.push({ node, x, y });
+
+  const children = node.children || [];
+  if (!children.length) return layout;
+
+  // Total size of all children
+  const totalSize = children.reduce((sum, child) => sum + getSubtreeSize(child), 0);
+
+  let currentAngle = startAngle;
+
+  children.forEach(child => {
+    const childSize = getSubtreeSize(child);
+    const minAngle = 0.05; // ~3 degrees
+    const angleSpan = Math.max(minAngle, (endAngle - startAngle) * (childSize / totalSize));
+
+    // const angleSpan = (endAngle - startAngle) * (childSize / totalSize);
+    const childStart = currentAngle;
+    const childEnd = currentAngle + angleSpan;
+
+    layoutRadial(child, centerX, centerY, childStart, childEnd, depth + 1, layout);
+    currentAngle += angleSpan;
+  });
+
+  return layout;
+}
+
+
+function getSubtreeSize(node) {
+  if (!node.children || node.children.length === 0) return 1;
+  return 1 + node.children.reduce((sum, child) => sum + getSubtreeSize(child), 0);
 }

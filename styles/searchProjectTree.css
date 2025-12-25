@@ -85,3 +85,46 @@
               border 0.2s,
               box-shadow 0.2s;
 }
+
+.searchProjectTreeView .searchProjectTreeViewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas {
+  position: absolute;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.treeNode {
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.treeChildren {
+  margin-left: 16px;
+}
+
+.treeLines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.treeNodes {
+  position: relative;
+}
+
+.searchProjectTreeCanvas svg circle {
+  transition: transform 0.2s, fill 0.2s;
+}
+
+.searchProjectTreeCanvas svg circle:hover {
+  fill: red;       /* highlight color */
+  transform: scale(1.5); /* slightly bigger */
+  cursor: pointer;
+}

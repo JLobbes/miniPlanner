@@ -266,3 +266,24 @@ function setProjectPinned(projectData, pinToDash) {
   projectData.pinToDash = Boolean(pinToDash);
   syncProjectInGlobalData(projectData);
 }
+
+function buildGlobalProjectTree() {
+  const map = new Map();
+
+  globalProjectData.forEach(p => {
+    map.set(p.uniqueProjectID, { ...p, children: [] });
+  });
+
+  const roots = [];
+
+  map.forEach(node => {
+    if (node.parentProjectID) {
+      map.get(node.parentProjectID)?.children.push(node);
+    } else {
+      roots.push(node);
+    }
+  });
+
+  globalSearchableProjectTree = roots;
+  return roots;d
+}

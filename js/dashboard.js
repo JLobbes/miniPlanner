@@ -7,6 +7,8 @@ function addSearchProjectTreeListener() {
   const searchProjectTreeBtn = document.querySelector('#searchProjectTreeBtn');
   searchProjectTreeBtn.addEventListener('click', () => {
     openSearchProjectTreeView();
+    // renderSearchProjectTree();
+    renderRadialProjectTree();
   });
 
   const ctrlSHandler = (e) => {

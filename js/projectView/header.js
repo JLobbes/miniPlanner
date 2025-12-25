@@ -161,16 +161,15 @@ function addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn) {
       }
     }  
   
-    document.addEventListener('keydown', escapeHandler);    
+    document.addEventListener('keydown', escapeHandler);  
+    console.log('escape handler for editing projectView header escape press added. ');
+    return escapeHandler;
   }
 
   catch(e) {
     console.error('escape handler for editing projectView header escape press added. ')
     return;
   }
-
-  console.log('escape handler for editing projectView header escape press added. ');
-    return escapeHandler;
 }
 
 function addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn) {
