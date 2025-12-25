@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDataToGlobalProjects();
   renderProjectsToDash();
 
-  // TO-DO: decide wethere these two should be in dashboard.js or not.
+  // TO-DO: decide whether these three should be in dashboard.js or not.
+  addSearchProjectTreeListener();
   addDownloadProjectDataListener();
   addUploadProjectDataListener();
+  addReturnToDashboardListener();
   console.log('Page loaded and ready!');
   
 });
@@ -16,13 +18,24 @@ const homeView = document.getElementById('homeView'); // Used Globally
 let projectViews = document.getElementsByClassName('projectView');
 const newProjBtn = document.querySelectorAll('.newProjectButton')[0];
 
-homeView.addEventListener('click', (e) => {
-  // Exclude project tiles from this listener.
-  if (e.target.closest('.projectTile')) return;
+function addReturnToDashboardListener() {
+  try {
+    homeView.addEventListener('click', (e) => {
+      // Exclude from this listener.
+      if (e.target.closest('.projectTile')) return;
+      if (e.target.closest('#searchProjectTreeBtn')) return;
+      if (e.target.closest('.escapeSearchViewBtn')) return;
+    
+      // Otherwise
+      closeAllProjectViews({});
+    });
+  }
 
-  // Otherwise
-  closeAllProjectViews({});
-});
+  catch(e) {
+    console.error('return to dashboard click listener not added');
+  }
+  console.log('return to dashboard click listener added');
+}
 
 newProjBtn.addEventListener('click', (e) => {
   e.stopPropagation(); // Prevents the event from bubbling up to homeView

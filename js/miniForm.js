@@ -165,6 +165,7 @@ function addMiniFormEscapePressListener(rejectBtn) {
 
   const escHandler = (e) => {
     if (e.key === 'Escape') {
+      e.preventDefault();
       rejectBtn.click();   
     }
   };

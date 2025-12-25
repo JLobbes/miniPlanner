@@ -43,7 +43,7 @@ function openProjectView(projectData, hasParent) {
   addNoteScrollAnimation();
   
   // Trigger drop down animation
-  triggerDropDown(projectView, 'active', 20);
+  triggerDropDown({ element: projectView, className: 'active', delay: 20, hideDashboardActions: true });
 }
 
 function closeSingleProjectView(projectData, projectView) {
@@ -95,19 +95,22 @@ function addProjectEventListeners(projectData, projectView, renderAsSingleTask) 
   addAddNoteLogListener(projectData, projectView);
   if(!renderAsSingleTask) addNewTaskListener(projectData, projectView);
 
-  handleProjViewEscape = addProjectViewEscapeKeyPressListener();
-
+  addProjectViewEscapeKeyPressListener();
 }
 
 function addProjectViewEscapeKeyPressListener() {
   handleProjViewEscape = (e) => {
     if (e.key === 'Escape') {
+      e.preventDefault();
       
       const editingProjectHeader = document.querySelector('.editingProjectTitle');
       if(editingProjectHeader) return;
 
       const usingMiniForm = document.querySelector('.miniForm');
       if(usingMiniForm) return;
+
+      const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+      if(searchProjectTreeViewOpen) return
 
       // Return to dashboard
       homeView.click();
@@ -118,13 +121,19 @@ function addProjectViewEscapeKeyPressListener() {
 }
 
 function clearProjectViewKeyPressListeners() {
-  document.removeEventListener('keydown', handleProjViewEscape);
+  try {
+    document.removeEventListener('keydown', handleProjViewEscape);
+  } 
+  catch(e) {
+    console.error('failed to clear escape listener.');
+  }
+  console.log('Keypress listener cleared.');
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.
 // Will be a pop-up if not used.
-function triggerDropDown(element, className = 'active', delay = 20) {
-  hideDashboardActions();
+function triggerDropDown({ element, className = 'active', delay = 20, hideDashboardActions = true }) {
+  if (hideDashboardActions) hideDashboardActionsElipses();
   element.classList.remove(className);
   void element.offsetWidth;
   setTimeout(() => {

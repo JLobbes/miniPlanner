@@ -1,6 +1,24 @@
 // /js/dashboard.js
 
 
+
+function addSearchProjectTreeListener() {
+
+  const searchProjectTreeBtn = document.querySelector('#searchProjectTreeBtn');
+  searchProjectTreeBtn.addEventListener('click', () => {
+    openSearchProjectTreeView();
+  });
+
+  const ctrlSHandler = (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      searchProjectTreeBtn.click();
+    }
+  };
+
+  document.addEventListener('keydown', ctrlSHandler);
+}
+
 function addUploadProjectDataListener() {
 
   const uploadProjectDataBtn = document.querySelector('#uploadDataBtn');
@@ -17,7 +35,7 @@ function addDownloadProjectDataListener() {
   });
 }
 
-function hideDashboardActions() {
+function hideDashboardActionsElipses() {
   
   const dashboardActionsDropDownBtn = document.querySelector('#dashboardActions');
   dashboardActionsDropDownBtn.style.display = 'none';
