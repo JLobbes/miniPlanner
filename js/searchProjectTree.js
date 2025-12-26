@@ -16,7 +16,10 @@ function createSearchProjectTreeViewHeader(searchProjectTreeView) {
   const header = document.createElement('div');
   header.className = 'searchProjectTreeHeader';
 
+  header.append(createSearchProjectTreeSearchBar());
+
   const escapeSearchViewBtn = document.createElement('button')
+  escapeSearchViewBtn.tabIndex = '1';
   escapeSearchViewBtn.className = 'escapeSearchViewBtn';
   escapeSearchViewBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`
   header.append(escapeSearchViewBtn);
@@ -25,6 +28,26 @@ function createSearchProjectTreeViewHeader(searchProjectTreeView) {
   addCloseSearchProjectTreeListener(searchProjectTreeView, escapeSearchViewBtn);
 
   return header;
+}
+
+function createSearchProjectTreeSearchBar() {
+
+  const searchBarWrapper = document.createElement('div');
+  searchBarWrapper.className = 'searchBarWrapper';
+
+  const searchButton = document.createElement('button');
+  searchButton.className = 'executeSearchProjectTreeBtn';
+  searchButton.tabIndex = '2';
+  searchButton.innerHTML = `<span class="fa-solid fa-search"></span>`;
+
+  const searchBarInput = document.createElement('input');
+  searchBarInput.className = 'searchBarInput';
+  searchBarInput.tabIndex = '2';
+  searchBarInput.type = 'text';
+
+  searchBarWrapper.append(searchBarInput, searchButton);
+
+  return searchBarWrapper;
 }
 
 function createSearchProjectTreeViewport(searchProjectTreeView) {

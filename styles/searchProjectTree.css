@@ -6,7 +6,7 @@
   justify-content: flex-start;
   bottom: -100%; 
   left: 10vw;
-  height: 90vh;
+  height: 98vh;
   width: 80vw;
   border: #111 solid 1px;
   border-radius: 0.5em;
@@ -25,33 +25,110 @@
 }
 
 .searchProjectTreeView.active {
-  bottom: 4vh; /* slides up into view */
+  bottom: 1vh; /* slides up into view */
 }
 
 .searchProjectTreeHeader {
-  position: relative;
+  position: absolute;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  height: auto;
+  height: 5em;
   width: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  z-index: 25;
 }
 
-.searchProjectTreeHeader button {
+.searchProjectTreeHeader .searchBarWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
   background-color: rgba(255, 255, 255, 0);
-  margin: 1em 1em 1em 1em;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .searchBarInput {
+  margin: 0em 0em 0em 5em;
+  height: 2.25em;
+  max-width: 22em;
+  width: 30%;
+  border-top: 1px solid #111 ;
+  border-right: none;
+  border-bottom: 1px solid #111 ;
+  border-left: 1px solid #111 ;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  text-indent: 1em;
+  font-size: 1.1em;
+  background-color: #fff;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .searchBarInput:focus, 
+.searchProjectTreeHeader .searchBarWrapper .searchBarInput:hover {
+  background-color: #ddd;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .searchBarInput:focus-visible {
+  outline: none;
+}
+
+.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn span {
+  font-size: 1.2em;
+  padding: 0.65em 0.6em 0.71em 0.5em;
+  color: #fff;
+}
+
+.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #111;
+  border: solid 1px #111;
+  border-top-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  cursor: pointer;
+}
+
+.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:focus,
+.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:hover {
+  background-color: #fff;
+  transition: background-color 0.2s,  
+              border 0.2s,
+              box-shadow 0.2s;
+  box-shadow: 
+    0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
+    0 0.25em 0.75em rgba(0, 0, 0, 0.15); 
+}
+
+.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:focus span,
+.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:hover span {
+  outline: #111 solid 2px;
+  outline-offset: -0.1em;
+  border-top-right-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  color: #111;
+}
+
+.searchProjectTreeHeader .escapeSearchViewBtn {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0);
+  margin: 1em 1.5em 0em 0em;
   border: none;
   border: 1em;
 }
 
-.searchProjectTreeHeader button:focus-visible {
+.searchProjectTreeHeader .escapeSearchViewBtn:focus-visible {
   outline: none;
 }
 
 .searchProjectTreeHeader button.escapeSearchViewBtn i {
-  padding: 0.25em 0.65em 0.25em 0.65em;
-  font-size: 1.15em;
+  display: block;
+  padding: 0.25em 0.65em 0.35em 0.65em;
+  font-size: 1.3em;
   font-weight: bold;
   background-color: #444;
   color: #fff;
@@ -71,7 +148,6 @@
 
 .searchProjectTreeHeader button.escapeSearchViewBtn:focus i,
 .searchProjectTreeHeader button.escapeSearchViewBtn:hover i {
-  padding: 0.25em 0.65em 0.25em 0.65em;
   background-color: #fff;
   color: #333;
   border: solid 1px black;
@@ -99,32 +175,32 @@
   will-change: transform;
 }
 
-.treeNode {
-  padding: 4px 8px;
+.searchProjectTreeView .searchProjectTreeCanvas .treeNode {
+  padding: 0.5em 1em;
   cursor: pointer;
 }
 
-.treeChildren {
+.searchProjectTreeView .searchProjectTreeCanvas .treeChildren {
   margin-left: 16px;
 }
 
-.treeLines {
+.searchProjectTreeView .searchProjectTreeCanvas .treeLines {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1000;
 }
 
-.treeNodes {
+.searchProjectTreeView .searchProjectTreeCanvas .treeNodes {
   position: relative;
 }
 
-.searchProjectTreeCanvas svg circle {
+.searchProjectTreeView .searchProjectTreeCanvas .searchProjectTreeCanvas svg circle {
   transition: transform 0.2s, fill 0.2s;
 }
 
-.searchProjectTreeCanvas svg circle:hover {
+.searchProjectTreeView .searchProjectTreeCanvas .searchProjectTreeCanvas svg circle:hover {
   fill: red;       /* highlight color */
-  transform: scale(1.5); /* slightly bigger */
+  /* transform: scale(1.5); slightly bigger */
   cursor: pointer;
 }
