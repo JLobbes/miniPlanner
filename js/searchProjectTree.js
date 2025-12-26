@@ -47,8 +47,50 @@ function createSearchProjectTreeSearchBar() {
 
   searchBarWrapper.append(searchBarInput, searchButton);
 
+  addSearchProjectTreeSearchBarListeners(searchBarInput);
+
   return searchBarWrapper;
 }
+
+function addSearchProjectTreeSearchBarListeners(searchBarInput) {
+
+  searchBarInput.addEventListener('input', () => {
+    const searchValue = searchBarInput.value.trim();
+    console.log(runProjectTreeSearch(searchValue));
+  }); 
+}
+
+function runProjectTreeSearch(searchValue) {
+  if (!searchValue) return globalProjectData;
+
+  return globalProjectData
+    .map(project => {
+      const titleScore = fuzzyScore(searchValue, project.projectTitle);
+      const descScore = fuzzyScore(searchValue, project.projectDescription);
+      const bestScore = titleScore !== -1 ? titleScore : descScore;
+      return { project, score: bestScore };
+    })
+    .filter(item => item.score !== -1)
+    .sort((a, b) => a.score - b.score)
+    .map(item => item.project);
+}
+
+function fuzzyScore(query, text) {
+  query = query.toLowerCase();
+  text = text.toLowerCase();
+
+  let qi = 0;
+  let firstMatch = -1;
+
+  for (let ti = 0; ti < text.length && qi < query.length; ti++) {
+    if (text[ti] === query[qi]) {
+      if (firstMatch === -1) firstMatch = ti;
+      qi++;
+    }
+  }
+  return qi === query.length ? firstMatch : -1;
+}
+
 
 function createSearchProjectTreeViewport(searchProjectTreeView) {
   const viewport = document.createElement('div');
