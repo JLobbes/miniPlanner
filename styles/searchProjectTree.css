@@ -75,7 +75,7 @@
   outline: none;
 }
 
-.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn span {
+.searchProjectTreeHeader .searchBarWrapper  button.executeSearchProjectTreeBtn span {
   font-size: 1.2em;
   padding: 0.65em 0.6em 0.71em 0.5em;
   color: #fff;
@@ -93,7 +93,7 @@
   cursor: pointer;
 }
 
-.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:focus,
+/* .searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:focus,
 .searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:hover {
   background-color: #fff;
   transition: background-color 0.2s,  
@@ -102,16 +102,16 @@
   box-shadow: 
     0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
     0 0.25em 0.75em rgba(0, 0, 0, 0.15); 
-}
+} */
 
-.searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:focus span,
+/* .searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:focus span,
 .searchProjectTreeHeader .searchBarWrapper button.executeSearchProjectTreeBtn:hover span {
   outline: #111 solid 2px;
   outline-offset: -0.1em;
   border-top-right-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
   color: #111;
-}
+} */
 
 .searchProjectTreeHeader .escapeSearchViewBtn {
   position: relative;
