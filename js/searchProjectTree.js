@@ -16,7 +16,7 @@ function createSearchProjectTreeViewHeader(searchProjectTreeView) {
   const header = document.createElement('div');
   header.className = 'searchProjectTreeHeader';
 
-  header.append(createSearchProjectTreeSearchBar());
+  header.append(createSearchProjectTreeSearchBar(searchProjectTreeView));
 
   const escapeSearchViewBtn = document.createElement('button')
   escapeSearchViewBtn.tabIndex = '1';
@@ -30,7 +30,7 @@ function createSearchProjectTreeViewHeader(searchProjectTreeView) {
   return header;
 }
 
-function createSearchProjectTreeSearchBar() {
+function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 
   const searchBarWrapper = document.createElement('div');
   searchBarWrapper.className = 'searchBarWrapper';
@@ -54,12 +54,12 @@ function createSearchProjectTreeSearchBar() {
 
   searchBarWrapper.append(searchBarInput, searchButton, searchResultContainer);
 
-  addSearchProjectTreeSearchBarListeners(searchBarInput);
+  addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView);
 
   return searchBarWrapper;
 }
 
-function addSearchProjectTreeSearchBarListeners(searchBarInput) {
+function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView) {
 
   const handleSearchInput = (e) => {
     const searchValue = searchBarInput.value.trim();
@@ -72,12 +72,9 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput) {
     const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
     searchResultsLocation.innerHTML = ``;
   };
-  document.addEventListener('click', handleClickAway);
-}
+  searchProjectTreeView.addEventListener('click', handleClickAway);
 
-function clearSeachProjectTreeListeners({ handleClickAway: clickAwayListener = false, searchInput = false }) {
-  if(clickAwayListener) document.removeEventListener('click', handleClickAway);
-  if(searchInput) document.removeEventListener('click', handleClickAway);
+  return { handleClickAway, handleSearchInput };
 }
 
 function runProjectTreeSearch(searchValue) {
@@ -123,6 +120,7 @@ function renderSearchResults({ results, allResults = false }) {
     const searchResultLine = document.createElement('div');
     searchResultLine.classList = 'projectTreeSearchResult';
     searchResultLine.tabIndex = '2';
+    searchResultLine.title = `${singleResult.projectTitle}`;
     searchResultLine.setAttribute('projectID', singleResult.uniqueProjectID);
 
     const icon = document.createElement('span');
@@ -194,7 +192,6 @@ function closeSearchProjectTreeView(searchProjectTreeView, escHandler) {
   setTimeout(() => {
     // Allow for slide up animation
     document.removeEventListener('keydown', escHandler);
-    clearSeachProjectTreeListeners({ handleClickAway: true });
     searchProjectTreeView.remove();
   }, 1500);
 }
