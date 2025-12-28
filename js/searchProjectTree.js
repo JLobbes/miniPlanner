@@ -48,7 +48,10 @@ function createSearchProjectTreeSearchBar() {
   searchBarInput.tabIndex = '2';
   searchBarInput.type = 'text';
 
-  searchBarWrapper.append(searchBarInput, searchButton);
+  const searchResultContainer = document.createElement('ul');
+  searchResultContainer.classList = 'projectTreeSearchResults';
+
+  searchBarWrapper.append(searchBarInput, searchButton, searchResultContainer);
 
   addSearchProjectTreeSearchBarListeners(searchBarInput);
 
@@ -59,7 +62,9 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput) {
 
   searchBarInput.addEventListener('input', () => {
     const searchValue = searchBarInput.value.trim();
+
     console.log(runProjectTreeSearch(searchValue));
+    renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
   }); 
 }
 
@@ -94,6 +99,24 @@ function fuzzyScore(query, text) {
   return qi === query.length ? firstMatch : -1;
 }
 
+function renderSearchResults({ results, allResults = false }) {
+
+  const renderLocation = document.querySelector('.projectTreeSearchResults');
+  renderLocation.innerHTML = ``;
+  
+  const topTen = results.slice(0, 10);
+  const resultsForRender = (allResults) ? results : topTen;
+  resultsForRender.forEach(singleResult => {
+    const searchResultLine = document.createElement('li');
+    searchResultLine.classList = 'projectTreeSearchResult';
+    searchResultLine.tabIndex = '2';
+    searchResultLine.setAttribute('projectID', singleResult.uniqueProjectID);
+
+    searchResultLine.innerText = `${singleResult.projectTitle}`;
+
+    renderLocation.append(searchResultLine);
+  })
+}
 
 function createSearchProjectTreeViewport(searchProjectTreeView) {
   const viewport = document.createElement('div');
@@ -159,7 +182,6 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
   let startX, startY;
 
   const updateTransform = () => {
-    // canvas.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
     const svg = canvas.querySelector('svg');
     if(svg) {
       svg.setAttribute('transform', `translate(${x}, ${y}) scale(${scale})`);
@@ -247,8 +269,6 @@ function renderRadialProjectTree() {
 
 
   drawRadialTree(layout, canvas);
-  // drawRadialLines(layout, canvas);
-  // drawRadialNodes(layout, canvas);
 }
 
 function drawRadialTree(layout, canvas) {
@@ -311,7 +331,6 @@ function layoutRadial(node, centerX, centerY, startAngle, endAngle, depth, layou
 
   return layout;
 }
-
 
 function getSubtreeSize(node) {
   if (!node.children || node.children.length === 0) return 1;
