@@ -128,21 +128,22 @@
   background-color: none;
 }
 
-.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults li.projectTreeSearchResult {
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   height: 2.5em;
   width: 100%;
+  gap: 0.5em;
   border: #333 solid 1px;
   border-radius: 0.5em;
   background-color: #fff;
   list-style: none;
 }
 
-.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults li.projectTreeSearchResult:focus,
-.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults li.projectTreeSearchResult:hover {
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult:focus,
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult:hover {
   box-shadow: 
     0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
     0 0.25em 0.75em rgba(0, 0, 0, 0.15); 
@@ -154,6 +155,17 @@
   25% { transform: translateX(-2px); }
   50% { transform: translateX(2px); }
   75% { transform: translateX(-2px); }
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectIcon {
+  margin: 0.25em 0em 0.25em 0.75em;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectTitle {
+  max-width: 16em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .searchProjectTreeHeader .escapeSearchViewBtn {

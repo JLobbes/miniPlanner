@@ -61,12 +61,23 @@ function createSearchProjectTreeSearchBar() {
 
 function addSearchProjectTreeSearchBarListeners(searchBarInput) {
 
-  searchBarInput.addEventListener('input', () => {
+  const handleSearchInput = (e) => {
     const searchValue = searchBarInput.value.trim();
-
-    console.log(runProjectTreeSearch(searchValue));
     renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
-  }); 
+  }
+  document.addEventListener('input', handleSearchInput);
+  
+  const handleClickAway = (e) => {
+    if (e.target.closest('.projectTreeSearchResult')) return;
+    const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
+    searchResultsLocation.innerHTML = ``;
+  };
+  document.addEventListener('click', handleClickAway);
+}
+
+function clearSeachProjectTreeListeners({ handleClickAway: clickAwayListener = false, searchInput = false }) {
+  if(clickAwayListener) document.removeEventListener('click', handleClickAway);
+  if(searchInput) document.removeEventListener('click', handleClickAway);
 }
 
 function runProjectTreeSearch(searchValue) {
@@ -108,13 +119,23 @@ function renderSearchResults({ results, allResults = false }) {
   const topTen = results.slice(0, 10);
   const resultsForRender = (allResults) ? results : topTen;
   resultsForRender.forEach(singleResult => {
-    const searchResultLine = document.createElement('li');
+
+    const searchResultLine = document.createElement('div');
     searchResultLine.classList = 'projectTreeSearchResult';
     searchResultLine.tabIndex = '2';
     searchResultLine.setAttribute('projectID', singleResult.uniqueProjectID);
 
-    searchResultLine.innerText = `${singleResult.projectTitle}`;
+    const icon = document.createElement('span');
+    const renderAsSingleTask = !hasChildren(singleResult.uniqueProjectID) || !singleResult.parentProjectID === null;
+    icon.className = `${ (renderAsSingleTask) ? 'fa-regular fa-rectangle-list' : 'fa-solid fa-folder' }`; 
+    icon.classList.add('projectIcon');
 
+    const projectTitle = document.createElement('p');
+    projectTitle.className = 'projectTitle';
+    
+    projectTitle.innerText = `${singleResult.projectTitle}`;
+    
+    searchResultLine.append(icon, projectTitle);
     renderLocation.append(searchResultLine);
   })
 }
@@ -173,6 +194,7 @@ function closeSearchProjectTreeView(searchProjectTreeView, escHandler) {
   setTimeout(() => {
     // Allow for slide up animation
     document.removeEventListener('keydown', escHandler);
+    clearSeachProjectTreeListeners({ handleClickAway: true });
     searchProjectTreeView.remove();
   }, 1500);
 }
