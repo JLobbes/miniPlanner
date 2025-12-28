@@ -33,7 +33,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   height: 5em;
   width: 100%;
   background-color: rgba(255, 255, 255, 0);
@@ -46,23 +46,23 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
+  height: auto;
+  width: auto;
+  border: #333 solid 1px;
+  border-radius: 0.5em;
   background-color: rgba(255, 255, 255, 0);
 }
 
 .searchProjectTreeHeader .searchBarWrapper .searchBarInput {
-  margin: 0em 0em 0em 5em;
+  position: relative;
+  margin: 0em 0em 0em 0em;
   height: 2.25em;
-  max-width: 22em;
-  width: 30%;
-  border-top: 1px solid #333 ;
-  border-right: none;
-  border-bottom: 1px solid #333 ;
-  border-left: 1px solid #333 ;
-  border-top-left-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
+  width: 22em;
   text-indent: 1em;
   font-size: 1.1em;
+  border: none;
+  border-top-left-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
   background-color: #fff;
 }
 
@@ -123,8 +123,8 @@
   top: 2.5em;
   height: auto;
   max-width: 24.25em;
-  width: calc(43% + 2.25em);
-  margin: 0.25em 0 0 5.5em;
+  width: 100%;
+  margin: 0.25em 0em 0em 0em;
   background-color: none;
 }
 
@@ -133,8 +133,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  height: 2em;
-  width: 97%;
+  height: 2.5em;
+  width: 100%;
   border: #333 solid 1px;
   border-radius: 0.5em;
   background-color: #fff;
@@ -157,9 +157,11 @@
 }
 
 .searchProjectTreeHeader .escapeSearchViewBtn {
-  position: relative;
+  position: absolute;
   background-color: rgba(255, 255, 255, 0);
-  margin: 1em 1.5em 0em 0em;
+  right: 1.25em;
+  top: 1em;
+  margin: 0em 0em 0em 0em;
   border: none;
   border: 1em;
 }

@@ -37,6 +37,7 @@ function createSearchProjectTreeSearchBar() {
 
   // The searchButton has no function, search is done on 'input'. 
   // But serves currently as an icon only. 
+
   const searchButton = document.createElement('button');
   searchButton.disabled = true;
   searchButton.className = 'executeSearchProjectTreeBtn';
