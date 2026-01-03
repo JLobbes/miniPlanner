@@ -25,7 +25,7 @@ function createSearchProjectTreeViewHeader(searchProjectTreeView) {
   header.append(escapeSearchViewBtn);
   searchProjectTreeView.append(header);
 
-  addCloseSearchProjectTreeListener(searchProjectTreeView, escapeSearchViewBtn);
+  addCloseSearchProjectTreeListeners(searchProjectTreeView, escapeSearchViewBtn);
 
   return header;
 }
@@ -61,20 +61,18 @@ function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 
 function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView) {
 
-  const handleSearchInput = (e) => {
+
+  globalListeners.input = (e) => {
     const searchValue = searchBarInput.value.trim();
     renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
   }
-  document.addEventListener('input', handleSearchInput);
   
   const handleClickAway = (e) => {
     if (e.target.closest('.projectTreeSearchResult')) return;
     const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
     searchResultsLocation.innerHTML = ``;
   };
-  searchProjectTreeView.addEventListener('click', handleClickAway);
-
-  return { handleClickAway, handleSearchInput };
+  globalListeners.click = handleClickAway;
 }
 
 function runProjectTreeSearch(searchValue) {
@@ -121,7 +119,6 @@ function renderSearchResults({ results, allResults = false }) {
     searchResultLine.classList = 'projectTreeSearchResult';
     searchResultLine.tabIndex = '2';
     searchResultLine.title = `${singleResult.projectTitle}`;
-    searchResultLine.setAttribute('projectID', singleResult.uniqueProjectID);
 
     const icon = document.createElement('span');
     const renderAsSingleTask = !hasChildren(singleResult.uniqueProjectID) || !singleResult.parentProjectID === null;
@@ -130,7 +127,7 @@ function renderSearchResults({ results, allResults = false }) {
 
     const projectTitle = document.createElement('p');
     projectTitle.className = 'projectTitle';
-    
+  
     projectTitle.innerText = `${singleResult.projectTitle}`;
     
     searchResultLine.append(icon, projectTitle);
@@ -153,25 +150,17 @@ function createSearchProjectTreeViewport(searchProjectTreeView) {
   return viewport;
 }
 
-function addCloseSearchProjectTreeListener(searchProjectTreeView, escapeSearchViewBtn) {
+function addCloseSearchProjectTreeListeners(searchProjectTreeView, escapeSearchViewBtn) {
   escapeSearchViewBtn.addEventListener('click', () => {
-    closeSearchProjectTreeView(searchProjectTreeView, escHandler)
+    closeSearchProjectTreeView(searchProjectTreeView);
   });
 
-  const escHandler = addCloseSearchProjectTreeEscapePressListener(escapeSearchViewBtn);
+  addCloseSearchProjectTreeEscapePressListener(escapeSearchViewBtn)
 }
 
 function addCloseSearchProjectTreeEscapePressListener(escapeSearchViewBtn) {
 
-  const escHandler = (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      escapeSearchViewBtn.click();   
-    }
-  };
-
-  document.addEventListener('keydown', escHandler);
-  return escHandler;
+  globalListeners.esc = () => escapeSearchViewBtn.click();
 }
 
 function openSearchProjectTreeView() {
@@ -186,14 +175,24 @@ function openSearchProjectTreeView() {
 };
 
 
-function closeSearchProjectTreeView(searchProjectTreeView, escHandler) {
+function closeSearchProjectTreeView(searchProjectTreeView) {
   
   searchProjectTreeView.classList.remove('active');
   setTimeout(() => {
     // Allow for slide up animation
-    document.removeEventListener('keydown', escHandler);
+    const projectViewAlsoOpen = document.querySelector('.projectView');
+    clearSearchProjectTreeViewGlobalListeners();
+
     searchProjectTreeView.remove();
   }, 1500);
+}
+
+function clearSearchProjectTreeViewGlobalListeners() {
+
+  if(projectViewAlsoOpen) globalListeners.esc = () => closeAllProjectViews({});
+  if(!projectViewAlsoOpen) globalListeners.esc = null;
+  globalListeners.click = null;
+  globalListeners.ctrlS = null;
 }
 
 function addSearchProjectTreePanZoom(viewport, canvas) {
@@ -216,14 +215,14 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
     viewport.style.cursor = 'grabbing';
   });
 
-  document.addEventListener('mousemove', e => {
+  viewport.addEventListener('mousemove', e => {
     if (!isPanning) return;
     x = e.clientX - startX;
     y = e.clientY - startY;
     updateTransform();
   });
 
-  document.addEventListener('mouseup', () => {
+  viewport.addEventListener('mouseup', () => {
     isPanning = false;
     viewport.style.cursor = 'grab';
   });

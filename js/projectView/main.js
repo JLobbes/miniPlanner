@@ -14,6 +14,7 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
       setTimeout(() => {
         // Allow for slide up animation
         openProject.remove();
+        
         clearProjectViewKeyPressListeners();
       }, 1500);
     }
@@ -51,6 +52,7 @@ function closeSingleProjectView(projectData, projectView) {
   setTimeout(() => {
     // Allow for slide up animation
     projectView.remove();
+    clearProjectViewKeyPressListeners();
   }, 1500);
 
   if(projectData.parentProjectID) {
@@ -99,35 +101,14 @@ function addProjectEventListeners(projectData, projectView, renderAsSingleTask) 
 }
 
 function addProjectViewEscapeKeyPressListener() {
-  handleProjViewEscape = (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      
-      const editingProjectHeader = document.querySelector('.editingProjectTitle');
-      if(editingProjectHeader) return;
 
-      const usingMiniForm = document.querySelector('.miniForm');
-      if(usingMiniForm) return;
-
-      const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
-      if(searchProjectTreeViewOpen) return
-
-      // Return to dashboard
-      homeView.click();
-    }
-  }
-
-  document.addEventListener('keydown', handleProjViewEscape);
+  globalListeners.esc = () => closeAllProjectViews({});
 }
 
 function clearProjectViewKeyPressListeners() {
-  try {
-    document.removeEventListener('keydown', handleProjViewEscape);
-  } 
-  catch(e) {
-    console.error('failed to clear escape listener.');
-  }
-  console.log('Keypress listener cleared.');
+  
+  globalListeners.ctrlE = null;
+  globalListeners.esc = null;
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.

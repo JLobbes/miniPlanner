@@ -16,7 +16,8 @@ function addProjectActionListeners(projectData, projectView) {
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
   });
-  addEnableEditHeaderKeyPressListener(editButton);
+
+  globalListeners.ctrlE = () => editButton.click();
 }
 
 function addProjectPinActionListeners(projectData, projectView) {
@@ -122,71 +123,38 @@ function enableEditHeader(projectData, projectView) {
   `;
   const projectDescriptionInput = projectDescription.querySelector('.editingProjectDescription');  
  
-  // Add listener to saveEditingProjectTitleBarBtn
-  const saveEditingProjectTitleBarBtn = projectTitle.querySelector('.saveEditingProjectTitleBarBtn');
+  // Add listeners to save or abort edit of header.
   const abortEditingProjectTitleBarBtn = projectTitle.querySelector('.abortEditingProjectTitleBarBtn');
+  addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn);
   
-  const enterHandler = addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn);
-  const escapeHandler = addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn);
-  
-  // Add listener to abortEditingProjectTitleBarBtn 
-  
+  const saveEditingProjectTitleBarBtn = projectTitle.querySelector('.saveEditingProjectTitleBarBtn');
+  addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn)  
+
   saveEditingProjectTitleBarBtn.addEventListener('click', () => {
     handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput);
-    clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler);
+    clearEditingHeaderKeyPressListeners();
   });
   abortEditingProjectTitleBarBtn.addEventListener('click', () => {
     handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDescription);
-    clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler);
+    clearEditingHeaderKeyPressListeners();
   });
 }
 
-function addEnableEditHeaderKeyPressListener(editButton) {
-  const ctrlEHandler = (e) => {
-    if (e.ctrlKey && e.key.toLowerCase() === 'e') {
-      e.preventDefault();
-      editButton.click();
-    }
-  };
-
-  document.addEventListener('keydown', ctrlEHandler);
-  return ctrlEHandler;
-}
-
 function addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn) {
-  try {
-    const escapeHandler = (e) => {
-      if(e.key === 'Escape') {
-        abortEditingProjectTitleBarBtn.click();
-      }
-    }  
-  
-    document.addEventListener('keydown', escapeHandler);  
-    console.log('escape handler for editing projectView header escape press added. ');
-    return escapeHandler;
-  }
 
-  catch(e) {
-    console.error('escape handler for editing projectView header escape press added. ')
-    return;
-  }
+  globalListeners.esc = () => abortEditingProjectTitleBarBtn.click();
 }
 
 function addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn) {
 
-  const enterHandler = (e) => {
-    if(e.key === 'Enter') {
-      saveEditingProjectTitleBarBtn.click();
-    }
-  }  
-
-  document.addEventListener('keydown', enterHandler);
-  return enterHandler;
+  globalListeners.enter = () => saveEditingProjectTitleBarBtn.click();
 }
 
 function clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler) {
-  document.removeEventListener('keydown', escapeHandler);
-  document.removeEventListener('keydown', enterHandler);
+  
+  globalListeners.enter = null;
+  // Change escape back to closing projectView
+  globalListeners.esc = () => closeAllProjectViews({});
 }
 
 function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle, projectTitleInput, projectDescription, projectDescriptionInput) {
@@ -200,6 +168,7 @@ function handleSaveEditingProjectTitleBar(projectView, projectData, projectTitle
     projectTitle.innerHTML = `
     <i class="fa-solid fa-folder"></i> ${projectData.projectTitle}
     `;
+
     const escHandler = addEditingHeaderEscapePressListener()
     
     projectDescription.innerHTML = `

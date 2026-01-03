@@ -162,11 +162,37 @@
 }
 
 .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectTitle {
-  max-width: 16em;
+  flex-grow: 1;
+  max-width: 22em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
+
+/* Canned buttons in-line */
+
+/* .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button {
+  display: block;
+  background-color: #fff;
+  border: #ccc solid 1px;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button:hover,
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button:focus {
+  display: block;
+  background-color: #333;
+  color: #fff;
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button span {
+  font-size: 1.2em;
+  padding: 0.25em;
+} */
 
 .searchProjectTreeHeader .escapeSearchViewBtn {
   position: absolute;

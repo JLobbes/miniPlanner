@@ -11,14 +11,7 @@ function addSearchProjectTreeListener() {
     renderRadialProjectTree();
   });
 
-  const ctrlSHandler = (e) => {
-    if (e.ctrlKey && e.key.toLowerCase() === 's') {
-      e.preventDefault();
-      searchProjectTreeBtn.click();
-    }
-  };
-
-  document.addEventListener('keydown', ctrlSHandler);
+  globalListeners.ctrlS = () => searchProjectTreeBtn.click();
 }
 
 function addUploadProjectDataListener() {

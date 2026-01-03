@@ -57,10 +57,10 @@ function addCloseUpdateStatusListListener(updateStatusList) {
     updateStatusList.remove();
 
     // cleanUpListener
-    document.removeEventListener('click', handleOutsideClick);
+    globalListeners.click = null;
   }
 
-  document.addEventListener('click', handleOutsideClick);
+  globalListeners.click = (e) => handleOutsideClick(e);
 }
 
 function createProgressBar({ projectData, projectView, editable, renderAsSingleTask, forProjectTile = false }) {

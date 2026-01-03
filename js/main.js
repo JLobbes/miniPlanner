@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderProjectsToDash();
 
   // TO-DO: decide whether these three should be in dashboard.js or not.
+  addGlobalListeners();
   addSearchProjectTreeListener();
   addDownloadProjectDataListener();
   addUploadProjectDataListener();
@@ -23,6 +24,7 @@ function addReturnToDashboardListener() {
     homeView.addEventListener('click', (e) => {
       // Exclude from this listener.
       if (e.target.closest('.projectTile')) return;
+      if (e.target.closest('.projectView')) return;
       if (e.target.closest('#searchProjectTreeBtn')) return;
       if (e.target.closest('.escapeSearchViewBtn')) return;
     
@@ -32,7 +34,7 @@ function addReturnToDashboardListener() {
   }
 
   catch(e) {
-    console.error('return to dashboard click listener not added');
+    console.error('return to dashboard click listener failed to add added');
   }
   console.log('return to dashboard click listener added');
 }
