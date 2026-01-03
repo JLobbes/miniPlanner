@@ -180,7 +180,6 @@ function closeSearchProjectTreeView(searchProjectTreeView) {
   searchProjectTreeView.classList.remove('active');
   setTimeout(() => {
     // Allow for slide up animation
-    const projectViewAlsoOpen = document.querySelector('.projectView');
     clearSearchProjectTreeViewGlobalListeners();
 
     searchProjectTreeView.remove();
@@ -189,8 +188,9 @@ function closeSearchProjectTreeView(searchProjectTreeView) {
 
 function clearSearchProjectTreeViewGlobalListeners() {
 
-  if(projectViewAlsoOpen) globalListeners.esc = () => closeAllProjectViews({});
-  if(!projectViewAlsoOpen) globalListeners.esc = null;
+  const projectViewOpen = document.querySelector('.projectView');
+  if(projectViewOpen) globalListeners.esc = () => closeAllProjectViews({});
+  if(!projectViewOpen) globalListeners.esc = null;
   globalListeners.click = null;
   globalListeners.ctrlS = null;
 }
