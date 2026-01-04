@@ -193,6 +193,7 @@ function clearSearchProjectTreeViewGlobalListeners() {
   if(!projectViewOpen) globalListeners.esc = null;
   globalListeners.click = null;
   globalListeners.ctrlS = null;
+  globalListeners.input = null;
 }
 
 function addSearchProjectTreePanZoom(viewport, canvas) {
