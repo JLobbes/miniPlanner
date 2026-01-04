@@ -147,7 +147,10 @@ function addEditingHeaderEscapePressListener(abortEditingProjectTitleBarBtn) {
 
 function addEditingHeaderEnterPressListener(saveEditingProjectTitleBarBtn) {
 
-  globalListeners.enter = () => saveEditingProjectTitleBarBtn.click();
+  globalListeners.enter = (e) => { 
+    e.preventDefault();
+    saveEditingProjectTitleBarBtn.click(); 
+  }
 }
 
 function clearEditingHeaderKeyPressListeners(escapeHandler, enterHandler) {

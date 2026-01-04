@@ -169,7 +169,12 @@ function addMiniFormEscapePressListener(rejectBtn) {
 
 function addMiniFormEnterPressListener(confirmBtn) {
 
-  globalListeners.enter = () => confirmBtn.click();
+  globalListeners.enter = (e) => {
+    if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") {
+      e.preventDefault();
+      confirmBtn.click();
+    } 
+  }
 }
 
 function clearMiniFormKeyPressListeners() {

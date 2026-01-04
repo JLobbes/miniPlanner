@@ -51,7 +51,8 @@ function addGlobalListeners () {
     }
 
     if(e.key === 'Enter') {
-      e.preventDefault();
+      // e.preventDefault() is defined in the handles for 'Enter' press.
+      // This is because the miniForm allows default action conditionally.
 
       const handler = globalListeners.enter;
       if (typeof handler === 'function') {
