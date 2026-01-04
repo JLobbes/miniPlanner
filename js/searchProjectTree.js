@@ -250,31 +250,32 @@ function renderSearchProjectTree() {
   });
 }
 
-function renderTreeNode(node) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'treeNode';
-  wrapper.textContent = node.projectTitle || 'Untitled';
+// function renderTreeNode(node) {
+//   const nodeWrapper = document.createElement('div');
+//   nodeWrapper.className = 'treeNode';
+//   nodeWrapper.textContent = node.projectTitle || 'Untitled';
 
-  if (node.children.length) {
-    const children = document.createElement('div');
-    children.className = 'treeChildren';
+//   if (node.children.length) {
+//     const children = document.createElement('div');
+//     children.className = 'treeChildren';
 
-    node.children.forEach(child => {
-      children.append(renderTreeNode(child));
-    });
+//     node.children.forEach(child => {
+//       children.append(renderTreeNode(child));
+//     });
 
-    wrapper.append(children);
-  }
+//     nodeWrapper.append(children);
+//   }
 
-  return wrapper;
-}
+//   return nodeWrapper;
+// }
+
 
 function renderRadialProjectTree() {
   const canvas = document.querySelector('.searchProjectTreeCanvas');
   canvas.innerHTML = '';
 
   const tree = buildGlobalProjectTree(); // Array of root nodes
-  const layout = [];
+  const nodes = [];
 
   // Canvas center
   const centerX = canvas.offsetWidth / 2;
@@ -284,38 +285,105 @@ function renderRadialProjectTree() {
     children: tree,
     uniqueProjectID: 'virtualRoot'
   };
-  layoutRadial(virtualRoot, centerX, centerY, 0, 2 * Math.PI, 0, layout);
+  layoutRadial(virtualRoot, centerX, centerY, 0, 2 * Math.PI, 0, nodes);
 
 
-  drawRadialTree(layout, canvas);
+  drawRadialTree(nodes, canvas);
 }
 
-function drawRadialTree(layout, canvas) {
-  const minX = Math.min(...layout.map(n => n.x)) - 50;
-  const maxX = Math.max(...layout.map(n => n.x)) + 50;
-  const minY = Math.min(...layout.map(n => n.y)) - 50;
-  const maxY = Math.max(...layout.map(n => n.y)) + 50;
+function drawRadialTree(nodes, canvas) {
+  const minX = Math.min(...nodes.map(n => n.x)) - 50;
+  const maxX = Math.max(...nodes.map(n => n.x)) + 50;
+  const minY = Math.min(...nodes.map(n => n.y)) - 50;
+  const maxY = Math.max(...nodes.map(n => n.y)) + 50;
 
-  const byId = Object.fromEntries(layout.map(n => [n.node.uniqueProjectID, n]));
+  const byId = Object.fromEntries(
+    nodes.map(n => [n.node.uniqueProjectID, n])
+  );
 
-  let svgContent = '';
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("width", "100%");
+  svg.setAttribute("height", "100%");
+  svg.setAttribute(
+    "viewBox",
+    `${minX} ${minY} ${maxX - minX} ${maxY - minY}`
+  );
 
   // Lines
-  layout.forEach(({ node }) => {
+  nodes.forEach(({ node }) => {
     node.children.forEach(child => {
       const parent = byId[node.uniqueProjectID];
       const kid = byId[child.uniqueProjectID];
-      svgContent += `<line x1="${parent.x}" y1="${parent.y}" x2="${kid.x}" y2="${kid.y}" stroke="black" stroke-width="2" />`;
+
+      const line = document.createElementNS(svgNS, "line");
+      line.classList.add('projectTreeLine');
+      line.setAttribute("x1", parent.x);
+      line.setAttribute("y1", parent.y);
+      line.setAttribute("x2", kid.x);
+      line.setAttribute("y2", kid.y);
+
+      svg.appendChild(line);
     });
   });
 
   // Nodes (dots)
-  layout.forEach(({ node, x, y }) => {
-    svgContent += `<circle cx="${x}" cy="${y}" r="5" fill="black" />`;
+  nodes.forEach(({ node, x, y }) => {
+    const nodeCircle = document.createElementNS(svgNS, "circle");
+    nodeCircle.classList.add("projectTreeNode");
+    if (node.projectStatus) {
+      nodeCircle.classList.add(
+        `statusShowing${(node.projectStatus != 'In Progress' ? node.projectStatus : 'InProgress').replace(' ', '')}`
+      );
+    }
+    nodeCircle.setAttribute("cx", x);
+    nodeCircle.setAttribute("cy", y);
+
+    addProjectTreeNodeListener(nodeCircle, node);
+    svg.appendChild(nodeCircle);
   });
 
-  // Single SVG container
-  canvas.innerHTML = `<svg width="100%" height="100%" viewBox="${minX} ${minY} ${maxX - minX} ${maxY - minY}">${svgContent}</svg>`;
+  canvas.replaceChildren(svg);
+}
+
+function addProjectTreeNodeListener(nodeCircle, nodeData) {
+
+  nodeCircle.addEventListener('mouseover', () => {
+    document.body.appendChild(createProjectTilePopUp(nodeCircle, nodeData));
+  })
+}
+
+function createProjectTilePopUp(nodeCircle, nodeData) {
+  
+  const projectTilePopUp = document.createElement('div');
+  projectTilePopUp.className = 'projectTilePopUp';
+  projectTilePopUp.id = `popup-${nodeData.uniqueProjectID}`;
+
+  // Get the circle's position on the screen
+  const rect = nodeCircle.getBoundingClientRect();
+
+  // Position popup absolutely
+  projectTilePopUp.style.position = 'absolute';
+  projectTilePopUp.style.left = `${rect.left - 5}px`;
+  projectTilePopUp.style.top = `${rect.top - 5}px`;
+
+  // TO-DO: add content
+  projectTilePopUp.appendChild(createProjectTile(nodeData));
+  
+  addRemoveProjectTilePopUpListeners(projectTilePopUp);
+
+  return projectTilePopUp;
+}
+
+function addRemoveProjectTilePopUpListeners(projectTilePopUp) {
+
+  projectTilePopUp.addEventListener('mouseleave', () => {
+    
+    setTimeout(() => {
+      projectTilePopUp.remove();
+    }, 25);
+  });
 }
 
 function layoutRadial(node, centerX, centerY, startAngle, endAngle, depth, layout) {

@@ -170,30 +170,6 @@
   cursor: pointer;
 }
 
-/* Canned buttons in-line */
-
-/* .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button {
-  display: block;
-  background-color: #fff;
-  border: #ccc solid 1px;
-  border-radius: 0.5em;
-  cursor: pointer;
-}
-
-.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button:hover,
-.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button:focus {
-  display: block;
-  background-color: #333;
-  color: #fff;
-  border-radius: 0.5em;
-  cursor: pointer;
-}
-
-.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult button span {
-  font-size: 1.2em;
-  padding: 0.25em;
-} */
-
 .searchProjectTreeHeader .escapeSearchViewBtn {
   position: absolute;
   background-color: rgba(255, 255, 255, 0);
@@ -257,32 +233,51 @@
   will-change: transform;
 }
 
-.searchProjectTreeView .searchProjectTreeCanvas .treeNode {
-  padding: 0.5em 1em;
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeLine {
+  stroke-width: 3;
+  stroke: #333;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode {
+  r: 10;
+  stroke: #333;
+  stroke-width: 3;
   cursor: pointer;
 }
 
-.searchProjectTreeView .searchProjectTreeCanvas .treeChildren {
-  margin-left: 16px;
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.statusShowingComplete {
+  fill: #b3f69f;
 }
 
-.searchProjectTreeView .searchProjectTreeCanvas .treeLines {
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.statusShowingPlanned {
+  fill: #4a97ca;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.statusShowingInProgress {
+  fill: #e7f661;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.statusShowingPaused {
+  fill: #ffbb61;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.statusShowingDelayed {
+  fill: #e95e45;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.statusShowingDead {
+  fill: #111;
+}
+
+body .projectTilePopUp {
+  display: block;
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1000;
+  height: auto;
+  width: auto;
+  background-color: none;
+  z-index: 9999;
 }
 
-.searchProjectTreeView .searchProjectTreeCanvas .treeNodes {
-  position: relative;
-}
-
-.searchProjectTreeView .searchProjectTreeCanvas .searchProjectTreeCanvas svg circle {
-  transition: transform 0.2s, fill 0.2s;
-}
-
-.searchProjectTreeView .searchProjectTreeCanvas .searchProjectTreeCanvas svg circle:hover {
-  fill: red;       /* highlight color */
-  /* transform: scale(1.5); slightly bigger */
-  cursor: pointer;
+body .projectTilePopUp .projectTile {
+  margin: 1em 0 0 1em;
 }

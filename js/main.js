@@ -36,7 +36,6 @@ function addReturnToDashboardListener() {
   catch(e) {
     console.error('return to dashboard click listener failed to add added');
   }
-  console.log('return to dashboard click listener added');
 }
 
 newProjBtn.addEventListener('click', (e) => {
