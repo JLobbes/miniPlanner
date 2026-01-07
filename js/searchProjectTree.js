@@ -268,17 +268,32 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
     viewport.style.cursor = 'grab';
   });
 
-  // ZOOM (wheel)
+  // ZOOM (wheel) with fixed steps
+  let lastZoomTime = 0;
+
   viewport.addEventListener('wheel', e => {
     e.preventDefault();
+    const now = Date.now();
+    if (now - lastZoomTime < 200) return; // 200ms cooldown
+    lastZoomTime = now;
 
-    const zoomIntensity = 0.1;
-    const direction = e.deltaY > 0 ? -1 : 1;
-    const factor = 1 + zoomIntensity * direction;
+    const zoomLevels = [0.5, 1, 2, 3];
+    const current = globalVariables.projectTreeScale;
+    let newScale;
 
-    globalVariables.projectTreeScale = Math.min(Math.max(globalVariables.projectTreeScale * factor, 0.2), 3);
-    clearAllPopUps()
-    updateTransform();
+    if (e.deltaY < 0) {
+      // scroll up → zoom in
+      newScale = zoomLevels.find(z => z > current) ?? zoomLevels[zoomLevels.length - 1];
+    } else {
+      // scroll down → zoom out
+      newScale = [...zoomLevels].reverse().find(z => z < current) ?? zoomLevels[0];
+    }
+
+    if (newScale !== current) {
+      globalVariables.projectTreeScale = newScale;
+      clearAllPopUps();
+      updateTransform();
+    }
   }, { passive: false });
 }
 
