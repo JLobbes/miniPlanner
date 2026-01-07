@@ -284,6 +284,41 @@ function buildGlobalProjectTree() {
     }
   });
 
-  globalSearchableProjectTree = roots;
-  return roots;d
+  globalProjectTree = roots;
+  return roots;
+}
+
+function updateProjectStatusAndAncestors(projectData, newStatus) {
+
+  // Update the project status
+  projectData.projectStatus = newStatus;
+  syncProjectInGlobalData(projectData); // Make sure to sync with global data
+  
+  // If the project has a parent, propagate the status change upwards
+  if (projectData.parentProjectID) {
+    const parentProject = getSingleProject(projectData.parentProjectID);
+    if (parentProject && parentProject.projectStatus !== newStatus) {
+      updateProjectStatusAndAncestors(parentProject, newStatus);
+    }
+  }
+}
+
+function updateProjectStatus(projectData, newStatus) {
+
+  projectData.projectStatus = newStatus;
+  syncProjectInGlobalData(projectData); 
+}
+
+function pauseInProgressDescendents(projectData) {
+
+  const children = getAllChildren(projectData.uniqueProjectID);
+  children.forEach(child => {
+    console.log('children found:', child);
+    if (child.projectStatus === 'In Progress') {
+      updateProjectStatus(child, 'Paused');
+
+      const projectView = document.querySelector('.projectView');
+      reRenderTaskList(projectView, projectData);
+    }
+  });
 }
