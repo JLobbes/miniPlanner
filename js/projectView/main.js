@@ -15,7 +15,7 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
         // Allow for slide up animation
         openProject.remove();
         
-        clearProjectViewKeyPressListeners();
+        if(!reFreshBetweenViews) clearProjectViewKeyPressListeners();
       }, 1500);
     }
   }
