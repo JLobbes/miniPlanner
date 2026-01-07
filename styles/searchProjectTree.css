@@ -133,7 +133,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  height: 2.5em;
+  height: 3em;
   width: 100%;
   gap: 0.5em;
   border: #333 solid 1px;
@@ -159,6 +159,8 @@
 
 .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectIcon {
   margin: 0.25em 0em 0.25em 0.75em;
+
+  font-size: 1.2em;
 }
 
 .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectTitle {
@@ -166,7 +168,9 @@
   max-width: 22em;
   white-space: nowrap;
   overflow: hidden;
+  font-size: 1.3em;
   text-overflow: ellipsis;
+  text-align: left;
   cursor: pointer;
 }
 
@@ -189,7 +193,7 @@
   padding: 0.25em 0.65em 1.2em 0.65em;
   font-size: 1.3em;
   font-weight: bold;
-  background-color: #444;
+  background-color: #333;
   color: #fff;
   border: solid 1px #fff;
   border-radius: 1em;
@@ -229,6 +233,8 @@
 
 .searchProjectTreeView .searchProjectTreeCanvas {
   position: absolute;
+  width: 100%;
+  height: 100%;
   transform-origin: 0 0;
   will-change: transform;
 }
@@ -269,13 +275,51 @@
   fill: #111;
 }
 
+.centerArrowWrapper {
+  position: absolute;
+  top: calc(50%);
+  left: calc(50%);
+  width: 1.2em;
+  height: 1.2em;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 1em;
+  transform: translate(calc(-50%), calc(-50%));
+  pointer-events: none; /* so it doesn’t block clicks */
+  animation: centerArrowFlash 0.3s infinite alternate;
+  box-shadow: 
+      0em 0em 0.1em #ff3f3f,   /* bright red */
+      0em 0em 0.2em #ff7f50,   /* coral/orange */
+      0em 0em 0.3em #ffd700,   /* gold */
+      0em 0em 0.6em #32cd32,   /* lime green */
+      0em 0em 0.9em #ff3f3f,   /* dodger blue */
+      0em 0em 1.1em #8a2be2;   /* blue violet */
+  z-index: 100;
+}
+
+.centerArrowWrapper span {
+  margin: 0 0 0 0em;
+  color: #a3e2ce;
+  font-size: 1.2em;
+  transform: rotate(180deg);
+}
+
+/* Simple flashing animation */
+@keyframes centerArrowFlash {
+  0% { opacity: 0; }
+  40% { opacity: 1;}
+  50% { opacity: 1;}
+  100% { opacity: 0; }
+}
+
+
 body .projectTilePopUp {
   display: block;
   position: absolute;
   height: auto;
   width: auto;
   background-color: none;
-  z-index: 9999;
+  z-index: 35;
+  cursor: pointer;
 }
 
 body .projectTilePopUp .projectTile {

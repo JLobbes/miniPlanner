@@ -39,6 +39,10 @@ function openProjectView(projectData, hasParent) {
   // Create and append new projectView
   const projectView = createProjectView(projectData);
   document.body.appendChild(projectView);
+
+  const searchProjectTreeOpen = document.querySelector('.searchProjectTreeView');
+  if (searchProjectTreeOpen) projectView.style.zIndex = '35'; 
+  if (!searchProjectTreeOpen) projectView.style.zIndex = '10'; 
   
   // Dynamically add consistent speed scroll animation for noteLogEntry. 
   addNoteScrollAnimation();
@@ -107,8 +111,11 @@ function addProjectViewEscapeKeyPressListener() {
 
 function clearProjectViewKeyPressListeners() {
   
+  const searchProjectTreeView = document.querySelector('.searchProjectTreeView');
+  if(searchProjectTreeView) globalListeners.esc = () => closeSearchProjectTreeView(searchProjectTreeView);
+  if(!searchProjectTreeView) globalListeners.esc = null;
+
   globalListeners.ctrlE = null;
-  globalListeners.esc = null;
 }
 
 // Handles delays dropDown of projectView to allow for drop down effect.

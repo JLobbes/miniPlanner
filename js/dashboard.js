@@ -7,8 +7,6 @@ function addSearchProjectTreeListener() {
   const searchProjectTreeBtn = document.querySelector('#searchProjectTreeBtn');
   searchProjectTreeBtn.addEventListener('click', () => {
     openSearchProjectTreeView();
-    // renderSearchProjectTree();
-    renderRadialProjectTree();
   });
 
   globalListeners.ctrlS = () => searchProjectTreeBtn.click();

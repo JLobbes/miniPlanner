@@ -69,10 +69,15 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
   
   const handleClickAway = (e) => {
     if (e.target.closest('.projectTreeSearchResult')) return;
-    const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
-    searchResultsLocation.innerHTML = ``;
+
+    clearSearchProjectTreeSearchResults();
   };
   globalListeners.click = handleClickAway;
+}
+
+function clearSearchProjectTreeSearchResults() {
+  const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
+  searchResultsLocation.innerHTML = ``;
 }
 
 function runProjectTreeSearch(searchValue) {
@@ -115,7 +120,7 @@ function renderSearchResults({ results, allResults = false }) {
   const resultsForRender = (allResults) ? results : topTen;
   resultsForRender.forEach(singleResult => {
 
-    const searchResultLine = document.createElement('div');
+    const searchResultLine = document.createElement('button');
     searchResultLine.classList = 'projectTreeSearchResult';
     searchResultLine.tabIndex = '2';
     searchResultLine.title = `${singleResult.projectTitle}`;
@@ -129,10 +134,21 @@ function renderSearchResults({ results, allResults = false }) {
     projectTitle.className = 'projectTitle';
   
     projectTitle.innerText = `${singleResult.projectTitle}`;
+
+    addFocusOnSearchResultListener(searchResultLine, singleResult.uniqueProjectID);
     
     searchResultLine.append(icon, projectTitle);
     renderLocation.append(searchResultLine);
   })
+}
+
+function addFocusOnSearchResultListener(searchResult, idOfTargetNode) {
+
+  searchResult.addEventListener('click', () => {
+    targetNode = document.querySelector(`.projectTreeNode.${idOfTargetNode}`);
+
+    focusOnNode(targetNode, 2);
+  });
 }
 
 function createSearchProjectTreeViewport(searchProjectTreeView) {
@@ -164,12 +180,14 @@ function addCloseSearchProjectTreeEscapePressListener(escapeSearchViewBtn) {
 }
 
 function openSearchProjectTreeView() {
-  
+
   openedSearchViews = document.querySelector('.searchProjectTreeView');
   if(openedSearchViews) return;
   
   const searchProjectTreeView = createSearchProjectTreeView();
   document.body.append(searchProjectTreeView);
+
+  renderRadialProjectTree();
   
   triggerDropDown({ element: searchProjectTreeView, className: 'active', delay: 20, hideDashboardActions: false });
 };
@@ -197,29 +215,31 @@ function clearSearchProjectTreeViewGlobalListeners() {
 }
 
 function addSearchProjectTreePanZoom(viewport, canvas) {
-  let x = 0, y = 0, scale = 1;
+  globalVariables.projectTreeX = 0;
+  globalVariables.projectTreeY = 0;
+  globalVariables.projectTreeScale = 1;
   let isPanning = false;
   let startX, startY;
 
   const updateTransform = () => {
     const svg = canvas.querySelector('svg');
     if(svg) {
-      svg.setAttribute('transform', `translate(${x}, ${y}) scale(${scale})`);
+      svg.style.transform = `translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px) scale(${globalVariables.projectTreeScale})`;
     }
   };
 
   // PAN
   viewport.addEventListener('mousedown', e => {
     isPanning = true;
-    startX = e.clientX - x;
-    startY = e.clientY - y;
+    startX = e.clientX - globalVariables.projectTreeX;
+    startY = e.clientY - globalVariables.projectTreeY;
     viewport.style.cursor = 'grabbing';
   });
 
   viewport.addEventListener('mousemove', e => {
     if (!isPanning) return;
-    x = e.clientX - startX;
-    y = e.clientY - startY;
+    globalVariables.projectTreeX = e.clientX - startX;
+    globalVariables.projectTreeY = e.clientY - startY;
     updateTransform();
   });
 
@@ -236,7 +256,8 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
     const direction = e.deltaY > 0 ? -1 : 1;
     const factor = 1 + zoomIntensity * direction;
 
-    scale = Math.min(Math.max(scale * factor, 0.2), 5);
+    globalVariables.projectTreeScale = Math.min(Math.max(globalVariables.projectTreeScale * factor, 0.2), 3);
+    clearAllPopUps()
     updateTransform();
   }, { passive: false });
 }
@@ -250,26 +271,6 @@ function renderSearchProjectTree() {
     canvas.append(renderTreeNode(node));
   });
 }
-
-// function renderTreeNode(node) {
-//   const nodeWrapper = document.createElement('div');
-//   nodeWrapper.className = 'treeNode';
-//   nodeWrapper.textContent = node.projectTitle || 'Untitled';
-
-//   if (node.children.length) {
-//     const children = document.createElement('div');
-//     children.className = 'treeChildren';
-
-//     node.children.forEach(child => {
-//       children.append(renderTreeNode(child));
-//     });
-
-//     nodeWrapper.append(children);
-//   }
-
-//   return nodeWrapper;
-// }
-
 
 function renderRadialProjectTree() {
   const canvas = document.querySelector('.searchProjectTreeCanvas');
@@ -338,10 +339,11 @@ function drawRadialTree(nodes, canvas) {
         `statusShowing${(node.projectStatus != 'In Progress' ? node.projectStatus : 'InProgress').replace(' ', '')}`
       );
     }
-    nodeCircle.setAttribute("cx", x);
-    nodeCircle.setAttribute("cy", y);
+    nodeCircle.classList.add(`${node.uniqueProjectID}`);
+    nodeCircle.setAttribute('cx', x);
+    nodeCircle.setAttribute('cy', y);
 
-    addProjectTreeNodeListener(nodeCircle, node);
+    addProjectTreeNodeListener(nodeCircle, node, x, y);
     svg.appendChild(nodeCircle);
   });
 
@@ -382,8 +384,17 @@ function addRemoveProjectTilePopUpListeners(projectTilePopUp) {
   projectTilePopUp.addEventListener('mouseleave', () => {
     
     setTimeout(() => {
-      projectTilePopUp.remove();
+      // projectTilePopUp.remove();
+      clearAllPopUps();
     }, 25);
+  });
+}
+
+function clearAllPopUps() {
+  
+  const projectTilePopUps = document.querySelectorAll('.projectTilePopUp');
+  projectTilePopUps.forEach(popUp => {
+    popUp.remove();
   });
 }
 
@@ -423,4 +434,68 @@ function layoutRadial(node, centerX, centerY, startAngle, endAngle, depth, layou
 function getSubtreeSize(node) {
   if (!node.children || node.children.length === 0) return 1;
   return 1 + node.children.reduce((sum, child) => sum + getSubtreeSize(child), 0);
+}
+
+function focusOnNode(circle, targetScale = null, animate = true) {
+
+  clearSearchProjectTreeSearchResults();
+
+  const svg = circle.ownerSVGElement;
+  const viewport = svg.closest('.searchProjectTreeViewport');
+  if (!svg || !viewport) return;
+
+  const currentScale = globalVariables.projectTreeScale;
+  const newScale = targetScale ?? currentScale;
+
+  const pt = svg.createSVGPoint();
+  pt.x = circle.cx.baseVal.value;
+  pt.y = circle.cy.baseVal.value;
+
+  // Transform point to screen coordinates
+  const screenPt = pt.matrixTransform(svg.getScreenCTM());
+
+  const vpRect = viewport.getBoundingClientRect();
+
+  // Calculate translation needed to center node **at new scale**
+  const scaleRatio = newScale / currentScale;
+  const tx = (vpRect.width / 2 - (screenPt.x - vpRect.left)) * scaleRatio;
+  const ty = (vpRect.height / 2 - (screenPt.y - vpRect.top)) * scaleRatio;
+
+  if (animate) svg.style.transition = 'transform 400ms ease';
+
+  // Apply translation and scale
+  globalVariables.projectTreeX += tx;
+  globalVariables.projectTreeY += ty;
+  globalVariables.projectTreeScale = newScale;
+
+  svg.style.transform = `translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px) scale(${globalVariables.projectTreeScale})`;
+
+  flashCenterArrowAnimation();
+
+  if (animate) setTimeout(() => (svg.style.transition = ''), 400);
+}
+
+function flashCenterArrowAnimation() {
+
+  const existingArrows = document.querySelector('.centerArrowWrapper');
+  if(existingArrows) {
+    existingArrows.forEach(arrow => {
+      arrow.remove();
+    });
+  } 
+
+  const centerArrowWrapper = document.createElement('div');
+  centerArrowWrapper.className = 'centerArrowWrapper';
+  centerArrowWrapper.innerHTML = '<span class="fa-regular fa-circle"></span>'
+
+  
+  setTimeout(() => {
+    document.body.appendChild(centerArrowWrapper);
+  }, 400);
+
+  setTimeout(() => {
+    centerArrowWrapper.remove();
+  }, 1300);
+
+  return centerArrowWrapper;
 }

@@ -47,7 +47,13 @@ let draggedItem = null; // Used globally
 let depth = null; // Used globally
 let handleProjViewEscape = null; //Used globally 
 const globalProjectData = [];
-let globalSearchableProjectTree = [];
+
+const globalVariables = {
+  globalSearchableProjectTree: [], // Data
+  projectTreeX: 0,
+  projectTreeY: 0,
+  projectTreeScale: 1,
+}
 
 function loadDataToGlobalProjects() {
   globalProjectData.length = 0; // clear existing
