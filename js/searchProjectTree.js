@@ -61,17 +61,26 @@ function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 
 function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView) {
 
-
+  searchBarInput.addEventListener('focus', () => {
+    console.log("focus fired");
+    showSearchProjectTreeSearchResults();
+  });
+  
   globalListeners.input = (e) => {
+    console.log('input fired')
     const searchValue = searchBarInput.value.trim();
     renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
   }
-  
+
   const handleClickAway = (e) => {
     if (e.target.closest('.projectTreeSearchResult')) return;
+    if (e.target.closest('.searchBarInput')) return;
 
-    clearSearchProjectTreeSearchResults();
+    console.log('clicked away anyway');
+
+    hideSearchProjectTreeSearchResults();
   };
+
   globalListeners.click = handleClickAway;
 }
 
@@ -79,6 +88,17 @@ function clearSearchProjectTreeSearchResults() {
   const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
   searchResultsLocation.innerHTML = ``;
 }
+
+function hideSearchProjectTreeSearchResults() {
+  const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
+  searchResultsLocation.style.display = 'none';
+}
+
+function showSearchProjectTreeSearchResults() {
+  const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
+  searchResultsLocation.style.display = '';
+}
+
 
 function runProjectTreeSearch(searchValue) {
   if (!searchValue) return globalProjectData;
@@ -114,7 +134,7 @@ function fuzzyScore(query, text) {
 function renderSearchResults({ results, allResults = false }) {
 
   const renderLocation = document.querySelector('.projectTreeSearchResults');
-  renderLocation.innerHTML = ``;
+  clearSearchProjectTreeSearchResults();
   
   const topTen = results.slice(0, 10);
   const resultsForRender = (allResults) ? results : topTen;
@@ -438,7 +458,7 @@ function getSubtreeSize(node) {
 
 function focusOnNode(circle, targetScale = null, animate = true) {
 
-  clearSearchProjectTreeSearchResults();
+  hideSearchProjectTreeSearchResults();
 
   const svg = circle.ownerSVGElement;
   const viewport = svg.closest('.searchProjectTreeViewport');
