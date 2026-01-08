@@ -228,6 +228,8 @@ function clearSearchProjectTreeViewGlobalListeners() {
   if(projectViewOpen) globalListeners.esc = () => closeAllProjectViews({});
   if(!projectViewOpen) globalListeners.esc = null;
   globalListeners.click = null;
+  globalListeners.ctrlMinus = null;
+  globalListeners.ctrlPlus= null;
   globalListeners.ctrlS = null;
   globalListeners.input = null;
 }
@@ -268,6 +270,7 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
 
   // ZOOM (wheel) with fixed steps
   let lastZoomTime = 0;
+  const zoomLevels = [0.5, 1, 2, 3];
 
   viewport.addEventListener('wheel', e => {
     e.preventDefault();
@@ -275,7 +278,6 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
     if (now - lastZoomTime < 200) return; // 200ms cooldown
     lastZoomTime = now;
 
-    const zoomLevels = [0.5, 1, 2, 3];
     const current = globalVariables.projectTreeScale;
     let newScale;
 
@@ -293,6 +295,33 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
       updateTransform();
     }
   }, { passive: false });
+
+  globalListeners.ctrlPlus = () => {
+    const current = globalVariables.projectTreeScale;
+    const newScale =
+      zoomLevels.find(z => z > current) ??
+      zoomLevels[zoomLevels.length - 1];
+
+    if (newScale !== current) {
+      globalVariables.projectTreeScale = newScale;
+      clearAllPopUps();
+      updateTransform();
+    }
+  };
+
+  globalListeners.ctrlMinus = () => {
+    const current = globalVariables.projectTreeScale;
+    const newScale =
+      [...zoomLevels].reverse().find(z => z < current) ??
+      zoomLevels[0];
+
+    if (newScale !== current) {
+      globalVariables.projectTreeScale = newScale;
+      clearAllPopUps();
+      updateTransform();
+    }
+  };
+
 }
 
 function renderSearchProjectTree() {

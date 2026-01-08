@@ -9,6 +9,8 @@ const globalListeners = {
   // Keypresses
   ctrlE: null,
   ctrlS: null,
+  ctrlPlus: null,
+  ctrlMinus: null,
   esc: null,
   enter: null,
 
@@ -45,6 +47,26 @@ function addGlobalListeners () {
       e.stopPropagation();
       
       const handler = globalListeners.ctrlE;
+      if (typeof handler === 'function') {
+        handler(e);
+      }
+    }
+
+    if (e.ctrlKey && e.key.toLowerCase() === '=') {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const handler = globalListeners.ctrlPlus;
+      if (typeof handler === 'function') {
+        handler(e);
+      }
+    }
+
+    if (e.ctrlKey && e.key.toLowerCase() === '-') {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const handler = globalListeners.ctrlMinus;
       if (typeof handler === 'function') {
         handler(e);
       }
