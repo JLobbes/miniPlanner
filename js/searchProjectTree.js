@@ -208,6 +208,9 @@ function openSearchProjectTreeView() {
   renderRadialProjectTree();
   
   triggerDropDown({ element: searchProjectTreeView, className: 'active', delay: 20, hideDashboardActions: false });
+  setInterval(() => {
+    globalVariables.projectTreePopUpsEnabled = true;
+  }, 1500);
 };
 
 
@@ -217,6 +220,7 @@ function closeSearchProjectTreeView(searchProjectTreeView) {
   setTimeout(() => {
     // Allow for slide up animation
     clearSearchProjectTreeViewGlobalListeners();
+    globalVariables.projectTreePopUpsEnabled = false;
 
     searchProjectTreeView.remove();
   }, 1500);
@@ -231,7 +235,7 @@ function clearSearchProjectTreeViewGlobalListeners() {
   globalListeners.ctrlMinus = null;
   globalListeners.ctrlPlus= null;
   globalListeners.ctrlS = null;
-  globalListeners.input = null;
+  globalListeners.input = null
 }
 
 function addSearchProjectTreePanZoom(viewport, canvas) {
@@ -415,6 +419,7 @@ function drawRadialTree(nodes, canvas) {
 function addProjectTreeNodeListener(nodeCircle, nodeData) {
 
   nodeCircle.addEventListener('mouseover', () => {
+    if (!globalVariables.projectTreePopUpsEnabled) return;
     document.body.appendChild(createProjectTilePopUp(nodeCircle, nodeData));
   })
 }
