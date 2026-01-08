@@ -215,12 +215,13 @@ function openSearchProjectTreeView() {
 
 
 function closeSearchProjectTreeView(searchProjectTreeView) {
-  
+  globalVariables.projectTreePopUpsEnabled = false;
+  clearAllPopUps();
+
   searchProjectTreeView.classList.remove('active');
   setTimeout(() => {
     // Allow for slide up animation
     clearSearchProjectTreeViewGlobalListeners();
-    globalVariables.projectTreePopUpsEnabled = false;
 
     searchProjectTreeView.remove();
   }, 1500);
