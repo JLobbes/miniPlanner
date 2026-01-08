@@ -62,12 +62,10 @@ function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView) {
 
   searchBarInput.addEventListener('focus', () => {
-    console.log("focus fired");
     showSearchProjectTreeSearchResults();
   });
   
   globalListeners.input = (e) => {
-    console.log('input fired')
     const searchValue = searchBarInput.value.trim();
     renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
   }
@@ -75,8 +73,6 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
   const handleClickAway = (e) => {
     if (e.target.closest('.projectTreeSearchResult')) return;
     if (e.target.closest('.searchBarInput')) return;
-
-    console.log('clicked away anyway');
 
     hideSearchProjectTreeSearchResults();
   };
@@ -167,7 +163,8 @@ function addFocusOnSearchResultListener(searchResult, idOfTargetNode) {
   searchResult.addEventListener('click', () => {
     targetNode = document.querySelector(`.projectTreeNode.${idOfTargetNode}`);
 
-    focusOnNode(targetNode, 2);
+    const zoomedOut = (globalVariables.projectTreeScale === 0.5);
+    focusOnNode(targetNode, zoomedOut ? 2 : globalVariables.projectTreeScale);
   });
 }
 
@@ -207,6 +204,7 @@ function openSearchProjectTreeView() {
   const searchProjectTreeView = createSearchProjectTreeView();
   document.body.append(searchProjectTreeView);
 
+  // TO-DO: Consider moving this to somewhere inside createSearchProjectTreeView(), that seems more appropriate.
   renderRadialProjectTree();
   
   triggerDropDown({ element: searchProjectTreeView, className: 'active', delay: 20, hideDashboardActions: false });
@@ -291,6 +289,7 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
 
     if (newScale !== current) {
       globalVariables.projectTreeScale = newScale;
+      console.log('scale changed to:', globalVariables.projectTreeScale);
       clearAllPopUps();
       updateTransform();
     }
@@ -471,66 +470,85 @@ function getSubtreeSize(node) {
   return 1 + node.children.reduce((sum, child) => sum + getSubtreeSize(child), 0);
 }
 
-function focusOnNode(circle, targetScale = null, animate = true) {
-
+function focusOnNode(targetNodeCircle, targetScale = null, animate = true) {
   hideSearchProjectTreeSearchResults();
 
-  const svg = circle.ownerSVGElement;
-  const viewport = svg.closest('.searchProjectTreeViewport');
-  if (!svg || !viewport) return;
+  const svgElement = targetNodeCircle.ownerSVGElement;
+  const viewportElement = svgElement?.closest('.searchProjectTreeViewport');
+  if (!svgElement || !viewportElement) return;
 
-  const currentScale = globalVariables.projectTreeScale;
-  const newScale = targetScale ?? currentScale;
+  const currentTreeScale = globalVariables.projectTreeScale;
+  const desiredTreeScale = targetScale ?? currentTreeScale;
 
-  const pt = svg.createSVGPoint();
-  pt.x = circle.cx.baseVal.value;
-  pt.y = circle.cy.baseVal.value;
+  // Create a point in SVG coordinate space
+  const svgPoint = svgElement.createSVGPoint();
+  svgPoint.x = targetNodeCircle.cx.baseVal.value;
+  svgPoint.y = targetNodeCircle.cy.baseVal.value;
 
-  // Transform point to screen coordinates
-  const screenPt = pt.matrixTransform(svg.getScreenCTM());
+  // Convert SVG coordinates to screen coordinates
+  const nodeScreenPoint = svgPoint.matrixTransform(
+    svgElement.getScreenCTM()
+  );
 
-  const vpRect = viewport.getBoundingClientRect();
+  const viewportRect = viewportElement.getBoundingClientRect();
 
-  // Calculate translation needed to center node **at new scale**
-  const scaleRatio = newScale / currentScale;
-  const tx = (vpRect.width / 2 - (screenPt.x - vpRect.left)) * scaleRatio;
-  const ty = (vpRect.height / 2 - (screenPt.y - vpRect.top)) * scaleRatio;
+  // How much scaling is changing
+  const scaleRatio = desiredTreeScale / currentTreeScale;
 
-  if (animate) svg.style.transition = 'transform 400ms ease';
+  // Translation needed to center the node in the viewport
+  const translateX =
+    (viewportRect.width / 2 - (nodeScreenPoint.x - viewportRect.left)) *
+    scaleRatio;
 
-  // Apply translation and scale
-  globalVariables.projectTreeX += tx;
-  globalVariables.projectTreeY += ty;
-  globalVariables.projectTreeScale = newScale;
+  const translateY =
+    (viewportRect.height / 2 - (nodeScreenPoint.y - viewportRect.top)) *
+    scaleRatio;
 
-  svg.style.transform = `translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px) scale(${globalVariables.projectTreeScale})`;
+  if (animate) {
+    svgElement.style.transition = 'transform 400ms ease';
+  }
 
-  flashCenterArrowAnimation();
+  // Update global transform state
+  globalVariables.projectTreeX += translateX;
+  globalVariables.projectTreeY += translateY;
+  globalVariables.projectTreeScale = desiredTreeScale;
 
-  if (animate) setTimeout(() => (svg.style.transition = ''), 400);
+  // Apply transform
+  svgElement.style.transform = `
+    translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px)
+    scale(${globalVariables.projectTreeScale})
+  `;
+
+  flashTargetNodeAnimation();
+
+  if (animate) {
+    setTimeout(() => {
+      svgElement.style.transition = '';
+    }, 400);
+  }
 }
 
-function flashCenterArrowAnimation() {
+function flashTargetNodeAnimation() {
 
-  const existingArrows = document.querySelector('.centerArrowWrapper');
-  if(existingArrows) {
-    existingArrows.forEach(arrow => {
-      arrow.remove();
+  const existingHighlights = document.querySelector('.highlightNodeWrapper');
+  if(existingHighlights) {
+    existingHighlights.forEach(highlight => {
+      highlight.remove();
     });
   } 
 
-  const centerArrowWrapper = document.createElement('div');
-  centerArrowWrapper.className = 'centerArrowWrapper';
-  centerArrowWrapper.innerHTML = '<span class="fa-regular fa-circle"></span>'
+  const highlightNodeWrapper = document.createElement('div');
+  highlightNodeWrapper.className = 'highlightNodeWrapper';
+  highlightNodeWrapper.innerHTML = '<span class="fa-regular fa-circle"></span>'
 
   
   setTimeout(() => {
-    document.body.appendChild(centerArrowWrapper);
+    document.body.appendChild(highlightNodeWrapper);
   }, 400);
 
   setTimeout(() => {
-    centerArrowWrapper.remove();
+    highlightNodeWrapper.remove();
   }, 1300);
 
-  return centerArrowWrapper;
+  return highlightNodeWrapper;
 }

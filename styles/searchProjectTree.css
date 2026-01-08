@@ -275,7 +275,7 @@
   fill: #111;
 }
 
-.centerArrowWrapper {
+.highlightNodeWrapper {
   position: absolute;
   top: calc(50%);
   left: calc(50%);
@@ -296,7 +296,7 @@
   z-index: 100;
 }
 
-.centerArrowWrapper span {
+.highlightNodeWrapper span {
   margin: 0 0 0 0em;
   color: #a3e2ce;
   font-size: 1.2em;

@@ -49,7 +49,7 @@ let handleProjViewEscape = null; //Used globally
 const globalProjectData = [];
 
 const globalVariables = {
-  globalSearchableProjectTree: [], // Data
+  globalProjectTree: [], // Data
   projectTreeX: 0,
   projectTreeY: 0,
   projectTreeScale: 1,
