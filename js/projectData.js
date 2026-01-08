@@ -313,7 +313,6 @@ function pauseInProgressDescendents(projectData) {
 
   const children = getAllChildren(projectData.uniqueProjectID);
   children.forEach(child => {
-    console.log('children found:', child);
     if (child.projectStatus === 'In Progress') {
       updateProjectStatus(child, 'Paused');
 
