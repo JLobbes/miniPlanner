@@ -315,7 +315,7 @@
 body .projectTilePopUp {
   display: block;
   position: absolute;
-  height: auto;
+  height: 1em;
   width: auto;
   background-color: none;
   z-index: 35;
