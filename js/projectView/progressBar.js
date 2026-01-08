@@ -45,15 +45,12 @@ function addUpdateStatusListener(projectData, updateStatusList) {
       const oldStatus = projectData.projectStatus;
 
       if(newStatus === 'In Progress') {
-        console.log('Now in progress. Update Anscestors')
         updateProjectStatusAndAncestors(projectData, 'In Progress');
       } else {
         updateProjectStatus(projectData, newStatus);
       }
       
       if(oldStatus === 'In Progress' && hasChildren(projectData.uniqueProjectID)) {
-        console.log('No longer in progress. Pause Descendants');
-
         pauseInProgressDescendents(projectData);
       }
         
