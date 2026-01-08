@@ -289,7 +289,6 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
 
     if (newScale !== current) {
       globalVariables.projectTreeScale = newScale;
-      console.log('scale changed to:', globalVariables.projectTreeScale);
       clearAllPopUps();
       updateTransform();
     }
@@ -402,8 +401,8 @@ function createProjectTilePopUp(nodeCircle, nodeData) {
 
   // Position popup absolutely
   projectTilePopUp.style.position = 'absolute';
-  projectTilePopUp.style.left = `${rect.left - 5}px`;
-  projectTilePopUp.style.top = `${rect.top - 5}px`;
+  projectTilePopUp.style.left = `${rect.left - 0}px`;
+  projectTilePopUp.style.top = `${rect.top - 0}px`;
 
   // TO-DO: add content
   projectTilePopUp.appendChild(createProjectTile(nodeData));
