@@ -321,3 +321,14 @@ function pauseInProgressDescendents(projectData) {
     }
   });
 }
+
+function updateProjectStatusAndDescendents(projectData, newStatus) {
+
+  const children = getAllChildren(projectData.uniqueProjectID);
+  children.forEach(child => {
+    updateProjectStatus(child, `${newStatus}`);
+
+    const projectView = document.querySelector('.projectView');
+    reRenderTaskList(projectView, projectData);
+  });
+}

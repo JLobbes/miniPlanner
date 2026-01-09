@@ -49,8 +49,10 @@ function addUpdateStatusListener(projectData, updateStatusList) {
       } else {
         updateProjectStatus(projectData, newStatus);
       }
-      
-      if(oldStatus === 'In Progress' && hasChildren(projectData.uniqueProjectID)) {
+
+      if(newStatus === 'Dead') {
+        updateProjectStatusAndDescendents(projectData, 'Dead');
+      } else if(oldStatus === 'In Progress' && hasChildren(projectData.uniqueProjectID)) {
         pauseInProgressDescendents(projectData);
       }
         
