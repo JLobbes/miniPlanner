@@ -436,26 +436,34 @@ function createProjectTilePopUp(nodeCircle, nodeData) {
 
   // Position popup absolutely
   projectTilePopUp.style.position = 'absolute';
-  projectTilePopUp.style.left = `${rect.left - 0}px`;
+  projectTilePopUp.style.left = `${rect.left + 20}px`;
   projectTilePopUp.style.top = `${rect.top - 0}px`;
 
   // TO-DO: add content
   projectTilePopUp.appendChild(createProjectTile(nodeData));
   
-  addRemoveProjectTilePopUpListeners(projectTilePopUp);
+  addRemoveProjectTilePopUpListeners(projectTilePopUp, nodeCircle);
 
   return projectTilePopUp;
 }
 
-function addRemoveProjectTilePopUpListeners(projectTilePopUp) {
+function addRemoveProjectTilePopUpListeners(projectTilePopUp, nodeCircle) {
+  let removeTimeout;
 
-  projectTilePopUp.addEventListener('mouseleave', () => {
-    
-    setTimeout(() => {
-      // projectTilePopUp.remove();
-      clearAllPopUps();
-    }, 25);
-  });
+  const scheduleRemove = () => {
+    removeTimeout = setTimeout(() => {
+      projectTilePopUp.remove();
+    }, 500);
+  };
+
+  const cancelRemove = () => {
+    clearTimeout(removeTimeout);
+  };
+
+  nodeCircle.addEventListener('mouseleave', scheduleRemove);
+
+  projectTilePopUp.addEventListener('mouseenter', cancelRemove);
+  projectTilePopUp.addEventListener('mouseleave', scheduleRemove);
 }
 
 function clearAllPopUps() {
