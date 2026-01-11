@@ -400,6 +400,7 @@ function drawRadialTree(nodes, canvas) {
   // Nodes (dots)
   nodes.forEach(({ node, x, y }) => {
     const nodeCircle = document.createElementNS(svgNS, "circle");
+    nodeCircle.draggable = true;
     nodeCircle.classList.add("projectTreeNode");
     if (node.projectStatus) {
       nodeCircle.classList.add(
@@ -440,7 +441,7 @@ function createProjectTilePopUp(nodeCircle, nodeData) {
   projectTilePopUp.style.top = `${rect.top - 0}px`;
 
   // TO-DO: add content
-  projectTilePopUp.appendChild(createProjectTile(nodeData));
+  projectTilePopUp.appendChild(createProjectTile({ projectData: nodeData, forDashboard: false, forPopUp: true }));
   
   addRemoveProjectTilePopUpListeners(projectTilePopUp, nodeCircle);
 
@@ -448,22 +449,24 @@ function createProjectTilePopUp(nodeCircle, nodeData) {
 }
 
 function addRemoveProjectTilePopUpListeners(projectTilePopUp, nodeCircle) {
-  let removeTimeout;
+  projectTilePopUp.removeTimeout = null;
+  projectTilePopUp.tapedUp = false; // Allows semi-permanent pin for reLocation
 
   const scheduleRemove = () => {
-    removeTimeout = setTimeout(() => {
+    if (projectTilePopUp.tapedUp) return;
+    projectTilePopUp.removeTimeout = setTimeout(() => {
       projectTilePopUp.remove();
     }, 500);
   };
 
   const cancelRemove = () => {
-    clearTimeout(removeTimeout);
+    clearTimeout(projectTilePopUp.removeTimeout);
   };
 
   nodeCircle.addEventListener('mouseleave', scheduleRemove);
-
   projectTilePopUp.addEventListener('mouseenter', cancelRemove);
   projectTilePopUp.addEventListener('mouseleave', scheduleRemove);
+
 }
 
 function clearAllPopUps() {
@@ -593,4 +596,8 @@ function flashTargetNodeAnimation() {
   }, 1300);
 
   return highlightNodeWrapper;
+}
+
+function addReLocateProjectDropZones() {
+  console.log("adding drop zones");
 }

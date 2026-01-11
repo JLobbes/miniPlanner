@@ -39,6 +39,11 @@
   font-size: 1.4em;
 }
 
+.miniFormMessage span.miniFormProjectTitle {
+  color: rgb(47, 176, 205);
+  font-style: italic;
+}
+
 .miniFormInput {
   display: flex;
   flex-direction: row;
@@ -83,10 +88,6 @@
   font-size: 1em;
   text-align: left;
   padding-left: 1em;
-}
-
-.miniForm label span {
-  /* font-weight: bold; */
 }
 
 .miniForm label input {

@@ -77,7 +77,7 @@ function createProjectViewTitleBar({ projectData, projectView, renderAsSingleTas
 }
 
 // Ellipsis action menu 
-function createProjectActions({ deleteAction = true, pinAction = false, unPinAction = false, editAction = false }) {
+function createProjectActions({ deleteAction = true, pinAction = false, unPinAction = false, editAction = false, tapeAction = false }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'projectActionsWrapper';
 
@@ -86,6 +86,7 @@ function createProjectActions({ deleteAction = true, pinAction = false, unPinAct
       <span>...</span>
       <div class="projectActionsDropDown">
         ${ deleteAction ? '<button class="deleteActionBtn" title="Delete"><i class="fa-solid fa-trash"></i></button>' : '' }
+        ${ tapeAction ? '<button class="tapeUpActionBtn" title="Tape Up Temporarily"><i class="fa-solid fa-tape"></i></button>' : '' }
         ${ pinAction ?  `
                           <button class="pinActionBtn" title="Pin to Dashboard"><i class="fa-solid fa-thumbtack"></i></button>
                           <button class="unPinActionBtn" title="Un-pin from Dash" style="display:none"><i class="fa-solid fa-thumbtack"></i></button>

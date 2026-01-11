@@ -63,6 +63,15 @@ function renderMiniForm(dataForMiniForm) {
     confirmDeleteTimeLogEntry: {
       miniFormMessage: `Are you sure you want to delete logged time?`,
     },
+    confirmMoveChild: {
+      miniFormMessage: `
+        This will move 
+        <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.childData) ? `${dataForMiniForm.childData.projectTitle}` : '')}</span> 
+        to 
+        <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.parentData) ? `${dataForMiniForm.parentData.projectTitle}` : '')}</span>.
+        Press enter to proceed.
+      `,
+    },
     confirmUploadData: {
       miniFormMessage: `⚠️<br><br>
         Uploading overwrites your current data.<br><br>
@@ -187,4 +196,14 @@ function clearMiniFormKeyPressListeners() {
 function requestConfirmation(dataForMiniForm) {
   console.log('requesting confirmation');
   return renderMiniForm(dataForMiniForm);
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, (m) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[m]));
 }

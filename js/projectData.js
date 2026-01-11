@@ -332,3 +332,21 @@ function updateProjectStatusAndDescendents(projectData, newStatus) {
     reRenderTaskList(projectView, projectData);
   });
 }
+
+async function updateProjectParent(projectID, newParentID) {
+
+  const targetProject = getSingleProject(projectID);
+  
+  const dataForMiniForm = {
+    formType: 'confirmMoveChild',
+    childData: { ... targetProject },
+    parentData: { ...getSingleProject(newParentID) }
+  };
+
+  await requestConfirmation(dataForMiniForm); 
+
+  targetProject.parentProjectID = newParentID;
+  syncProjectInGlobalData(targetProject);
+
+  requestConfirmation
+}

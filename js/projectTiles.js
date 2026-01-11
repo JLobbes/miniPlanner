@@ -12,15 +12,14 @@ function renderProjectsToDash() {
     .sort((a, b) => (a.placement.dashboardOrder ?? 0) - (b.placement.dashboardOrder ?? 0));
 
   topLevelProjects.forEach(project => {
-    const tile = createProjectTile(structuredClone(project));
+    const tile = createProjectTile({ projectData: structuredClone(project) });
     container.appendChild(tile);
   });
 
-  addDragLogicForTiles()
 }
 
 // Create the full project tile element
-function createProjectTile(projectData) {
+function createProjectTile({ projectData, forDashboard = true, forPopUp = false }) {
   const tile = document.createElement('div');
   tile.className = 'projectTile';
   tile.draggable = 'true';
@@ -31,23 +30,41 @@ function createProjectTile(projectData) {
   tile.appendChild(createProjectTitle({ titleText: projectData.projectTitle, renderAsSingleTask}));
   tile.appendChild(createProjectDescription(projectData.projectDescription));
   tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask, forProjectTile: true }));
-  tile.appendChild(createProjectActions({}));
+  
+  if(forPopUp && !forDashboard) tile.appendChild(createProjectActions({ tapeAction: true }));
+  if(forDashboard && !forPopUp) tile.appendChild(createProjectActions({ tapeAction: false }));
 
-  addTileEventListeners(projectData, tile) // TO-DO: Group all scattered listeners
+  addTileEventListeners({ projectData, projectTile: tile, forDashboard, forPopUp }) // TO-DO: Group all scattered listeners
 
   return tile;
 }
 
-function addTileEventListeners(projectData, projectTile) {
+function addTileEventListeners({ projectData, projectTile, forDashboard, forPopUp }) {
   
-  projectTile.addEventListener('click', () => openProjectView(projectData));
+  projectTile.addEventListener('click', (e) => {
+    if (e.target.closest('.projectActionsDropDown button')) return;
 
-  const deleteBtn = projectTile.querySelector('.projectActionsDropDown button[title="Delete"]');
+    // otherwise
+    openProjectView(projectData);
+  });
+
+  const deleteBtn = projectTile.querySelector('.projectActionsDropDown .deleteActionBtn');
   deleteBtn.addEventListener('click', async (e) => {
     e.stopPropagation(); // prevent project from opening
     await triggerDeleteProjectCascade(projectData, projectTile);
   });
+
+  if(forPopUp) {
+    const tapeUpProjectBtn = projectTile.querySelector('.projectActionsDropDown .tapeUpActionBtn');
+    tapeUpProjectBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // prevent project from opening
+      tapeUpProjectTile(projectData, projectTile);
+    });
+  }
   
+  if(forPopUp && !forDashboard) addReLocateDragLogicForTile(projectTile);
+  if(forDashboard && !forPopUp) addRerrangeDragLogicForTile(projectTile);
+
 }
 
 // Title section
@@ -77,17 +94,13 @@ function createProjectDescription(descText) {
 // Ellipsis action menu (i.e, projectActions)
 //    was moved to /js/projectView/header.js
 
+
 // Drag Logic for Tile Rearrangment
+function addRerrangeDragLogicForTile(projectTile) {
 
-function addDragLogicForTiles() {
-
-  const projectTiles = document.querySelectorAll('.projectTile');
-  
-  projectTiles.forEach(item => {
-    item.addEventListener('dragstart', handleDragStart);
-    item.addEventListener('dragover', handleDragOver);
-    item.addEventListener('drop', handleDrop);
-  });
+  projectTile.addEventListener('dragstart', handleDragStart);
+  projectTile.addEventListener('dragover', handleDragOver);
+  projectTile.addEventListener('drop', handleDrop);
 
   function handleDragStart(e) {
     draggedItem = this; // store reference
@@ -109,7 +122,7 @@ function addDragLogicForTiles() {
   }
   
   function updateDashboardOrder() {
-    const tiles = Array.from(document.querySelectorAll('.projectTile'));
+    const tiles = Array.from(document.querySelectorAll('#homeViewProjectsWrapper .projectTile'));
     tiles.forEach((tile, index) => {
       const projectID = tile.getAttribute('projectid');
       const singleProject = globalProjectData.find(p => p.uniqueProjectID === projectID);
@@ -120,3 +133,78 @@ function addDragLogicForTiles() {
   }
 }
 
+// Drag Logic for Tile Rearrangement
+function addReLocateDragLogicForTile(projectTile) {
+
+  projectTile.addEventListener('dragstart', handleDragStart);
+  projectTile.addEventListener('dragover', handleDragOver);
+  projectTile.addEventListener('drop', handleDrop);
+
+  // Only add viewport listeners once
+  const viewport = document.querySelector('.searchProjectTreeCanvas');
+  if (!viewport.dataset.dragListenerAdded) {
+    viewport.addEventListener('dragover', handleDragOver);
+    viewport.addEventListener('drop', handleDrop);
+    viewport.dataset.dragListenerAdded = "true";
+  }
+
+  function handleDragStart(e) {
+    draggedItem = this; // store reference
+    addReLocateProjectDropZones(); // show drop zones
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault(); // required to allow drop
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+
+    const landedOnProjectTile = e.target.closest('.projectTile');
+
+    if (landedOnProjectTile) {
+      const newParentID = landedOnProjectTile.getAttribute('projectID');
+      const childID = draggedItem.getAttribute('projectID');
+      updateProjectLocation(childID, newParentID);
+    } else {
+      // Move physically to mouse position if dropped outside a project tile
+      tapeUpProjectTile(getSingleProject(projectTile.getAttribute('projectID')), projectTile);
+
+      const projectTilePopUp = draggedItem.closest('.projectTilePopUp'); // get element
+      if (projectTilePopUp) {
+        const rect = projectTilePopUp.getBoundingClientRect();
+        projectTilePopUp.style.left = e.clientX - rect.width / 2 + 'px';
+        projectTilePopUp.style.top = e.clientY - rect.height / 2 - 58 + 'px';
+      }
+    }
+  }
+
+  function updateProjectLocation(childID, newParentID) {
+    updateProjectParent(childID, newParentID);
+    // TODO: reRender the searchView canvas or similar
+  }
+}
+
+function tapeUpProjectTile(projectData, projectTile) {
+
+  const projectTilePopUp = projectTile.closest('.projectTilePopUp');
+  projectTilePopUp.tapedUp = true;
+
+  const tapeUpBtn = projectTilePopUp.querySelector('.projectActions .tapeUpActionBtn');
+  tapeUpBtn.style.display = 'none';
+
+  const unTapeButton = document.createElement('button');
+  unTapeButton.className = 'unTapeBtn';
+  unTapeButton.innerHTML = `<span class='fa-solid fa-xmark'></span>`;
+
+  addUnTapeProjectTilePopUpListener(unTapeButton, projectTilePopUp);
+  
+  projectTilePopUp.appendChild(unTapeButton);
+}
+
+function addUnTapeProjectTilePopUpListener(unPinButton, projectTilePopUp) {
+
+  unPinButton.addEventListener('click', () => {
+    projectTilePopUp.remove();
+  });
+};
