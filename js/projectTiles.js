@@ -58,7 +58,7 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
     const tapeUpProjectBtn = projectTile.querySelector('.projectActionsDropDown .tapeUpActionBtn');
     tapeUpProjectBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // prevent project from opening
-      tapeUpProjectTile(projectData, projectTile);
+      tapeUpProjectTile(projectTile);
     });
   }
   
@@ -159,35 +159,46 @@ function addReLocateDragLogicForTile(projectTile) {
 
   function handleDrop(e) {
     e.preventDefault();
-
     const landedOnProjectTile = e.target.closest('.projectTile');
+    const projectTilePopUp = draggedItem.parentElement; // capture immediately
 
     if (landedOnProjectTile) {
-      const newParentID = landedOnProjectTile.getAttribute('projectID');
-      const childID = draggedItem.getAttribute('projectID');
-      updateProjectLocation(childID, newParentID);
-    } else {
-      // Move physically to mouse position if dropped outside a project tile
-      tapeUpProjectTile(getSingleProject(projectTile.getAttribute('projectID')), projectTile);
-
-      const projectTilePopUp = draggedItem.closest('.projectTilePopUp'); // get element
-      if (projectTilePopUp) {
+        const newParentID = landedOnProjectTile.getAttribute('projectID');
+        const childID = draggedItem.getAttribute('projectID');
+        updateProjectLocation(childID, newParentID);
+    } else if (projectTilePopUp) {
+        // Position first
         const rect = projectTilePopUp.getBoundingClientRect();
         projectTilePopUp.style.left = e.clientX - rect.width / 2 + 'px';
         projectTilePopUp.style.top = e.clientY - rect.height / 2 - 58 + 'px';
-      }
+
+        // Then tape up (idempotent)
+        if (!projectTilePopUp.tapedUp) {
+            projectTilePopUp.tapedUp = true;
+            const tapeUpBtn = projectTilePopUp.querySelector('.projectActions .tapeUpActionBtn');
+            tapeUpBtn.style.display = 'none';
+
+            const unTapeButton = document.createElement('button');
+            unTapeButton.className = 'unTapeBtn';
+            unTapeButton.innerHTML = "<span class='fa-solid fa-xmark'></span>";
+            addUnTapeProjectTilePopUpListener(unTapeButton, projectTilePopUp);
+            projectTilePopUp.appendChild(unTapeButton);
+        }
     }
   }
 
   function updateProjectLocation(childID, newParentID) {
     updateProjectParent(childID, newParentID);
-    // TODO: reRender the searchView canvas or similar
+    reRenderSearchProjectTreeView();
   }
 }
 
-function tapeUpProjectTile(projectData, projectTile) {
+function tapeUpProjectTile(projectTile) {
+  console.log(projectTile);
 
-  const projectTilePopUp = projectTile.closest('.projectTilePopUp');
+  const projectTilePopUp = projectTile.parentElement;
+  
+  if(projectTilePopUp.tapedUp) return;
   projectTilePopUp.tapedUp = true;
 
   const tapeUpBtn = projectTilePopUp.querySelector('.projectActions .tapeUpActionBtn');
@@ -202,9 +213,9 @@ function tapeUpProjectTile(projectData, projectTile) {
   projectTilePopUp.appendChild(unTapeButton);
 }
 
-function addUnTapeProjectTilePopUpListener(unPinButton, projectTilePopUp) {
+function addUnTapeProjectTilePopUpListener(unTapeButton, projectTilePopUp) {
 
-  unPinButton.addEventListener('click', () => {
+  unTapeButton.addEventListener('click', () => {
     projectTilePopUp.remove();
   });
 };
