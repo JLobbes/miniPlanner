@@ -187,9 +187,12 @@ function addReLocateDragLogicForTile(projectTile) {
     }
   }
 
-  function updateProjectLocation(childID, newParentID) {
-    updateProjectParent(childID, newParentID);
-    reRenderSearchProjectTreeView();
+  async function updateProjectLocation(childID, newParentID) {
+    
+    await updateProjectParent(childID, newParentID);
+    
+    // Now the data is updated, safe to re-render
+    reRenderProjectTreeViewPort();
   }
 }
 

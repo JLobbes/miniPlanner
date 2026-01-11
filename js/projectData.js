@@ -333,20 +333,23 @@ function updateProjectStatusAndDescendents(projectData, newStatus) {
   });
 }
 
+
 async function updateProjectParent(projectID, newParentID) {
+    const targetProject = getSingleProject(projectID);
+    const parentProject = getSingleProject(newParentID);
 
-  const targetProject = getSingleProject(projectID);
-  
-  const dataForMiniForm = {
-    formType: 'confirmMoveChild',
-    childData: { ... targetProject },
-    parentData: { ...getSingleProject(newParentID) }
-  };
+    const dataForMiniForm = {
+        formType: 'confirmMoveChild',
+        childData: { ...targetProject },
+        parentData: { ...parentProject }
+    };
 
-  await requestConfirmation(dataForMiniForm); 
+    // Wait for user confirmation
+    await requestConfirmation(dataForMiniForm);
 
-  targetProject.parentProjectID = newParentID;
-  syncProjectInGlobalData(targetProject);
+    // Update the actual data
+    targetProject.parentProjectID = newParentID;
+    syncProjectInGlobalData(targetProject);
 
-  requestConfirmation
+    // Now data is fully updated; do NOT re-render here
 }

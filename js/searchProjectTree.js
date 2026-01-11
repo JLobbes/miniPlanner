@@ -601,3 +601,25 @@ function flashTargetNodeAnimation() {
 function addReLocateProjectDropZones() {
   console.log("adding drop zones");
 }
+
+function reRenderProjectTreeViewPort() {
+
+  const searchProjectTreeView = document.querySelector('.searchProjectTreeView');
+  if (!searchProjectTreeView) return;
+
+  // Clear current view
+  const viewport = document.querySelector('.searchProjectTreeViewport');
+  viewport.innerHTML = '';
+
+  const canvas = document.createElement('div');
+  canvas.className = 'searchProjectTreeCanvas';
+
+  viewport.append(canvas);
+  searchProjectTreeView.append(viewport);
+
+  addSearchProjectTreePanZoom(viewport, canvas);
+  clearAllPopUps();
+
+  // Rebuild the radial project tree
+  renderRadialProjectTree();
+}
