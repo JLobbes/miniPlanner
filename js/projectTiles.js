@@ -150,7 +150,6 @@ function addReLocateDragLogicForTile(projectTile) {
 
   function handleDragStart(e) {
     draggedItem = this; // store reference
-    addReLocateProjectDropZones(); // show drop zones
   }
 
   function handleDragOver(e) {
@@ -192,7 +191,11 @@ function addReLocateDragLogicForTile(projectTile) {
     await updateProjectParent(childID, newParentID);
     
     // Now the data is updated, safe to re-render
+    
+    const previousZoomLevel = globalVariables.projectTreeScale;
+    storeFocusNode(newParentID);
     reRenderProjectTreeViewPort();
+    restoreFocusNode(previousZoomLevel);
   }
 }
 

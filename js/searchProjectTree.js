@@ -164,7 +164,7 @@ function addFocusOnSearchResultListener(searchResult, idOfTargetNode) {
     targetNode = document.querySelector(`.projectTreeNode.${idOfTargetNode}`);
 
     const zoomedOut = (globalVariables.projectTreeScale === 0.5);
-    focusOnNode(targetNode, zoomedOut ? 2 : globalVariables.projectTreeScale);
+    focusOnNode(targetNode, { inputScale: zoomedOut ? 2 : globalVariables.projectTreeScale });
   });
 }
 
@@ -216,6 +216,9 @@ function openSearchProjectTreeView() {
 
 function closeSearchProjectTreeView(searchProjectTreeView) {
   globalVariables.projectTreePopUpsEnabled = false;
+  globalVariables.projectTreeScale = 1;
+  globalVariables.projectTreeFocusNodeID = null;
+
   clearAllPopUps();
 
   searchProjectTreeView.classList.remove('active');
@@ -287,10 +290,8 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
     let newScale;
 
     if (e.deltaY < 0) {
-      // scroll up → zoom in
       newScale = zoomLevels.find(z => z > current) ?? zoomLevels[zoomLevels.length - 1];
     } else {
-      // scroll down → zoom out
       newScale = [...zoomLevels].reverse().find(z => z < current) ?? zoomLevels[0];
     }
 
@@ -326,7 +327,6 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
       updateTransform();
     }
   };
-
 }
 
 function renderSearchProjectTree() {
@@ -515,64 +515,6 @@ function getSubtreeSize(node) {
   return 1 + node.children.reduce((sum, child) => sum + getSubtreeSize(child), 0);
 }
 
-function focusOnNode(targetNodeCircle, targetScale = null, animate = true) {
-  hideSearchProjectTreeSearchResults();
-
-  const svgElement = targetNodeCircle.ownerSVGElement;
-  const viewportElement = svgElement?.closest('.searchProjectTreeViewport');
-  if (!svgElement || !viewportElement) return;
-
-  const currentTreeScale = globalVariables.projectTreeScale;
-  const desiredTreeScale = targetScale ?? currentTreeScale;
-
-  // Create a point in SVG coordinate space
-  const svgPoint = svgElement.createSVGPoint();
-  svgPoint.x = targetNodeCircle.cx.baseVal.value;
-  svgPoint.y = targetNodeCircle.cy.baseVal.value;
-
-  // Convert SVG coordinates to screen coordinates
-  const nodeScreenPoint = svgPoint.matrixTransform(
-    svgElement.getScreenCTM()
-  );
-
-  const viewportRect = viewportElement.getBoundingClientRect();
-
-  // How much scaling is changing
-  const scaleRatio = desiredTreeScale / currentTreeScale;
-
-  // Translation needed to center the node in the viewport
-  const translateX =
-    (viewportRect.width / 2 - (nodeScreenPoint.x - viewportRect.left)) *
-    scaleRatio;
-
-  const translateY =
-    (viewportRect.height / 2 - (nodeScreenPoint.y - viewportRect.top)) *
-    scaleRatio;
-
-  if (animate) {
-    svgElement.style.transition = 'transform 400ms ease';
-  }
-
-  // Update global transform state
-  globalVariables.projectTreeX += translateX;
-  globalVariables.projectTreeY += translateY;
-  globalVariables.projectTreeScale = desiredTreeScale;
-
-  // Apply transform
-  svgElement.style.transform = `
-    translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px)
-    scale(${globalVariables.projectTreeScale})
-  `;
-
-  flashTargetNodeAnimation();
-
-  if (animate) {
-    setTimeout(() => {
-      svgElement.style.transition = '';
-    }, 400);
-  }
-}
-
 function flashTargetNodeAnimation() {
 
   const existingHighlights = document.querySelector('.highlightNodeWrapper');
@@ -598,10 +540,6 @@ function flashTargetNodeAnimation() {
   return highlightNodeWrapper;
 }
 
-function addReLocateProjectDropZones() {
-  console.log("adding drop zones");
-}
-
 function reRenderProjectTreeViewPort() {
 
   const searchProjectTreeView = document.querySelector('.searchProjectTreeView');
@@ -622,4 +560,100 @@ function reRenderProjectTreeViewPort() {
 
   // Rebuild the radial project tree
   renderRadialProjectTree();
+}
+
+function restoreFocusNode(zoomScaleBeforeReRender) {
+  const id = globalVariables.projectTreeFocusNodeID;
+  if (!id) return;
+
+  const node = document.querySelector(`.projectTreeNode.${id}`);
+  if (!node) return;
+
+  focusOnNode(node, {
+    inputScale: zoomScaleBeforeReRender,
+    animate: true
+  });
+}
+
+function storeFocusNode(nodeID) {
+  
+  globalVariables.projectTreeFocusNodeID = nodeID;
+}
+
+function focusOnNode(
+  targetNodeCircle,
+  { inputScale = null, nodeX = 0.5, nodeY = 0.5, animate = true } = {}
+) {
+  hideSearchProjectTreeSearchResults();
+
+  const svg = targetNodeCircle?.ownerSVGElement;
+  const viewport = svg?.closest('.searchProjectTreeViewport');
+  if (!svg || !viewport) return;
+
+  const currentScale = globalVariables.projectTreeScale;
+  const targetScale = inputScale ?? currentScale;
+  const duration = 400;
+
+  const doPan = () => {
+    const pt = svg.createSVGPoint();
+    pt.x = targetNodeCircle.cx.baseVal.value;
+    pt.y = targetNodeCircle.cy.baseVal.value;
+
+    const nodeScreen = pt.matrixTransform(svg.getScreenCTM());
+    const viewportRect = viewport.getBoundingClientRect();
+
+    const desiredX = viewportRect.left + viewportRect.width * nodeX;
+    const desiredY = viewportRect.top + viewportRect.height * nodeY;
+
+    const dx = desiredX - nodeScreen.x;
+    const dy = desiredY - nodeScreen.y;
+
+    if (animate) svg.style.transition = `transform ${duration}ms ease`;
+
+    globalVariables.projectTreeX += dx;
+    globalVariables.projectTreeY += dy;
+
+    svg.style.transform = `
+      translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px)
+      scale(${globalVariables.projectTreeScale})
+    `;
+
+    flashTargetNodeAnimation();
+
+    if (animate) {
+      setTimeout(() => (svg.style.transition = ''), duration);
+    }
+  };
+
+  // ---------- ZOOM (only if needed) ----------
+  if (targetScale !== currentScale) {
+    if (animate) svg.style.transition = `transform ${duration}ms ease`;
+
+    fadeCanvasOut();
+
+    globalVariables.projectTreeScale = targetScale;
+    svg.style.transform = `
+      translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px)
+      scale(${targetScale})
+    `;
+
+    setTimeout(() => {
+      svg.style.transition = '';
+      fadeCanvasIn();
+      doPan(); // pan AFTER zoom
+    }, animate ? duration : 0);
+  } else {
+    // ---------- PAN ONLY ----------
+    doPan();
+  }
+}
+
+function fadeCanvasOut() {
+  const canvas = document.querySelector('.searchProjectTreeCanvas');
+  if (canvas) canvas.style.opacity = '0';
+}
+
+function fadeCanvasIn() {
+  const canvas = document.querySelector('.searchProjectTreeCanvas');
+  if (canvas) canvas.style.opacity = '1';
 }

@@ -54,6 +54,7 @@ const globalVariables = {
   projectTreeX: 0,
   projectTreeY: 0,
   projectTreeScale: 1,
+  projectTreeFocusNodeID: null,
 }
 
 function loadDataToGlobalProjects() {

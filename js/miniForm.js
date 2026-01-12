@@ -190,7 +190,11 @@ function clearMiniFormKeyPressListeners() {
 
   globalListeners.enter = null;
   // Change escape press back to close project view.
-  globalListeners.esc = () => closeAllProjectViews({});
+  const searchViewOpen = document.querySelector('.searchProjectTreeView');
+  if(searchViewOpen) globalListeners.esc = () => closeSearchProjectTreeView({});
+  
+  const projectViewOpen = document.querySelector('.projectView');
+  if(projectViewOpen) globalListeners.esc = () => closeAllProjectViews({});
 }
 
 function requestConfirmation(dataForMiniForm) {
