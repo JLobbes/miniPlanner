@@ -422,6 +422,10 @@ function addProjectTreeNodeListener(nodeCircle, nodeData) {
 
   nodeCircle.addEventListener('mouseover', () => {
     if (!globalVariables.projectTreePopUpsEnabled) return;
+
+    const alreadyCreated = document.querySelector(`#popup-${nodeData.uniqueProjectID}`);
+    if(alreadyCreated) return;
+
     document.body.appendChild(createProjectTilePopUp(nodeCircle, nodeData));
   })
 }

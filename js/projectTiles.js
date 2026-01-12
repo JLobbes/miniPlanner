@@ -200,7 +200,6 @@ function addReLocateDragLogicForTile(projectTile) {
 }
 
 function tapeUpProjectTile(projectTile) {
-  console.log(projectTile);
 
   const projectTilePopUp = projectTile.parentElement;
   

@@ -25,6 +25,11 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
 
 function openProjectView(projectData, hasParent) {
 
+  const opened = document.querySelector(`.projectView`);
+  if(opened) {
+    if(opened.getAttribute('projectID') === `${projectData.uniqueProjectID}`) return;
+  }
+
   if (!projectData) {
     console.error('Project not found:', projectData?.uniqueProjectID);
     return;

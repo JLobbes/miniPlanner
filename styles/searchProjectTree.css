@@ -246,7 +246,7 @@
 }
 
 .searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode {
-  r: 10;
+  r: 12;
   stroke: #333;
   stroke-width: 3;
   cursor: pointer;
