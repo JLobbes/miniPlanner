@@ -159,6 +159,7 @@ function addReLocateDragLogicForTile(projectTile) {
   function handleDrop(e) {
     e.preventDefault();
     const landedOnProjectTile = e.target.closest('.projectTile');
+    if (landedOnProjectTile === draggedItem) return;
     const projectTilePopUp = draggedItem.parentElement; // capture immediately
 
     if (landedOnProjectTile) {
