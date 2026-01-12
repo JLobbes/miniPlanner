@@ -1,172 +1,4 @@
-// js/searchProjectTree.js
-
-function createSearchProjectTreeView() {
-
-  const searchProjectTreeView = document.createElement('div');
-  searchProjectTreeView.className = 'searchProjectTreeView';
-
-  createSearchProjectTreeViewHeader(searchProjectTreeView);
-  createSearchProjectTreeViewport(searchProjectTreeView);
-
-  return searchProjectTreeView;
-}
-
-function createSearchProjectTreeViewHeader(searchProjectTreeView) {
-
-  const header = document.createElement('div');
-  header.className = 'searchProjectTreeHeader';
-
-  header.append(createSearchProjectTreeSearchBar(searchProjectTreeView));
-
-  const escapeSearchViewBtn = document.createElement('button')
-  escapeSearchViewBtn.tabIndex = '1';
-  escapeSearchViewBtn.className = 'escapeSearchViewBtn';
-  escapeSearchViewBtn.innerHTML = `<i class="fa-solid fa-xmark"></i>`
-  header.append(escapeSearchViewBtn);
-  searchProjectTreeView.append(header);
-
-  addCloseSearchProjectTreeListeners(searchProjectTreeView, escapeSearchViewBtn);
-
-  return header;
-}
-
-function createSearchProjectTreeSearchBar(searchProjectTreeView) {
-
-  const searchBarWrapper = document.createElement('div');
-  searchBarWrapper.className = 'searchBarWrapper';
-
-  // The searchButton has no function, search is done on 'input'. 
-  // But serves currently as an icon only. 
-
-  const searchButton = document.createElement('button');
-  searchButton.disabled = true;
-  searchButton.className = 'executeSearchProjectTreeBtn';
-  searchButton.tabIndex = '2';
-  searchButton.innerHTML = `<span class="fa-solid fa-search"></span>`;
-
-  const searchBarInput = document.createElement('input');
-  searchBarInput.className = 'searchBarInput';
-  searchBarInput.tabIndex = '2';
-  searchBarInput.type = 'text';
-
-  const searchResultContainer = document.createElement('ul');
-  searchResultContainer.classList = 'projectTreeSearchResults';
-
-  searchBarWrapper.append(searchBarInput, searchButton, searchResultContainer);
-
-  addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView);
-
-  return searchBarWrapper;
-}
-
-function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView) {
-
-  searchBarInput.addEventListener('focus', () => {
-    showSearchProjectTreeSearchResults();
-  });
-  
-  globalListeners.input = (e) => {
-    const searchValue = searchBarInput.value.trim();
-    renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
-  }
-
-  const handleClickAway = (e) => {
-    if (e.target.closest('.projectTreeSearchResult')) return;
-    if (e.target.closest('.searchBarInput')) return;
-
-    hideSearchProjectTreeSearchResults();
-  };
-
-  globalListeners.click = handleClickAway;
-}
-
-function clearSearchProjectTreeSearchResults() {
-  const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
-  searchResultsLocation.innerHTML = ``;
-}
-
-function hideSearchProjectTreeSearchResults() {
-  const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
-  searchResultsLocation.style.display = 'none';
-}
-
-function showSearchProjectTreeSearchResults() {
-  const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
-  searchResultsLocation.style.display = '';
-}
-
-
-function runProjectTreeSearch(searchValue) {
-  if (!searchValue) return globalProjectData;
-
-  return globalProjectData
-    .map(project => {
-      const titleScore = fuzzyScore(searchValue, project.projectTitle);
-      const descScore = fuzzyScore(searchValue, project.projectDescription);
-      const bestScore = titleScore !== -1 ? titleScore : descScore;
-      return { project, score: bestScore };
-    })
-    .filter(item => item.score !== -1)
-    .sort((a, b) => a.score - b.score)
-    .map(item => item.project);
-}
-
-function fuzzyScore(query, text) {
-  query = query.toLowerCase();
-  text = text.toLowerCase();
-
-  let qi = 0;
-  let firstMatch = -1;
-
-  for (let ti = 0; ti < text.length && qi < query.length; ti++) {
-    if (text[ti] === query[qi]) {
-      if (firstMatch === -1) firstMatch = ti;
-      qi++;
-    }
-  }
-  return qi === query.length ? firstMatch : -1;
-}
-
-function renderSearchResults({ results, allResults = false }) {
-
-  const renderLocation = document.querySelector('.projectTreeSearchResults');
-  clearSearchProjectTreeSearchResults();
-  
-  const topTen = results.slice(0, 10);
-  const resultsForRender = (allResults) ? results : topTen;
-  resultsForRender.forEach(singleResult => {
-
-    const searchResultLine = document.createElement('button');
-    searchResultLine.classList = 'projectTreeSearchResult';
-    searchResultLine.tabIndex = '2';
-    searchResultLine.title = `${singleResult.projectTitle}`;
-
-    const icon = document.createElement('span');
-    const renderAsSingleTask = !hasChildren(singleResult.uniqueProjectID) || !singleResult.parentProjectID === null;
-    icon.className = `${ (renderAsSingleTask) ? 'fa-regular fa-rectangle-list' : 'fa-solid fa-folder' }`; 
-    icon.classList.add('projectIcon');
-
-    const projectTitle = document.createElement('p');
-    projectTitle.className = 'projectTitle';
-  
-    projectTitle.innerText = `${singleResult.projectTitle}`;
-
-    addFocusOnSearchResultListener(searchResultLine, singleResult.uniqueProjectID);
-    
-    searchResultLine.append(icon, projectTitle);
-    renderLocation.append(searchResultLine);
-  })
-}
-
-function addFocusOnSearchResultListener(searchResult, idOfTargetNode) {
-
-  searchResult.addEventListener('click', () => {
-    targetNode = document.querySelector(`.projectTreeNode.${idOfTargetNode}`);
-
-    const zoomedOut = (globalVariables.projectTreeScale === 0.5);
-    focusOnNode(targetNode, { inputScale: zoomedOut ? 2 : globalVariables.projectTreeScale });
-  });
-}
+// js/searchProjectTreeView/viewport.js
 
 function createSearchProjectTreeViewport(searchProjectTreeView) {
   const viewport = document.createElement('div');
@@ -181,65 +13,6 @@ function createSearchProjectTreeViewport(searchProjectTreeView) {
   addSearchProjectTreePanZoom(viewport, canvas);
 
   return viewport;
-}
-
-function addCloseSearchProjectTreeListeners(searchProjectTreeView, escapeSearchViewBtn) {
-  escapeSearchViewBtn.addEventListener('click', () => {
-    closeSearchProjectTreeView(searchProjectTreeView);
-  });
-
-  addCloseSearchProjectTreeEscapePressListener(escapeSearchViewBtn)
-}
-
-function addCloseSearchProjectTreeEscapePressListener(escapeSearchViewBtn) {
-
-  globalListeners.esc = () => escapeSearchViewBtn.click();
-}
-
-function openSearchProjectTreeView() {
-
-  openedSearchViews = document.querySelector('.searchProjectTreeView');
-  if(openedSearchViews) return;
-  
-  const searchProjectTreeView = createSearchProjectTreeView();
-  document.body.append(searchProjectTreeView);
-
-  // TO-DO: Consider moving this to somewhere inside createSearchProjectTreeView(), that seems more appropriate.
-  renderRadialProjectTree();
-  
-  triggerDropDown({ element: searchProjectTreeView, className: 'active', delay: 20, hideDashboardActions: false });
-  setInterval(() => {
-    globalVariables.projectTreePopUpsEnabled = true;
-  }, 1500);
-};
-
-
-function closeSearchProjectTreeView(searchProjectTreeView) {
-  globalVariables.projectTreePopUpsEnabled = false;
-  globalVariables.projectTreeScale = 1;
-  globalVariables.projectTreeFocusNodeID = null;
-
-  clearAllPopUps();
-
-  searchProjectTreeView.classList.remove('active');
-  setTimeout(() => {
-    // Allow for slide up animation
-    clearSearchProjectTreeViewGlobalListeners();
-
-    searchProjectTreeView.remove();
-  }, 1500);
-}
-
-function clearSearchProjectTreeViewGlobalListeners() {
-
-  const projectViewOpen = document.querySelector('.projectView');
-  if(projectViewOpen) globalListeners.esc = () => closeAllProjectViews({});
-  if(!projectViewOpen) globalListeners.esc = null;
-  globalListeners.click = null;
-  globalListeners.ctrlMinus = null;
-  globalListeners.ctrlPlus= null;
-  globalListeners.ctrlS = null;
-  globalListeners.input = null
 }
 
 function addSearchProjectTreePanZoom(viewport, canvas) {
@@ -544,46 +317,6 @@ function flashTargetNodeAnimation() {
   return highlightNodeWrapper;
 }
 
-function reRenderProjectTreeViewPort() {
-
-  const searchProjectTreeView = document.querySelector('.searchProjectTreeView');
-  if (!searchProjectTreeView) return;
-
-  // Clear current view
-  const viewport = document.querySelector('.searchProjectTreeViewport');
-  viewport.innerHTML = '';
-
-  const canvas = document.createElement('div');
-  canvas.className = 'searchProjectTreeCanvas';
-
-  viewport.append(canvas);
-  searchProjectTreeView.append(viewport);
-
-  addSearchProjectTreePanZoom(viewport, canvas);
-  clearAllPopUps();
-
-  // Rebuild the radial project tree
-  renderRadialProjectTree();
-}
-
-function restoreFocusNode(zoomScaleBeforeReRender) {
-  const id = globalVariables.projectTreeFocusNodeID;
-  if (!id) return;
-
-  const node = document.querySelector(`.projectTreeNode.${id}`);
-  if (!node) return;
-
-  focusOnNode(node, {
-    inputScale: zoomScaleBeforeReRender,
-    animate: true
-  });
-}
-
-function storeFocusNode(nodeID) {
-  
-  globalVariables.projectTreeFocusNodeID = nodeID;
-}
-
 function focusOnNode(
   targetNodeCircle,
   { inputScale = null, nodeX = 0.5, nodeY = 0.5, animate = true } = {}
@@ -660,4 +393,45 @@ function fadeCanvasOut() {
 function fadeCanvasIn() {
   const canvas = document.querySelector('.searchProjectTreeCanvas');
   if (canvas) canvas.style.opacity = '1';
+}
+
+function reRenderProjectTreeViewPort() {
+
+  const searchProjectTreeView = document.querySelector('.searchProjectTreeView');
+  if (!searchProjectTreeView) return;
+
+  // Clear current view
+  const viewport = document.querySelector('.searchProjectTreeViewport');
+  viewport.innerHTML = '';
+
+  const canvas = document.createElement('div');
+  canvas.className = 'searchProjectTreeCanvas';
+
+  viewport.append(canvas);
+  searchProjectTreeView.append(viewport);
+
+  addSearchProjectTreePanZoom(viewport, canvas);
+  clearAllPopUps();
+
+  // Rebuild the radial project tree
+  renderRadialProjectTree();
+}
+
+
+function restoreFocusNode(zoomScaleBeforeReRender) {
+  const id = globalVariables.projectTreeFocusNodeID;
+  if (!id) return;
+
+  const node = document.querySelector(`.projectTreeNode.${id}`);
+  if (!node) return;
+
+  focusOnNode(node, {
+    inputScale: zoomScaleBeforeReRender,
+    animate: true
+  });
+}
+
+function storeFocusNode(nodeID) {
+  
+  globalVariables.projectTreeFocusNodeID = nodeID;
 }
