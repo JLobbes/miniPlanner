@@ -171,6 +171,9 @@ function addReLocateDragLogicForTile(projectTile) {
     if (landedOnProjectTile) {
         const newParentID = landedOnProjectTile.getAttribute('projectID');
         const childID = draggedItem.getAttribute('projectID');
+
+        // --- FAILSAFES: Prevent cycles ---
+
         if (childID === 'theVirtualRoot') return; // Don't allow the dashboard to be put in a child.
         updateProjectLocation(childID, newParentID);
     } else if (projectTilePopUp) {
