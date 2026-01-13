@@ -50,15 +50,21 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
 
   const deleteBtn = projectTile.querySelector('.projectActionsDropDown .deleteActionBtn');
   deleteBtn.addEventListener('click', async (e) => {
-    e.stopPropagation(); // prevent project from opening
+    e.stopPropagation();
 
-    const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
-    if (searchProjectTreeViewOpen) {
-      
+    const success = await triggerDeleteProjectCascade(projectData, projectTile);
+
+    if (success) {
+      const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+      if (searchProjectTreeViewOpen) {
+        const parentNodeID = projectData.parentProjectID;
+        reRenderProjecTreeViewportToNode(parentNodeID);
+      }
+    } else {
+      console.log(`Deletion of ${projectData.projectTitle} cancelled by user.`);
     }
-
-    await triggerDeleteProjectCascade(projectData, projectTile);
   });
+
 
   if(forPopUp) {
     const tapeUpProjectBtn = projectTile.querySelector('.projectActionsDropDown .tapeUpActionBtn');

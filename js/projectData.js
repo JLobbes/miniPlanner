@@ -157,49 +157,36 @@ function deleteSingleProject(uniqueProjectID, projectTile) {
 }
 
 async function triggerDeleteProjectCascade(projectData, projectTile) {
-  console.log(`Project ${projectData.uniqueProjectID} is being deleted`);
-
-  // Handle delete or TO-DO: move children to another parent project.
   try {
-    //
     const allChildren = getAllChildren(projectData.uniqueProjectID);
     const childCount = allChildren.length;
 
-    if(childCount > 0) {
+    // Delete children if there are any
+    if (childCount > 0) {
       const dataForMiniForm = {
         formType: 'confirmDeleteChildren',
         quantityOfChildren: childCount,
-        projectData: { ... projectData },
+        projectData: { ...projectData },
       };
 
       await requestConfirmation(dataForMiniForm);
-      // console.log('Child deletion confirmed — proceeding with delete.');
+      allChildren.forEach(child => deleteSingleProject(child.uniqueProjectID));
+    }
 
-      // Loop to delete all identified children. 
-      allChildren.forEach(child => {
-        const childUniqueID = child.uniqueProjectID;
-        deleteSingleProject(childUniqueID);
-      });
-    } 
-    
-  } catch (error) {
-    console.log('Deletion of children canceled:', error.message);
-    return; // End process if children are not handled.
-  }
-
-  // Delete Parent
-  try {
-    const dataForMiniForm = {
+    // Delete parent
+    const dataForMiniFormParent = {
       formType: 'confirmDeleteParent',
-      projectData: { ... projectData },
+      projectData: { ...projectData },
     };
 
-    await requestConfirmation(dataForMiniForm); 
-    // console.log('Parent deletion confirmed — proceeding with delete.');
-
+    await requestConfirmation(dataForMiniFormParent);
     deleteSingleProject(projectData.uniqueProjectID);
+
+    // Success! Return true
+    return true;
   } catch (err) {
-    console.log('Deletion of parent canceled:', err.message);
+    console.log('Deletion cancelled by user:', err.message);
+    return false; // Cancellation, not an error
   }
 }
 
