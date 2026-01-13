@@ -125,7 +125,7 @@ function renderRadialProjectTree() {
 
   const virtualRoot = {
     children: tree,
-    uniqueProjectID: 'virtualRoot'
+    uniqueProjectID: 'theVirtualRoot',
   };
   layoutRadial(virtualRoot, centerX, centerY, 0, 2 * Math.PI, 0, nodes);
 
@@ -184,7 +184,7 @@ function drawRadialTree(nodes, canvas) {
     nodeCircle.setAttribute('cx', x);
     nodeCircle.setAttribute('cy', y);
 
-    addProjectTreeNodeListener(nodeCircle, node, x, y);
+    addProjectTreeNodeListener(nodeCircle, node);
     svg.appendChild(nodeCircle);
   });
 
@@ -199,8 +199,23 @@ function addProjectTreeNodeListener(nodeCircle, nodeData) {
     const alreadyCreated = document.querySelector(`#popup-${nodeData.uniqueProjectID}`);
     if(alreadyCreated) return;
 
-    document.body.appendChild(createProjectTilePopUp(nodeCircle, nodeData));
+    if(nodeCircle.classList.contains('theVirtualRoot')) {
+      createFauxPopUpForDashboard(nodeCircle);
+    } else {
+      document.body.appendChild(createProjectTilePopUp(nodeCircle, nodeData));
+    }
   })
+}
+
+function createFauxPopUpForDashboard(nodeCircle) {
+
+  const fauxData = {
+    projectTitle: 'Dashboard',
+    uniqueProjectID: 'theVirtualRoot',
+    projectDescription: 'Drop tiles here to become parentless',
+    projectStatus: 'virtualRoot',
+  }
+  document.body.appendChild(createProjectTilePopUp(nodeCircle, fauxData));
 }
 
 function createProjectTilePopUp(nodeCircle, nodeData) {

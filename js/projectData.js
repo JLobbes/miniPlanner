@@ -336,7 +336,13 @@ function updateProjectStatusAndDescendents(projectData, newStatus) {
 
 async function updateProjectParent(projectID, newParentID) {
     const targetProject = getSingleProject(projectID);
-    const parentProject = getSingleProject(newParentID);
+
+    let parentProject = {
+      projectTitle: 'Dashboard',
+    }
+    if(newParentID !== 'theVirtualRoot') {
+      parentProject = getSingleProject(newParentID);
+    }
 
     const dataForMiniForm = {
         formType: 'confirmMoveChild',
@@ -348,7 +354,7 @@ async function updateProjectParent(projectID, newParentID) {
     await requestConfirmation(dataForMiniForm);
 
     // Update the actual data
-    targetProject.parentProjectID = newParentID;
+    targetProject.parentProjectID = (newParentID === 'theVirtualRoot') ? null : newParentID;
     syncProjectInGlobalData(targetProject);
 
     // Now data is fully updated; do NOT re-render here

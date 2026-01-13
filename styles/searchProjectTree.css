@@ -276,6 +276,13 @@
   fill: #111;
 }
 
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.theVirtualRoot {
+  r: 20;
+  stroke-width: 3;
+  fill: white;
+  stroke-dasharray: 8 4; 
+}
+
 .highlightNodeWrapper {
   position: absolute;
   top: calc(50%);
