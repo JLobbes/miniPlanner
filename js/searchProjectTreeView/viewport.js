@@ -450,3 +450,11 @@ function storeFocusNode(nodeID) {
   
   globalVariables.projectTreeFocusNodeID = nodeID;
 }
+
+function reRenderProjecTreeViewportToNode(nodeID) {
+
+  const previousZoomLevel = globalVariables.projectTreeScale;
+  storeFocusNode(nodeID);
+  reRenderProjectTreeViewPort();
+  restoreFocusNode(previousZoomLevel);
+}  

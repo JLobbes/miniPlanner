@@ -209,11 +209,9 @@ function addReLocateDragLogicForTile(projectTile) {
     await updateProjectParent(childID, newParentID);
     
     // Now the data is updated, safe to re-render
-    
-    const previousZoomLevel = globalVariables.projectTreeScale;
-    storeFocusNode(newParentID);
-    reRenderProjectTreeViewPort();
-    restoreFocusNode(previousZoomLevel);
+    if (newParentID === 'theVirtualRoot') renderProjectsToDash()
+  
+    reRenderProjecTreeViewportToNode(childID);
   }
 }
 
