@@ -57,6 +57,11 @@ function addUpdateStatusListener(projectData, updateStatusList) {
       }
         
       reRenderProgressBar(projectData);
+
+      const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+      if (searchProjectTreeViewOpen) {
+        reRenderProjecTreeViewportToNode(projectData.uniqueProjectID);
+      }
     });
   });
 }
