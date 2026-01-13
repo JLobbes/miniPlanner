@@ -102,6 +102,7 @@ function createTasksWrapper(projectData, projectView) {
     taskDiv.tabIndex = '7';
     taskDiv.className = 'task';
     taskDiv.draggable = 'true';
+    taskDiv.title = `${task.projectTitle}`;
     taskDiv.setAttribute('taskID', `${task.uniqueProjectID}`);
     taskDiv.innerHTML = `
       ${ renderAsSingleTask ? 
