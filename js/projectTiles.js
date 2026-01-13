@@ -51,6 +51,12 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
   const deleteBtn = projectTile.querySelector('.projectActionsDropDown .deleteActionBtn');
   deleteBtn.addEventListener('click', async (e) => {
     e.stopPropagation(); // prevent project from opening
+
+    const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+    if (searchProjectTreeViewOpen) {
+      
+    }
+
     await triggerDeleteProjectCascade(projectData, projectTile);
   });
 

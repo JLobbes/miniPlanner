@@ -337,11 +337,20 @@ function updateProjectStatusAndDescendents(projectData, newStatus) {
 async function updateProjectParent(projectID, newParentID) {
     const targetProject = getSingleProject(projectID);
 
-    let parentProject = {
-      projectTitle: 'Dashboard',
+    // --- ESCAPE: Prevent cycles ---
+    if (newParentID !== 'theVirtualRoot') {
+        const descendants = getAllChildren(projectID).map(p => p.uniqueProjectID);
+        if (descendants.includes(newParentID)) {
+            alert("Cannot move a project under one of its own descendants!");
+            return; // early exit
+        }
     }
-    if(newParentID !== 'theVirtualRoot') {
-      parentProject = getSingleProject(newParentID);
+
+    let parentProject = {
+        projectTitle: 'Dashboard',
+    };
+    if (newParentID !== 'theVirtualRoot') {
+        parentProject = getSingleProject(newParentID);
     }
 
     const dataForMiniForm = {
