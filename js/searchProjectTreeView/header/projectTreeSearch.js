@@ -55,7 +55,6 @@ function runProjectTreeSearch(searchValue) {
 
   return globalProjectData
     .map(project => {
-      console.log(project);
       const titleScore = fuzzyScore(searchValue, project.projectTitle);
       const descScore = fuzzyScore(searchValue, project.projectDescription);
       const bestScore = titleScore !== -1 ? titleScore : descScore;
@@ -82,10 +81,7 @@ function showSearchProjectTreeSearchResults() {
 }
 
 function fuzzyScore(query, text) {
-  if (!text || !query) {
-    console.error('Missing inputs to score in fuzzyScore()');
-    return;
-  };
+  if (!text || !query) return;
   query = query.toLowerCase();
   text = text.toLowerCase();
 
@@ -102,6 +98,12 @@ function fuzzyScore(query, text) {
 }
 
 function renderSearchResults({ results, allResults = false }) {
+
+  if (results.length === 0) {
+    return; 
+    
+    // TO-DO: use this for show 'no-results' later.
+  } 
 
   const renderLocation = document.querySelector('.projectTreeSearchResults');
   clearSearchProjectTreeSearchResults();
