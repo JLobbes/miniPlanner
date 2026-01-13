@@ -57,7 +57,7 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
     if (success) {
       const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
       if (searchProjectTreeViewOpen) {
-        const parentNodeID = projectData.parentProjectID;
+        const parentNodeID = (projectData.parentProjectID) ? projectData.parentProjectID : 'theVirtualRoot';
         reRenderProjecTreeViewportToNode(parentNodeID);
       }
     } else {
