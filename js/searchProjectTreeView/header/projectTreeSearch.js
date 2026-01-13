@@ -99,6 +99,7 @@ function fuzzyScore(query, text) {
 
 function renderSearchResults({ results, allResults = false }) {
 
+  if (!results) return;
   if (results.length === 0) {
     return; 
     
