@@ -22,13 +22,17 @@ const globalListeners = {
 function addGlobalListeners () {
   
   document.addEventListener('click', (e) => {
+    // Skip file inputs (let browser do its thing)
+    if (e.target.tagName === 'INPUT' && e.target.type === 'file') return;
+
+    // For all other clicks, prevent default if needed
     e.preventDefault();
 
     const handler = globalListeners.click;
-    if(typeof handler === 'function') {
-      handler(e)
+    if (typeof handler === 'function') {
+      handler(e);
     }
-  })
+  });
 
   document.addEventListener('input', (e) => {
     e.preventDefault();
