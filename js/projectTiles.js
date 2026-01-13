@@ -175,6 +175,13 @@ function addReLocateDragLogicForTile(projectTile) {
         // --- FAILSAFES: Prevent cycles ---
 
         if (childID === 'theVirtualRoot') return; // Don't allow the dashboard to be put in a child.
+
+        const descendants = getAllChildren(childID).map(p => p.uniqueProjectID);
+        if (descendants.includes(newParentID)) {
+            return; // exit early
+        }
+
+        // Safe
         updateProjectLocation(childID, newParentID);
     } else if (projectTilePopUp) {
         // Position first
