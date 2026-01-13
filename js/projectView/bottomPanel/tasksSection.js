@@ -8,6 +8,11 @@ function addNewTaskListener(projectData, projectView) {
   addNewTaskBtn.tabIndex = '3';
   addNewTaskBtn.addEventListener('click', () => {
     openNewProject({ parentID: projectData.uniqueProjectID, hasParent: true });
+    
+    const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+    if (searchProjectTreeViewOpen) {
+      reRenderProjecTreeViewportToNode(projectData.uniqueProjectID);
+    }
 
     // Re-render tasksWrapper
     reRenderTaskList(projectView, projectData)

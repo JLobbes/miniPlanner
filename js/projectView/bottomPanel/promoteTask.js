@@ -29,6 +29,11 @@ function addPromoteBtnListener(projectData, projectView, promoteBtnWrapper, prom
     
     // Re-open as full project
     openProjectView(projectData);
+    
+    const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+    if (searchProjectTreeViewOpen) {
+      reRenderProjecTreeViewportToNode(projectData.uniqueProjectID);
+    }
   })
 
   promoteBtn.addEventListener('mouseover', () => {
