@@ -51,7 +51,7 @@ function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 }
 
 function runProjectTreeSearch(searchValue) {
-  if (!searchValue) return globalProjectData;
+  if (!searchValue) return;
 
   return globalProjectData
     .map(project => {
@@ -81,6 +81,9 @@ function showSearchProjectTreeSearchResults() {
 }
 
 function fuzzyScore(query, text) {
+  if (!text || !query) {
+    console.error('No inputs to score in fuzzyScore()');
+  };
   query = query.toLowerCase();
   text = text.toLowerCase();
 
