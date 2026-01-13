@@ -3,12 +3,18 @@
 function addProjectActionListeners(projectData, projectView) {
   const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
-    try {
-      await triggerDeleteProjectCascade(projectData);
-      closeSingleProjectView(projectData, projectView);
-    } catch (err) {
-      // user canceled or deletion failed — keep view open
-      console.log('Deletion canceled or failed:', err.message);
+
+    const success = await triggerDeleteProjectCascade(projectData);
+
+    if (success) {
+      const searchProjectTreeViewOpen = document.querySelector('.searchProjectTreeView');
+      if (searchProjectTreeViewOpen) {
+        const parentNodeID = projectData.parentProjectID;
+        reRenderProjecTreeViewportToNode(parentNodeID);
+        closeSingleProjectView(projectData, projectView);
+      }
+    } else {
+      console.log(`Deletion of ${projectData.projectTitle} cancelled by user.`);
     }
   });
 
