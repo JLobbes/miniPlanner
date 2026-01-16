@@ -3,12 +3,20 @@
 function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTreeView) {
 
   searchBarInput.addEventListener('focus', () => {
-    showSearchProjectTreeSearchResults();
+    const searchValue = searchBarInput.value.trim();
+    console.log('search value:', searchValue);
+    if (searchValue) {
+      showSearchProjectTreeSearchResults();
+      renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
+    }
   });
   
   globalListeners.input = (e) => {
     const searchValue = searchBarInput.value.trim();
-    renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
+    if (searchValue) {
+      showSearchProjectTreeSearchResults();
+      renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
+    }
   }
 
   const handleClickAway = (e) => {
@@ -53,7 +61,8 @@ function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 function runProjectTreeSearch(searchValue) {
   if (!searchValue) return;
 
-  return globalProjectData
+  const preFiltered = filterOutExcludedStatuses(globalProjectData, globalVariables.filteredOutStatuses);
+  return preFiltered
     .map(project => {
       const titleScore = fuzzyScore(searchValue, project.projectTitle);
       const descScore = fuzzyScore(searchValue, project.projectDescription);
@@ -128,16 +137,17 @@ function renderSearchResults({ results, allResults = false }) {
   
     projectTitle.innerText = `${singleResult.projectTitle}`;
 
-    addFocusOnSearchResultListener(searchResultLine, singleResult.uniqueProjectID);
+    addFocusOnSearchResultListener(searchResultLine, singleResult.uniqueProjectID, singleResult.projectStatus);
     
     searchResultLine.append(icon, projectTitle);
     renderLocation.append(searchResultLine);
   })
 }
 
-function addFocusOnSearchResultListener(searchResult, idOfTargetNode) {
+function addFocusOnSearchResultListener(searchResult, idOfTargetNode, projectStatus) {
 
   searchResult.addEventListener('click', () => {
+
     targetNode = document.querySelector(`.projectTreeNode.${idOfTargetNode}`);
 
     const zoomedOut = (globalVariables.projectTreeScale === 0.5);

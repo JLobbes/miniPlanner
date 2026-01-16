@@ -188,7 +188,7 @@
   outline: none;
 }
 
-.searchProjectTreeHeader button.escapeSearchViewBtn i {
+.searchProjectTreeHeader button.escapeSearchViewBtn span {
   display: block;
   padding: 0.25em 0.65em 1.2em 0.65em;
   font-size: 1.3em;
@@ -203,13 +203,13 @@
               border 0.2s,
               box-shadow 0.2s;
 }
-.searchProjectTreeHeader button.escapeSearchViewBtn i {
+.searchProjectTreeHeader button.escapeSearchViewBtn span {
   height: 1.5em;
   margin: 0 0 2em 0;
 }
 
-.searchProjectTreeHeader button.escapeSearchViewBtn:focus i,
-.searchProjectTreeHeader button.escapeSearchViewBtn:hover i {
+.searchProjectTreeHeader button.escapeSearchViewBtn:focus span,
+.searchProjectTreeHeader button.escapeSearchViewBtn:hover span {
   background-color: #fff;
   color: #333;
   border: solid 1px black;
@@ -222,6 +222,136 @@
               color 0.2s,
               border 0.2s,
               box-shadow 0.2s;
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn {
+  position: absolute;
+  background-color: #333;
+  left: 1.25em;
+  top: 1em;
+  margin: 0em 0em 0em 0em;
+  padding: 0.15em 0.15em 0.15em 0.20em;
+  border-radius: 1em;
+  border: 1px solid #333;
+  border: 1em;
+  cursor: pointer;
+  z-index: 30;
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn span {
+  font-size: 1.3em;
+  color: #fff;
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn:focus, 
+.searchProjectTreeHeader button.openFilterPanelBtn:hover {
+  animation: wiggleSeachResult 0.5s ease-in-out
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn:focus-visible {
+  outline: none;
+}
+
+.searchProjectTreeHeader .filterPanel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+  left: 0.90em;
+  top: 0.70em;
+  gap: 0.5em;
+  height: 0em;
+  margin: 1.7em 0em 0em 0em;
+  padding: 0.15em 0.15em 0.15em 0.20em;
+  border-radius: 1em;
+  border: 1px solid #333;
+  border: 1em;
+  overflow: hidden;
+  z-index: 30;
+  transition: height 0.5s ease;
+}
+
+.searchProjectTreeHeader .filterPanel.open {
+  height: 10.5em;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn {
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 1em;
+  border: none;
+  cursor: pointer;
+}
+
+.filterNodeBtn.crossed::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;  /* match or slightly exceed SVG */
+  height: 2px;  /* line thickness */
+  background-color: #333;
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+}
+
+.filterNodeBtn.crossed.dead::after {
+  background-color: #eee; /* dead exception */
+  height: 3px;
+
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn:focus-visible {
+  outline: none;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn:focus, 
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn:hover {
+  animation: wiggleSeachResult 0.5s ease-in-out;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 5px 8px rgba(0, 0, 0, 0.2);
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon {
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon {
+  stroke-width: 2;
+  stroke: #333;
+  r: 9;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingComplete {
+  fill: #b3f69f;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingPlanned {
+  fill: #4a97ca;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingInProgress {
+  fill: #e7f661;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingPaused {
+  fill: #ffbb61;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingDelayed {
+  fill: #e95e45;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingDead {
+  fill: #111;
 }
 
 .searchProjectTreeView .searchProjectTreeViewport {
@@ -301,7 +431,7 @@
       0em 0em 0.6em #32cd32,   /* lime green */
       0em 0em 0.9em #ff3f3f,   /* dodger blue */
       0em 0em 1.1em #8a2be2;   /* blue violet */
-  z-index: 100;
+  z-index: 30;
 }
 
 .highlightNodeWrapper span {

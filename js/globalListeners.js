@@ -23,7 +23,7 @@ function addGlobalListeners () {
   
   document.addEventListener('click', (e) => {
     // Skip file inputs (let browser do its thing)
-    if (e.target.tagName === 'INPUT' && e.target.type === 'file') return;
+    if (e.target.tagName === 'INPUT') return;
 
     // For all other clicks, prevent default if needed
     e.preventDefault();

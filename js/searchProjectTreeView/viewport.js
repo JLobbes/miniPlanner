@@ -10,60 +10,64 @@ function createSearchProjectTreeViewport(searchProjectTreeView) {
   viewport.append(canvas);
   searchProjectTreeView.append(viewport);
 
-  addSearchProjectTreePanZoom(viewport, canvas);
+  addSearchProjectTreePanZoom(searchProjectTreeView, viewport, canvas);
 
   return viewport;
 }
 
-function addSearchProjectTreePanZoom(viewport, canvas) {
+function addSearchProjectTreePanZoom(searchProjectTreeView, viewport, canvas) {
   globalVariables.projectTreeX = 0;
   globalVariables.projectTreeY = 0;
   globalVariables.projectTreeScale = 1;
+
   let isPanning = false;
-  let startX, startY;
+  let startX = 0, startY = 0;
+  let lastZoomTime = 0;
+
+  const zoomLevels = [0.5, 1, 2, 3];
 
   const updateTransform = () => {
     const svg = canvas.querySelector('svg');
-    if(svg) {
-      svg.style.transform = `translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px) scale(${globalVariables.projectTreeScale})`;
-    }
+    if (!svg) return;
+
+    svg.style.transform =
+      `translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px)
+       scale(${globalVariables.projectTreeScale})`;
   };
 
-  // PAN
-  viewport.addEventListener('mousedown', e => {
+  // ---------- PAN HANDLERS ----------
+  viewport._onMouseDown = (e) => {
     isPanning = true;
     startX = e.clientX - globalVariables.projectTreeX;
     startY = e.clientY - globalVariables.projectTreeY;
     viewport.style.cursor = 'grabbing';
-  });
+  };
 
-  viewport.addEventListener('mousemove', e => {
+  viewport._onMouseMove = (e) => {
     if (!isPanning) return;
     globalVariables.projectTreeX = e.clientX - startX;
     globalVariables.projectTreeY = e.clientY - startY;
     updateTransform();
-  });
+  };
 
-  viewport.addEventListener('mouseup', () => {
+  viewport._onMouseUp = () => {
     isPanning = false;
     viewport.style.cursor = 'grab';
-  });
+  };
 
-  // ZOOM (wheel) with fixed steps
-  let lastZoomTime = 0;
-  const zoomLevels = [0.5, 1, 2, 3];
-
-  viewport.addEventListener('wheel', e => {
+  // ---------- ZOOM HANDLER ----------
+  viewport._onWheel = (e) => {
     e.preventDefault();
+
     const now = Date.now();
-    if (now - lastZoomTime < 200) return; // 200ms cooldown
+    if (now - lastZoomTime < 200) return;
     lastZoomTime = now;
 
     const current = globalVariables.projectTreeScale;
     let newScale;
 
     if (e.deltaY < 0) {
-      newScale = zoomLevels.find(z => z > current) ?? zoomLevels[zoomLevels.length - 1];
+      newScale = zoomLevels.find(z => z > current) ?? zoomLevels.at(-1);
     } else {
       newScale = [...zoomLevels].reverse().find(z => z < current) ?? zoomLevels[0];
     }
@@ -73,7 +77,13 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
       clearAllPopUps();
       updateTransform();
     }
-  }, { passive: false });
+  };
+
+  // ---------- ATTACH ----------
+  viewport.addEventListener('mousedown', viewport._onMouseDown);
+  viewport.addEventListener('mousemove', viewport._onMouseMove);
+  viewport.addEventListener('mouseup', viewport._onMouseUp);
+  viewport.addEventListener('wheel', viewport._onWheel, { passive: false });
 
   globalListeners.ctrlPlus = () => {
     const current = globalVariables.projectTreeScale;
@@ -102,13 +112,101 @@ function addSearchProjectTreePanZoom(viewport, canvas) {
   };
 }
 
+// function addSearchProjectTreePanZoom(searchProjectTreeView, viewport, canvas) {
+//   globalVariables.projectTreeX = 0;
+//   globalVariables.projectTreeY = 0;
+//   globalVariables.projectTreeScale = 1;
+//   let isPanning = false;
+//   let startX, startY;
+
+//   const updateTransform = () => {
+//     console.log('updateTransform:', new Date().toLocaleTimeString());
+//     const svg = canvas.querySelector('svg');
+//     if(svg) {
+//       svg.style.transform = `translate(${globalVariables.projectTreeX}px, ${globalVariables.projectTreeY}px) scale(${globalVariables.projectTreeScale})`;
+//     }
+//   };
+
+//   // PAN
+//   viewport.addEventListener('mousedown', e => {
+//     isPanning = true;
+//     startX = e.clientX - globalVariables.projectTreeX;
+//     startY = e.clientY - globalVariables.projectTreeY;
+//     viewport.style.cursor = 'grabbing';
+//   });
+
+//   viewport.addEventListener('mousemove', e => {
+//     if (!isPanning) return;
+//     globalVariables.projectTreeX = e.clientX - startX;
+//     globalVariables.projectTreeY = e.clientY - startY;
+//     updateTransform();
+//   });
+
+//   viewport.addEventListener('mouseup', () => {
+//     isPanning = false;
+//     viewport.style.cursor = 'grab';
+//   });
+
+//   // ZOOM (wheel) with fixed steps
+//   let lastZoomTime = 0;
+//   const zoomLevels = [0.5, 1, 2, 3];
+
+//   viewport.addEventListener('wheel', e => {
+//     e.preventDefault();
+//     const now = Date.now();
+//     if (now - lastZoomTime < 200) return; // 200ms cooldown
+//     lastZoomTime = now;
+
+//     const current = globalVariables.projectTreeScale;
+//     let newScale;
+
+//     if (e.deltaY < 0) {
+//       newScale = zoomLevels.find(z => z > current) ?? zoomLevels[zoomLevels.length - 1];
+//     } else {
+//       newScale = [...zoomLevels].reverse().find(z => z < current) ?? zoomLevels[0];
+//     }
+
+//     if (newScale !== current) {
+//       globalVariables.projectTreeScale = newScale;
+//       clearAllPopUps();
+//       updateTransform();
+//     }
+//   }, { passive: false });
+
+//   globalListeners.ctrlPlus = () => {
+//     const current = globalVariables.projectTreeScale;
+//     const newScale =
+//       zoomLevels.find(z => z > current) ??
+//       zoomLevels[zoomLevels.length - 1];
+
+//     if (newScale !== current) {
+//       globalVariables.projectTreeScale = newScale;
+//       clearAllPopUps();
+//       updateTransform();
+//     }
+//   };
+
+//   globalListeners.ctrlMinus = () => {
+//     const current = globalVariables.projectTreeScale;
+//     const newScale =
+//       [...zoomLevels].reverse().find(z => z < current) ??
+//       zoomLevels[0];
+
+//     if (newScale !== current) {
+//       globalVariables.projectTreeScale = newScale;
+//       clearAllPopUps();
+//       updateTransform();
+//     }
+//   };
+// }
+
 function renderSearchProjectTree() {
   const canvas = document.querySelector('.searchProjectTreeCanvas');
   canvas.innerHTML = '';
 
   const tree = buildGlobalProjectTree();
   tree.forEach(node => {
-    canvas.append(renderTreeNode(node));
+    canvas.append(renderTreeNode(node)); // TO-DO: This function isn't defined?
   });
 }
 
@@ -116,7 +214,9 @@ function renderRadialProjectTree() {
   const canvas = document.querySelector('.searchProjectTreeCanvas');
   canvas.innerHTML = '';
 
-  const tree = buildGlobalProjectTree(); // Array of root nodes
+  const fullTree = buildGlobalProjectTree(); // Array of root nodes
+  const filteredTree = filterOutExcludedStatuses(fullTree, globalVariables.filteredOutStatuses);
+
   const nodes = [];
 
   // Canvas center
@@ -124,13 +224,33 @@ function renderRadialProjectTree() {
   const centerY = canvas.offsetHeight / 2;
 
   const virtualRoot = {
-    children: tree,
+    children: filteredTree,
     uniqueProjectID: 'theVirtualRoot',
   };
   layoutRadial(virtualRoot, centerX, centerY, 0, 2 * Math.PI, 0, nodes);
 
-
   drawRadialTree(nodes, canvas);
+}
+
+function filterOutExcludedStatuses(nodes, excludedStatuses) {
+  return nodes
+    .map(node => {
+      const filteredChildren = node.children
+        ? filterOutExcludedStatuses(node.children, excludedStatuses)
+        : [];
+      
+      // drop this node if its status is in excludedStatuses
+      if (excludedStatuses.includes(node.projectStatus)) {
+        return null;
+      }
+      
+      // keep node with filtered children
+      return {
+        ...node,
+        children: filteredChildren
+      };
+    })
+    .filter(Boolean); // remove nulls
 }
 
 function drawRadialTree(nodes, canvas) {
@@ -297,6 +417,7 @@ function layoutRadial(node, centerX, centerY, startAngle, endAngle, depth, layou
 
     layoutRadial(child, centerX, centerY, childStart, childEnd, depth + 1, layout);
     currentAngle += angleSpan;
+
   });
 
   return layout;
@@ -416,16 +537,23 @@ function reRenderProjectTreeViewPort() {
   if (!searchProjectTreeView) return;
 
   // Clear current view
-  const viewport = document.querySelector('.searchProjectTreeViewport');
-  viewport.innerHTML = '';
+  function tearDownOldViewport(viewport) {
+    viewport.removeEventListener('mousedown', viewport._onMouseDown);
+    viewport.removeEventListener('mousemove', viewport._onMouseMove);
+    viewport.removeEventListener('mouseup', viewport._onMouseUp);
+    viewport.removeEventListener('wheel', viewport._onWheel);
 
-  const canvas = document.createElement('div');
-  canvas.className = 'searchProjectTreeCanvas';
+    viewport._onMouseDown =
+    viewport._onMouseMove =
+    viewport._onMouseUp =
+    viewport._onWheel = null;
+    viewport.remove();
+  }
+  const oldViewport = document.querySelector('.searchProjectTreeViewport');
+  tearDownOldViewport(oldViewport);
 
-  viewport.append(canvas);
-  searchProjectTreeView.append(viewport);
+  const newViewport = createSearchProjectTreeViewport(searchProjectTreeView);
 
-  addSearchProjectTreePanZoom(viewport, canvas);
   clearAllPopUps();
 
   // Rebuild the radial project tree

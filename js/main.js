@@ -3,6 +3,7 @@
 // Wait for the DOM to load
 document.addEventListener('DOMContentLoaded', () => {
   loadDataToGlobalProjects();
+  loadSettings();
   renderProjectsToDash();
 
   // TO-DO: decide whether these three should be in dashboard.js or not.
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   addUploadProjectDataListener();
   addReturnToDashboardListener();
   console.log('Page loaded and ready!');
-  
+
 });
 
 const homeView = document.getElementById('homeView'); // Used Globally
@@ -55,6 +56,9 @@ const globalVariables = {
   projectTreeY: 0,
   projectTreeScale: 1,
   projectTreeFocusNodeID: null,
+  filteredOutStatuses: [],
+
+  SETTINGS_KEY: 'miniPlannerSettings',
 }
 
 function loadDataToGlobalProjects() {
@@ -69,3 +73,31 @@ function loadDataToGlobalProjects() {
   console.log('Loaded project data:', globalProjectData);
 }
 
+function loadSettings() {
+  const stored = localStorage.getItem(globalVariables.SETTINGS_KEY);
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+
+      globalVariables.filteredOutStatuses = parsed.filterOutStatuses;
+    } catch (err) {
+      console.error('Failed to parse settings from localStorage:', err);
+      globalVariables.filteredOutStatuses = [];
+    }
+  } else {
+    globalVariables.filteredOutStatuses = [];
+  }
+}
+
+function saveSettings() {
+  try {
+    const settings = {
+      filterOutStatuses: structuredClone(globalVariables.filteredOutStatuses),
+    }
+
+    localStorage.setItem(globalVariables.SETTINGS_KEY, JSON.stringify(settings));
+    console.log('Settings saved to local storage');
+  } catch (err) {
+    console.error('Failed to save settings:', err);
+  }
+}
