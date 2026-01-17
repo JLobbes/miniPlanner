@@ -1,0 +1,103 @@
+/* styles/searchProjectTreeView/header/filterPanel.css */
+
+.searchProjectTreeHeader .filterPanel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+  left: 0.90em;
+  top: 0.70em;
+  gap: 0.5em;
+  height: 0em;
+  margin: 1.7em 0em 0em 0em;
+  padding: 0.15em 0.15em 0.15em 0.20em;
+  border-radius: 1em;
+  border: 1px solid #333;
+  border: 1em;
+  overflow: hidden;
+  z-index: 30;
+  transition: height 0.5s ease;
+}
+
+.searchProjectTreeHeader .filterPanel.open {
+  height: 10.5em;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn {
+  position: relative;
+  height: fit-content;
+  width: fit-content;
+  padding: 0;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 1em;
+  border: none;
+  cursor: pointer;
+}
+
+.filterNodeBtn.crossed::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;  /* match or slightly exceed SVG */
+  height: 2px;  /* line thickness */
+  background-color: #333;
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+}
+
+.filterNodeBtn.crossed.dead::after {
+  background-color: #eee; /* dead exception */
+  height: 3px;
+
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn:focus-visible {
+  outline: none;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn:focus, 
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn:hover {
+  animation: wiggleSeachResult 0.5s ease-in-out;
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    0 5px 8px rgba(0, 0, 0, 0.2);
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon {
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon {
+  stroke-width: 2;
+  stroke: #333;
+  r: 9;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingComplete {
+  fill: #b3f69f;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingPlanned {
+  fill: #4a97ca;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingInProgress {
+  fill: #e7f661;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingPaused {
+  fill: #ffbb61;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingDelayed {
+  fill: #e95e45;
+}
+
+.searchProjectTreeHeader .filterPanel button.filterNodeBtn svg.filterNodeIcon circle.circleIcon.statusShowingDead {
+  fill: #111;
+}

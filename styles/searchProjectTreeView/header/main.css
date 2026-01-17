@@ -1,0 +1,92 @@
+/* styles/searchProjectTreeView/header/main.css */
+
+.searchProjectTreeHeader {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 5em;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0);
+  z-index: 25;
+}
+
+.searchProjectTreeHeader .escapeSearchViewBtn {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0);
+  right: 1.25em;
+  top: 1em;
+  margin: 0em 0em 0em 0em;
+  border: none;
+  border: 1em;
+}
+
+.searchProjectTreeHeader .escapeSearchViewBtn:focus-visible {
+  outline: none;
+}
+
+.searchProjectTreeHeader button.escapeSearchViewBtn span {
+  display: block;
+  padding: 0.25em 0.65em 1.2em 0.65em;
+  font-size: 1.3em;
+  font-weight: bold;
+  background-color: #333;
+  color: #fff;
+  border: solid 1px #fff;
+  border-radius: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s,  
+              color 0.2s,
+              border 0.2s,
+              box-shadow 0.2s;
+}
+.searchProjectTreeHeader button.escapeSearchViewBtn span {
+  height: 1.5em;
+  margin: 0 0 2em 0;
+}
+
+.searchProjectTreeHeader button.escapeSearchViewBtn:focus span,
+.searchProjectTreeHeader button.escapeSearchViewBtn:hover span {
+  background-color: #fff;
+  color: #333;
+  border: solid 1px black;
+  border-radius: 1em;
+  cursor: pointer;
+  box-shadow: 
+    0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
+    0 0.25em 0.75em rgba(0, 0, 0, 0.15); 
+  transition: background-color 0.2s,  
+              color 0.2s,
+              border 0.2s,
+              box-shadow 0.2s;
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn {
+  position: absolute;
+  background-color: #333;
+  left: 1.25em;
+  top: 1em;
+  margin: 0em 0em 0em 0em;
+  padding: 0.15em 0.15em 0.15em 0.20em;
+  border-radius: 1em;
+  border: 1px solid #333;
+  border: 1em;
+  cursor: pointer;
+  z-index: 30;
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn span {
+  font-size: 1.3em;
+  color: #fff;
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn:focus, 
+.searchProjectTreeHeader button.openFilterPanelBtn:hover {
+  animation: wiggleSeachResult 0.5s ease-in-out
+}
+
+.searchProjectTreeHeader button.openFilterPanelBtn:focus-visible {
+  outline: none;
+}
+

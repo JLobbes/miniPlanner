@@ -1,0 +1,88 @@
+/* styles/searchProjectTreeView/main.css */
+
+.searchProjectTreeView {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  bottom: -100%; 
+  left: 10vw;
+  height: 98vh;
+  width: 80vw;
+  border: #111 solid 1px;
+  border-radius: 0.5em;
+  background-color: #fff;
+  box-shadow: 
+    0.25em 0.25em 0em rgb(221, 221, 221);
+  transition: bottom 1.5s ease;
+  z-index: 20;
+}
+
+@media (max-width: 1200px) {
+  .searchProjectTreeView {
+    width: 95vw;
+    left: 2.5vw;
+  }
+}
+
+.searchProjectTreeView.active {
+  bottom: 1vh; /* slides up into view */
+}
+
+
+body .projectTilePopUp {
+  display: block;
+  position: absolute;
+  height: 1em;
+  width: auto;
+  background-color: none;
+  z-index: 35;
+  cursor: pointer;
+}
+
+body .projectTilePopUp button.unTapeBtn {
+  position: absolute;
+  right: 0;
+  top: -1em;
+  height: auto;
+  width: auto;
+  padding: 0.25em 0.25em 0.15em 0.25em;
+  background-color: #333;
+  border: 1px solid #333;
+  border-radius: 0.5em;
+  cursor: pointer;
+  transition: background-color 0.2s,  
+              color 0.2s,
+              border 0.2s,
+              box-shadow 0.2s;
+}
+
+body .projectTilePopUp button.unTapeBtn:focus,
+body .projectTilePopUp button.unTapeBtn:hover {
+  background-color: #fff;
+  color: #333;
+  border: solid 1px black;
+  cursor: pointer;
+  box-shadow: 
+    0 0.125em 0.375em rgba(0, 0, 0, 0.1),         
+    0 0.25em 0.75em rgba(0, 0, 0, 0.15); 
+  transition: background-color 0.2s,  
+              color 0.2s,
+              border 0.2s,
+              box-shadow 0.2s;
+}
+
+body .projectTilePopUp button.unTapeBtn span {
+  color: #fff;
+  font-size: 1.1em;
+}
+
+body .projectTilePopUp button.unTapeBtn:focus span,
+body .projectTilePopUp button.unTapeBtn:hover span {
+  color: #333;
+}
+
+body .projectTilePopUp .projectTile {
+  margin: 1em 0 0 0em;
+}
