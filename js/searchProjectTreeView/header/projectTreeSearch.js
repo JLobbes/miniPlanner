@@ -4,7 +4,6 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
 
   searchBarInput.addEventListener('focus', () => {
     const searchValue = searchBarInput.value.trim();
-    console.log('search value:', searchValue);
     if (searchValue) {
       showSearchProjectTreeSearchResults();
       renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
@@ -13,9 +12,11 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
   
   globalListeners.input = (e) => {
     const searchValue = searchBarInput.value.trim();
-    if (searchValue) {
+    if (searchValue && searchValue !== '') {
       showSearchProjectTreeSearchResults();
       renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
+    } else {
+      clearSearchProjectTreeSearchResults();
     }
   }
 
@@ -61,18 +62,25 @@ function createSearchProjectTreeSearchBar(searchProjectTreeView) {
 function runProjectTreeSearch(searchValue) {
   if (!searchValue) return;
 
-  const preFiltered = filterOutExcludedStatuses(globalProjectData, globalVariables.filteredOutStatuses);
+  const preFiltered = filterOutExcludedStatuses(
+    globalProjectData,
+    globalVariables.filteredOutStatuses
+  );
+
   return preFiltered
     .map(project => {
-      const titleScore = fuzzyScore(searchValue, project.projectTitle);
-      const descScore = fuzzyScore(searchValue, project.projectDescription);
-      const bestScore = titleScore !== -1 ? titleScore : descScore;
-      return { project, score: bestScore };
+      const titleScore = fuzzyScore(searchValue, project.projectTitle, 2);
+      const descriptionScore = fuzzyScore(searchValue, project.projectDescription);
+      const totalScore = titleScore + descriptionScore;
+
+      return {
+        ...project,
+        score: totalScore
+      };
     })
-    .filter(item => item.score !== -1)
-    .sort((a, b) => a.score - b.score)
-    .map(item => item.project);
+    .sort((a, b) => b.score - a.score);
 }
+
 
 function clearSearchProjectTreeSearchResults() {
   const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
@@ -89,22 +97,38 @@ function showSearchProjectTreeSearchResults() {
   searchResultsLocation.style.display = '';
 }
 
-function fuzzyScore(query, text) {
-  if (!text || !query) return;
+function fuzzyScore(query, text, weight = 1) {
+  if (!query || !text) return 0;
+
   query = query.toLowerCase();
   text = text.toLowerCase();
 
-  let qi = 0;
-  let firstMatch = -1;
+  let score = 0;
+  let queryIndex = 0;
+  let lastMatchedTextIndex = -1;
 
-  for (let ti = 0; ti < text.length && qi < query.length; ti++) {
-    if (text[ti] === query[qi]) {
-      if (firstMatch === -1) firstMatch = ti;
-      qi++;
+  for (
+    let textIndex = 0;
+    textIndex < text.length && queryIndex < query.length;
+    textIndex++
+  ) {
+    if (text[textIndex] === query[queryIndex]) {
+      // progressive reward: later query chars are worth more
+      score += weight * 10 * (queryIndex + 1);
+
+      // penalize gaps between matches
+      if (lastMatchedTextIndex !== -1) {
+        score -= weight * (textIndex - lastMatchedTextIndex - 1);
+      }
+
+      lastMatchedTextIndex = textIndex;
+      queryIndex++;
     }
   }
-  return qi === query.length ? firstMatch : -1;
+
+  return score;
 }
+
 
 function renderSearchResults({ results, allResults = false }) {
 
@@ -122,6 +146,8 @@ function renderSearchResults({ results, allResults = false }) {
   const resultsForRender = (allResults) ? results : topTen;
   resultsForRender.forEach(singleResult => {
 
+    console.log('result: ', singleResult);
+    // console.log('searchValue:', searchValue, '\n', 'searchScore:', totalScore);
     const searchResultLine = document.createElement('button');
     searchResultLine.classList = 'projectTreeSearchResult';
     searchResultLine.tabIndex = '2';
