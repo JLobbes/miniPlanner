@@ -18,6 +18,19 @@ function addProjectActionListeners(projectData, projectView) {
     }
   });
 
+  const focusNodeAction = projectView.querySelector('.projectActionsDropDown button.focusNodeAction');
+  focusNodeAction.addEventListener('click', (e) => {
+
+    const projectTreeViewOpened = document.querySelector('.searchProjectTreeView');
+    if(projectTreeViewOpened) {
+      const targetNode = document.querySelector(`.projectTreeNode.${projectData.uniqueProjectID}`);
+      focusOnNode(targetNode);
+      
+    } else {
+      openSearchProjectTreeView(projectData.uniqueProjectID);
+    }
+  });
+
   const editButton = projectView.querySelector('.projectActionsDropDown button[title="Edit"]');
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
@@ -63,27 +76,27 @@ function createProjectViewTitleBar({ projectData, projectView, renderAsSingleTas
   if(projectData.parentProjectID === null) {
 
     // Top level projects shouldn't have pin or unpin action buttons
-    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, unPinAction: false, editAction: true }))
+    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, unPinAction: false, editAction: true, focusNodeAction: true }))
 
   } else if(projectData.hasOwnProperty('pinToDash')) {
 
     // Projects that have pinned or unpinned have pinToDash property. 
     projectData.pinToDash ? 
-      wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, unPinAction: true, editAction: true })) :
-      wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, unPinAction: false, editAction: true }))
+      wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, unPinAction: true, editAction: true, focusNodeAction: true })) :
+      wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, unPinAction: false, editAction: true, focusNodeAction: true }))
     ;
 
   } else {
 
     //Child projects without 'pinToDash' property are rendered with pinActionBtn visible.
-    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, unPinAction: false, editAction: true }))
+    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, unPinAction: false, editAction: true, focusNodeAction: true }))
   }
 
   return wrapper;
 }
 
 // Ellipsis action menu 
-function createProjectActions({ deleteAction = true, pinAction = false, unPinAction = false, editAction = false, tapeAction = false }) {
+function createProjectActions({ deleteAction = true, pinAction = false, unPinAction = false, editAction = false, tapeAction = false, focusNodeAction = false }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'projectActionsWrapper';
 
@@ -92,7 +105,6 @@ function createProjectActions({ deleteAction = true, pinAction = false, unPinAct
       <span>...</span>
       <div class="projectActionsDropDown">
         ${ deleteAction ? '<button class="deleteActionBtn" title="Delete"><i class="fa-solid fa-trash"></i></button>' : '' }
-        ${ tapeAction ? '<button class="tapeUpActionBtn" title="Tape Up Temporarily"><i class="fa-solid fa-tape"></i></button>' : '' }
         ${ pinAction ?  `
                           <button class="pinActionBtn" title="Pin to Dashboard"><i class="fa-solid fa-thumbtack"></i></button>
                           <button class="unPinActionBtn" title="Un-pin from Dash" style="display:none"><i class="fa-solid fa-thumbtack"></i></button>
@@ -101,7 +113,9 @@ function createProjectActions({ deleteAction = true, pinAction = false, unPinAct
                           <button class="pinActionBtn" title="Pin to Dashboard" style="display:none"><i class="fa-solid fa-thumbtack"></i></button>
                           <button class="unPinActionBtn" title="Un-pin from Dash" ><i class="fa-solid fa-thumbtack"></i></button>
                         ` : '' }
+        ${ focusNodeAction ? '<button class="focusNodeAction" title="Open node in Project Tree"><i class="fa-regular fa-circle-dot"></i></button>' : '' }
         ${ editAction ? '<button class="editActionBtn" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>' : '' }
+        ${ tapeAction ? '<button class="tapeUpActionBtn" title="Tape Up Temporarily"><i class="fa-solid fa-tape"></i></button>' : '' }
       </div>
     </div>
   `;

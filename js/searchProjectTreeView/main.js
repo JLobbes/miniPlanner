@@ -1,6 +1,6 @@
 // js/searchProjectTree.js
 
-function createSearchProjectTreeView() {
+function createSearchProjectTreeView(targetNodeID) {
 
   const searchProjectTreeView = document.createElement('div');
   searchProjectTreeView.className = 'searchProjectTreeView';
@@ -12,18 +12,25 @@ function createSearchProjectTreeView() {
 }
 
 
-function openSearchProjectTreeView() {
+function openSearchProjectTreeView(targetNodeID) {
 
   openedSearchViews = document.querySelector('.searchProjectTreeView');
   if(openedSearchViews) return;
   
-  const searchProjectTreeView = createSearchProjectTreeView();
+  const searchProjectTreeView = createSearchProjectTreeView(targetNodeID);
   document.body.append(searchProjectTreeView);
 
   // TO-DO: Consider moving this to somewhere inside createSearchProjectTreeView(), that seems more appropriate.
   renderRadialProjectTree();
   
+
   triggerDropDown({ element: searchProjectTreeView, className: 'active', delay: 20, hideDashboardActions: false });
+
+  if(targetNodeID) {
+    const targetNode = document.querySelector(`.projectTreeNode.${targetNodeID}`);
+    focusOnNode(targetNode);
+  }
+
   setInterval(() => {
     globalVariables.projectTreePopUpsEnabled = true;
   }, 1500);

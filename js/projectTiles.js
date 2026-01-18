@@ -31,8 +31,8 @@ function createProjectTile({ projectData, forDashboard = true, forPopUp = false 
   tile.appendChild(createProjectDescription(projectData.projectDescription));
   tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask, forProjectTile: true }));
   
-  if(forPopUp && !forDashboard) tile.appendChild(createProjectActions({ tapeAction: true }));
-  if(forDashboard && !forPopUp) tile.appendChild(createProjectActions({ tapeAction: false }));
+  if(forPopUp && !forDashboard) tile.appendChild(createProjectActions({ tapeAction: true, focusNodeAction: true }));
+  if(forDashboard && !forPopUp) tile.appendChild(createProjectActions({ tapeAction: false, focusNodeAction: true }));
 
   addTileEventListeners({ projectData, projectTile: tile, forDashboard, forPopUp }) // TO-DO: Group all scattered listeners
 
@@ -65,6 +65,18 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
     }
   });
 
+  const focusNodeAction = projectTile.querySelector('.projectActionsDropDown button.focusNodeAction');
+  focusNodeAction.addEventListener('click', (e) => {
+
+    const projectTreeViewOpened = document.querySelector('.searchProjectTreeView');
+    if(projectTreeViewOpened) {
+      const targetNode = document.querySelector(`.projectTreeNode.${projectData.uniqueProjectID}`);
+      focusOnNode(targetNode);
+      
+    } else {
+      openSearchProjectTreeView(projectData.uniqueProjectID);
+    }
+  });
 
   if(forPopUp) {
     const tapeUpProjectBtn = projectTile.querySelector('.projectActionsDropDown .tapeUpActionBtn');
