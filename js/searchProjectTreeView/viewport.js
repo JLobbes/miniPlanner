@@ -74,7 +74,6 @@ function addSearchProjectTreePanZoom(searchProjectTreeView, viewport, canvas) {
 
     if (newScale !== current) {
       globalVariables.projectTreeScale = newScale;
-      clearAllPopUps();
       updateTransform();
     }
   };
