@@ -79,13 +79,27 @@
   position: absolute;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.25em;
   top: 2.5em;
-  height: auto;
-  max-width: 24.25em;
+  height: 70vh;
+  max-width: 24.5em;
   width: 100%;
   margin: 0.25em 0em 0em 0em;
   background-color: none;
+  overflow: auto;
+  transition: height 0.3s ease;
+}
+
+.searchProjectTreeHeader .searchBarWrapper ul.projectTreeSearchResults.showingFullResults {
+  height: 85vh;
+  border-bottom: #111 1px dashed;
+  scrollbar-width: 0;
+  padding-bottom: 0.25em;
+}
+
+ul.projectTreeSearchResults.showingFullResults::-webkit-scrollbar {
+  display: none;
 }
 
 .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult {
@@ -93,8 +107,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  flex-shrink: 0;
   height: 3em;
-  width: 100%;
+  width: 98%;
   gap: 0.5em;
   border: #333 solid 1px;
   border-radius: 0.5em;
@@ -119,13 +134,12 @@
 
 .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectIcon {
   margin: 0.25em 0em 0.25em 0.75em;
-
   font-size: 1.2em;
 }
 
 .searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .projectTreeSearchResult .projectTitle {
   flex-grow: 1;
-  max-width: 22em;
+  max-width: 19.5em;
   white-space: nowrap;
   overflow: hidden;
   font-size: 1.3em;
@@ -133,4 +147,58 @@
   text-align: left;
   cursor: pointer;
 }
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .showWeakMatchesBtn {
+  display: flex;
+  flex-direction: column;
+  width: 5em;
+  height: 3em;
+  margin: 0.5em 0 0 0;
+  padding: 0.5em 2em 1em 2em;
+  border-radius: 0.5em;
+  background-color: #333;
+  border: 1px solid #777;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 
+    height 0.3s ease,
+    width  0.3s ease,
+    padding  0.3s ease
+    ;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .showWeakMatchesBtn:hover {
+  height: 7em;
+  width: 12em;
+  padding: 1em 2em 1em 2em;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .showWeakMatchesBtn span {
+  display: block;
+  font-size: 1.1em;
+  color: #fff;
+  font-weight: bold;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .showWeakMatchesBtn > span:nth-child(n+2):nth-child(-n+3) {
+  color: #333;
+  opacity: 0;
+  transition: 
+    color 1s ease,
+    opacity 0.1s ease;
+  ;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .showWeakMatchesBtn:hover > span:nth-child(n+2):nth-child(-n+3) {
+  color: #fff;
+  opacity: 1;
+}
+
+.searchProjectTreeHeader .searchBarWrapper .projectTreeSearchResults .showWeakMatchesBtn span:first-of-type {
+  font-size: 1.75em;
+  margin: 0 0 0.1em 0;
+}
+
+
+
 

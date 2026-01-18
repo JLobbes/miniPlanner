@@ -4,9 +4,9 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
 
   searchBarInput.addEventListener('focus', () => {
     const searchValue = searchBarInput.value.trim();
-    if (searchValue) {
+    if (searchValue && searchValue !== '') {
       showSearchProjectTreeSearchResults();
-      renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
+      renderSearchResults({ results: runProjectTreeSearch(searchValue), showAllResults: false });
     }
   });
   
@@ -14,7 +14,7 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
     const searchValue = searchBarInput.value.trim();
     if (searchValue && searchValue !== '') {
       showSearchProjectTreeSearchResults();
-      renderSearchResults({ results: runProjectTreeSearch(searchValue), allResults: false });
+      renderSearchResults({ results: runProjectTreeSearch(searchValue), showAllResults: false });
     } else {
       clearSearchProjectTreeSearchResults();
     }
@@ -22,6 +22,7 @@ function addSearchProjectTreeSearchBarListeners(searchBarInput, searchProjectTre
 
   const handleClickAway = (e) => {
     if (e.target.closest('.projectTreeSearchResult')) return;
+    if (e.target.closest('.showWeakMatchesBtn')) return;
     if (e.target.closest('.searchBarInput')) return;
 
     hideSearchProjectTreeSearchResults();
@@ -84,6 +85,7 @@ function runProjectTreeSearch(searchValue) {
 
 function clearSearchProjectTreeSearchResults() {
   const searchResultsLocation = document.querySelector('.projectTreeSearchResults');
+  searchResultsLocation.classList.remove('showingFullResults');
   searchResultsLocation.innerHTML = ``;
 }
 
@@ -130,7 +132,7 @@ function fuzzyScore(query, text, weight = 1) {
 }
 
 
-function renderSearchResults({ results, allResults = false }) {
+function renderSearchResults({ results, showAllResults = false }) {
 
   if (!results) return;
   if (results.length === 0) {
@@ -142,12 +144,11 @@ function renderSearchResults({ results, allResults = false }) {
   const renderLocation = document.querySelector('.projectTreeSearchResults');
   clearSearchProjectTreeSearchResults();
   
-  const topTen = results.slice(0, 10);
-  const resultsForRender = (allResults) ? results : topTen;
+  const highConfidence = results.filter(project => project.score >= 100)
+  const topTen = highConfidence.slice(0, 10);
+  const resultsForRender = (showAllResults) ? results : topTen;
   resultsForRender.forEach(singleResult => {
 
-    console.log('result: ', singleResult);
-    // console.log('searchValue:', searchValue, '\n', 'searchScore:', totalScore);
     const searchResultLine = document.createElement('button');
     searchResultLine.classList = 'projectTreeSearchResult';
     searchResultLine.tabIndex = '2';
@@ -168,9 +169,25 @@ function renderSearchResults({ results, allResults = false }) {
     searchResultLine.append(icon, projectTitle);
     renderLocation.append(searchResultLine);
   })
+
+  if (!showAllResults && highConfidence.length < results.length ) {
+    const showWeakMatchesBtn = document.createElement('button');
+    showWeakMatchesBtn.classList.add('showWeakMatchesBtn');
+    showWeakMatchesBtn.innerHTML = `
+      <span>?</span>
+      <span>Show Weak</span>
+      <span>Matches</span>
+      `
+    renderLocation.appendChild(showWeakMatchesBtn);
+  
+    const view = document.querySelector('.searchProjectTreeView');
+    view._handleShowWeakResultsListener = addShowWeakResultsListener(results, showWeakMatchesBtn);
+  } else {
+    renderLocation.classList.add('showingFullResults');
+  }
 }
 
-function addFocusOnSearchResultListener(searchResult, idOfTargetNode, projectStatus) {
+function addFocusOnSearchResultListener(searchResult, idOfTargetNode) {
 
   searchResult.addEventListener('click', () => {
 
@@ -181,3 +198,14 @@ function addFocusOnSearchResultListener(searchResult, idOfTargetNode, projectSta
   });
 }
 
+function addShowWeakResultsListener(results, showWeakMatchesBtn) {
+
+  const handleShowWeakResultsListener = () => {
+    
+    renderSearchResults({ results, showAllResults: true });  
+  }
+
+  showWeakMatchesBtn.addEventListener('click', handleShowWeakResultsListener);
+
+  return handleShowWeakResultsListener
+}
