@@ -1,5 +1,6 @@
 /* Project Time Tracking Styles */
 
+.timeWrapperLoadingBlock,
 .timeWrapper {
   position: relative;
   display: flex;
@@ -12,6 +13,25 @@
   padding: 0 1em 1em 1em;
   background-color: #333;
   border-radius: 0.5em;
+}
+
+.timeWrapperLoadingBlock {
+  animation: loadingFlash;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes loadingFlash {
+  from {
+    color: #333;
+    background-color: rgba(91, 217, 208, 0.95);
+  }
+  to {
+    color: rgba(161, 246, 240, 0.9);
+    background-color: #333;
+  }
 }
 
 .timeWrapper .timeWrapperHeader {

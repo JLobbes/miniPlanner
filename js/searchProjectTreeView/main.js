@@ -14,7 +14,7 @@ function createSearchProjectTreeView(targetNodeID) {
 
 function openSearchProjectTreeView(targetNodeID) {
 
-  openedSearchViews = document.querySelector('.searchProjectTreeView');
+  const openedSearchViews = document.querySelector('.searchProjectTreeView');
   if(openedSearchViews) return;
   
   const searchProjectTreeView = createSearchProjectTreeView(targetNodeID);
@@ -33,9 +33,24 @@ function openSearchProjectTreeView(targetNodeID) {
 
   setInterval(() => {
     globalVariables.projectTreePopUpsEnabled = true;
-  }, 1500);
+    checkFullyOpened(searchProjectTreeView);
+  }, 500);
 };
 
+function checkFullyOpened(element) {
+  if (!element) return;
+
+  const onTransitionEnd = (e) => {
+    if (e.propertyName !== 'bottom') return;
+
+    element.removeEventListener('transitionend', onTransitionEnd);
+
+    // 🔥 do your "after the fact" stuff here
+    console.log('Search Project Tree View fully opened');
+  };
+
+  element.addEventListener('transitionend', onTransitionEnd);
+}
 
 function closeSearchProjectTreeView(searchProjectTreeView) {
   globalVariables.projectTreePopUpsEnabled = false;
@@ -50,7 +65,7 @@ function closeSearchProjectTreeView(searchProjectTreeView) {
     clearSearchProjectTreeViewGlobalListeners();
 
     searchProjectTreeView.remove();
-  }, 1500);
+  }, 500);
 }
 
 function clearSearchProjectTreeViewGlobalListeners() {

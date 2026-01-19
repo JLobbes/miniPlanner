@@ -15,6 +15,8 @@ function createBottomPanel({ projectData, projectView, renderAsSingleTask }) {
 
   const right = document.createElement('div');
   right.className = 'bottomPanelRight';
+
+  // right.appendChild(createLoadingBlock('timeWrapperLoadingBlock'));
   right.appendChild(createTimeWrapper(projectData, projectView));
   right.appendChild(createNotesWrapper(projectData, projectView));
 

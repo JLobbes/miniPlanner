@@ -55,6 +55,48 @@ function getAllChildren(parentID) {
   return allChildren;
 }
 
+function getAllChildrenFast(parentID) {
+  // Build a static map the first time the function is called
+  if (!getAllChildrenFast._projectMap) {
+    const map = new Map();
+    globalProjectData.forEach(p => map.set(p.uniqueProjectID, { ...p, children: [] }));
+
+    map.forEach(node => {
+      if (node.parentProjectID) {
+        const parent = map.get(node.parentProjectID);
+        if (parent) parent.children.push(node);
+      }
+    });
+
+    getAllChildrenFast._projectMap = map;
+  }
+
+  const map = getAllChildrenFast._projectMap;
+  const parentNode = map.get(parentID);
+  if (!parentNode) return [];
+
+  // Internal helper for recursion
+  function traverse(node) {
+    if (node._cachedAllChildren) return node._cachedAllChildren;
+
+    const all = [];
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
+      all.push(child);
+      const grandChildren = traverse(child);
+      for (let j = 0; j < grandChildren.length; j++) {
+        all.push(grandChildren[j]);
+      }
+    }
+
+    node._cachedAllChildren = all;
+    return all;
+  }
+
+  return traverse(parentNode);
+}
+
+
 function hasChildren(targetProjectID) {
   return globalProjectData.some(p => p.parentProjectID === targetProjectID);
 }
@@ -255,6 +297,7 @@ function setProjectPinned(projectData, pinToDash) {
 }
 
 function buildGlobalProjectTree() {
+  console.time('Build flat tree');
   const map = new Map();
 
   globalProjectData.forEach(p => {
@@ -272,6 +315,7 @@ function buildGlobalProjectTree() {
   });
 
   globalProjectTree = roots;
+  console.timeEnd('Build flat tree');
   return roots;
 }
 
@@ -354,4 +398,14 @@ async function updateProjectParent(projectID, newParentID) {
     syncProjectInGlobalData(targetProject);
 
     // Now data is fully updated; do NOT re-render here
+}
+
+function getCachedChildren(projectData) {
+  // Check if children already stored
+  console.time("Get cached children");
+  if (!projectData._cachedChildren) {
+    projectData._cachedChildren = getAllChildrenFast(projectData.uniqueProjectID);
+  }
+  console.timeEnd("Get cached children");
+  return projectData._cachedChildren;
 }

@@ -100,7 +100,8 @@ function createTasksWrapper(projectData, projectView) {
     .filter(p => p.parentProjectID === projectData.uniqueProjectID)
     .sort((a, b) => (a.placement[`level${depth}Task`] ?? 0) - (b.placement[`level${depth}Task`] ?? 0)); // depth is a global variable, found in js/main.js
   
-  tasks.forEach(task => {
+  const topTen = tasks.slice(0, 6); // Don't render full list, until toggle completed. Helps improve drop down animation.
+  topTen.forEach(task => {
     const renderAsSingleTask = !hasChildren(task.uniqueProjectID);
 
     const taskDiv = document.createElement('button');

@@ -15,7 +15,7 @@
   background-color: #fff;
   box-shadow: 
     0.25em 0.25em 0em rgb(221, 221, 221);
-  transition: bottom 1.5s ease;
+  transition: bottom 500ms ease;
   z-index: 20;
 }
 

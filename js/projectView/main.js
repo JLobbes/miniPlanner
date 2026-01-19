@@ -16,7 +16,7 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
         openProject.remove();
         
         if(!reFreshBetweenViews) clearProjectViewKeyPressListeners();
-      }, 1500);
+      }, 500);
     }
   }
   // Ensure project on dash are reRender to reflect edits. 
@@ -24,11 +24,6 @@ function closeAllProjectViews({ reFreshBetweenViews }) {
 }
 
 function openProjectView(projectData, hasParent) {
-
-  // const opened = document.querySelector(`.projectView`);
-  // if(opened) {
-  //   if(opened.getAttribute('projectID') === `${projectData.uniqueProjectID}`) return;
-  // }
 
   if (!projectData) {
     console.error('Project not found:', projectData?.uniqueProjectID);
@@ -53,7 +48,11 @@ function openProjectView(projectData, hasParent) {
   addNoteScrollAnimation();
   
   // Trigger drop down animation
-  triggerDropDown({ element: projectView, className: 'active', delay: 20, hideDashboardActions: true });
+  triggerDropDown({ element: projectView, className: 'active', delay: 0, hideDashboardActions: true });
+
+  setInterval(() => {
+    checkFullyOpened(projectView);
+  }, 500);
 }
 
 function closeSingleProjectView(projectData, projectView) {
@@ -62,7 +61,7 @@ function closeSingleProjectView(projectData, projectView) {
     // Allow for slide up animation
     projectView.remove();
     clearProjectViewKeyPressListeners();
-  }, 1500);
+  }, 500);
 
   if(projectData.parentProjectID) {
     const parentProjectData = getSingleProject(projectData.parentProjectID);
@@ -77,6 +76,7 @@ function findOpenedProjectView(projectID) {
 
 // Main project view builder
 function createProjectView(projectData) {
+  console.time('Create Project View');
 
   // Projects that top level or have no children are 'Tasks'
   const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID) && projectData.parentProjectID !== null;
@@ -87,11 +87,13 @@ function createProjectView(projectData) {
 
 
   if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
+
   projectView.appendChild(createProjectViewTitleBar({ projectData, projectView, renderAsSingleTask: renderAsSingleTask }));
   projectView.appendChild(createProgressBar({ projectData, projectView, editable: true, renderAsSingleTask: renderAsSingleTask })); 
   projectView.appendChild(createBottomPanel({projectData, projectView, renderAsSingleTask})); 
 
   addProjectEventListeners(projectData, projectView, renderAsSingleTask) // TO-DO: Group all scattered listeners
+
 
   return projectView;
 }

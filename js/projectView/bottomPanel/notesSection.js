@@ -37,7 +37,6 @@ function addDeleteNoteLogEntryListeners (notesWrapper, projectData, projectView)
   });
 }
 
-
 // Notes Section 
 function createNotesWrapper(projectData, projectView) {
   const notesWrapper = document.createElement('div');
@@ -45,7 +44,7 @@ function createNotesWrapper(projectData, projectView) {
 
   // Get all note logs from all children
   const allNoteLogs = [];
-  const allChildren = getAllChildren(projectData.uniqueProjectID);
+  const allChildren = getCachedChildren(projectData);
   allChildren.forEach((child) => {
     child.noteLog.forEach((childNoteLogEntry) => {
       childNoteLogEntry.projectTitle = child.projectTitle;
@@ -60,7 +59,8 @@ function createNotesWrapper(projectData, projectView) {
   })
 
   // Build note log entries
-  const noteLogEntries = allNoteLogs
+  const top10 = allNoteLogs.splice(0,4);
+  const noteLogEntries = top10
     .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date);

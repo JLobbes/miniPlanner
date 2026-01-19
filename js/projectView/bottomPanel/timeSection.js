@@ -37,15 +37,21 @@ function addDeleteTimeLogEntryListeners (timeWrapper, projectData, projectView) 
   });
 }
 
+function createLoadingBlock(className) {
+  const loadingBlock = document.createElement('div');
+  loadingBlock.classList.add(`${className}`);
+  return loadingBlock;
+}
 
 // Time Section 
 function createTimeWrapper(projectData, projectView) {
   const timeWrapper = document.createElement('div');
-  timeWrapper.className = 'timeWrapper';
+  timeWrapper.classList.add('timeWrapper');
 
   // Get all time logs from all children
   const allTimeLogs = [];
-  const allChildren = getAllChildren(projectData.uniqueProjectID);
+  const allChildren = getCachedChildren(projectData);
+
   allChildren.forEach((child) => {
     child.timeLog.forEach((childTimeLogEntry) => {
       childTimeLogEntry.projectTitle = child.projectTitle;
@@ -60,7 +66,9 @@ function createTimeWrapper(projectData, projectView) {
   })
 
   // Build time log entries
-  const timeLogEntries = allTimeLogs
+  console.time('Render Time Log');
+  const top10 = allTimeLogs.splice(0, 4);
+  const timeLogEntries = top10 // Don't render full list, until toggle completed. Helps improve drop down animation.
     .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date)
@@ -118,6 +126,7 @@ function createTimeWrapper(projectData, projectView) {
       </button>
     </div>
   `;
+  console.timeEnd('Render Time Log')
 
   addEditTimeLogEntryListeners(timeWrapper, projectData, projectView); 
   addDeleteTimeLogEntryListeners(timeWrapper, projectData, projectView); 
