@@ -52,45 +52,97 @@
   fill: #111;
 }
 
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.targetNodeFlashRed {
+  animation: targetNodeFlashRed 0.3s ease;
+  animation-duration: alternate;
+  animation-iteration-count: 3;
+}
+
+.searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.targetNodeFlashGray {
+  animation: targetNodeFlashGray 0.3s ease;
+  animation-duration: alternate;
+  animation-iteration-count: 3;
+}
+
+@keyframes targetNodeFlashGray {
+  0% { 
+    r: 12;
+    stroke: #333;
+    stroke-width: 3;
+  }
+  25% { 
+    r: 14;
+    stroke: #555;
+    stroke-width: 6;
+  }
+  50% { 
+    r: 16;
+    stroke: #777;
+    stroke-width: 8;
+  }
+  60% { 
+    r: 18;
+    stroke: #aaa;
+    stroke-width: 11;
+  }
+  70% { 
+    r: 22;
+    stroke: #ccc;
+    stroke-width: 15;
+  }
+  75% { 
+    r: 28;
+    stroke: #eee;
+    stroke-width: 19;
+  }
+  100% { 
+    r: 12;
+    stroke: #fff;
+    stroke-width: 3;
+  }
+}
+
+@keyframes targetNodeFlashRed {
+  0% { 
+    r: 12;
+    stroke: #dd1313;
+    stroke-width: 3;
+  }
+  25% { 
+    r: 14;
+    stroke: #dd1313e1;
+    stroke-width: 6;
+  }
+  50% { 
+    r: 16;
+    stroke: #dd1313c7;
+    stroke-width: 8;
+  }
+  60% { 
+    r: 18;
+    stroke: #dd13139e;
+    stroke-width: 11;
+  }
+  70% { 
+    r: 22;
+    stroke: #dd131367;
+    stroke-width: 15;
+  }
+  75% { 
+    r: 28;
+    stroke: #dd131359;
+    stroke-width: 19;
+  }
+  100% { 
+    r: 12;
+    stroke: #dd131311;
+    stroke-width: 3;
+  }
+}
+
 .searchProjectTreeView .searchProjectTreeCanvas .projectTreeNode.theVirtualRoot {
   r: 20;
   stroke-width: 3;
   fill: white;
   stroke-dasharray: 8 4; 
-}
-
-.highlightNodeWrapper {
-  position: absolute;
-  top: calc(50%);
-  left: calc(50%);
-  width: 1.2em;
-  height: 1.2em;
-  background-color: rgba(255, 255, 255, 0);
-  border-radius: 1em;
-  transform: translate(calc(-50%), calc(-50%));
-  pointer-events: none; /* so it doesn’t block clicks */
-  animation: centerArrowFlash 0.3s infinite alternate;
-  box-shadow: 
-      0em 0em 0.1em #ff3f3f,   /* bright red */
-      0em 0em 0.2em #ff7f50,   /* coral/orange */
-      0em 0em 0.3em #ffd700,   /* gold */
-      0em 0em 0.6em #32cd32,   /* lime green */
-      0em 0em 0.9em #ff3f3f,   /* dodger blue */
-      0em 0em 1.1em #8a2be2;   /* blue violet */
-  z-index: 30;
-}
-
-.highlightNodeWrapper span {
-  margin: 0 0 0 0em;
-  color: #a3e2ce;
-  font-size: 1.2em;
-  transform: rotate(180deg);
-}
-
-/* Simple flashing animation */
-@keyframes centerArrowFlash {
-  0% { opacity: 0; }
-  40% { opacity: 1;}
-  50% { opacity: 1;}
-  100% { opacity: 0; }
 }

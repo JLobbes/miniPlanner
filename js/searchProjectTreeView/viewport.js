@@ -339,30 +339,33 @@ function getSubtreeSize(node) {
   return 1 + node.children.reduce((sum, child) => sum + getSubtreeSize(child), 0);
 }
 
-function flashTargetNodeAnimation() {
+function flashTargetNodeAnimation(targetNodeCircle) {
 
-  const existingHighlights = document.querySelector('.highlightNodeWrapper');
-  if(existingHighlights) {
-    existingHighlights.forEach(highlight => {
-      highlight.remove();
-    });
-  } 
+  clearTimeout(targetNodeCircle._changeToFlashGray);
+  clearTimeout(targetNodeCircle._haltAnimation);
 
-  const highlightNodeWrapper = document.createElement('div');
-  highlightNodeWrapper.className = 'highlightNodeWrapper';
-  highlightNodeWrapper.innerHTML = '<span class="fa-regular fa-circle"></span>'
+  targetNodeCircle.classList.remove(
+    'targetNodeFlashRed',
+    'targetNodeFlashGray'
+  );
 
-  
-  setTimeout(() => {
-    document.body.appendChild(highlightNodeWrapper);
-  }, 400);
+  // start red flash
+  targetNodeCircle.classList.add('targetNodeFlashRed');
 
-  setTimeout(() => {
-    highlightNodeWrapper.remove();
-  }, 1300);
+  // switch to gray
+  targetNodeCircle._changeToFlashGray = setTimeout(() => {
+    targetNodeCircle.classList.remove('targetNodeFlashRed');
+    targetNodeCircle.classList.add('targetNodeFlashGray');
+  }, 700);
 
-  return highlightNodeWrapper;
+  targetNodeCircle._haltAnimation = setTimeout(() => {
+    targetNodeCircle.classList.remove(
+      'targetNodeFlashRed',
+      'targetNodeFlashGray'
+    );
+  }, 2000);
 }
+
 
 function focusOnNode(
   targetNodeCircle,
@@ -402,7 +405,7 @@ function focusOnNode(
       scale(${globalVariables.projectTreeScale})
     `;
 
-    flashTargetNodeAnimation();
+    flashTargetNodeAnimation(targetNodeCircle);
 
     if (animate) {
       setTimeout(() => (svg.style.transition = ''), duration);
@@ -470,7 +473,6 @@ function reRenderProjectTreeViewPort() {
   // Rebuild the radial project tree
   renderRadialProjectTree();
 }
-
 
 function restoreFocusNode(zoomScaleBeforeReRender) {
   const id = globalVariables.projectTreeFocusNodeID;
