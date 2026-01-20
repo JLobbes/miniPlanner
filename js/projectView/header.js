@@ -12,6 +12,9 @@ function addProjectActionListeners(projectData, projectView) {
         const parentNodeID = projectData.parentProjectID;
         reRenderProjecTreeViewportToNode(parentNodeID);
         closeSingleProjectView(projectData, projectView);
+      } else {
+
+        closeSingleProjectView(projectData, projectView);
       }
     } else {
       console.log(`Deletion of ${projectData.projectTitle} cancelled by user.`);
