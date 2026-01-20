@@ -297,7 +297,6 @@ function setProjectPinned(projectData, pinToDash) {
 }
 
 function buildGlobalProjectTree() {
-  console.time('Build flat tree');
   const map = new Map();
 
   globalProjectData.forEach(p => {
@@ -315,7 +314,6 @@ function buildGlobalProjectTree() {
   });
 
   globalProjectTree = roots;
-  console.timeEnd('Build flat tree');
   return roots;
 }
 
@@ -402,10 +400,8 @@ async function updateProjectParent(projectID, newParentID) {
 
 function getCachedChildren(projectData) {
   // Check if children already stored
-  console.time("Get cached children");
   if (!projectData._cachedChildren) {
     projectData._cachedChildren = getAllChildrenFast(projectData.uniqueProjectID);
   }
-  console.timeEnd("Get cached children");
   return projectData._cachedChildren;
 }

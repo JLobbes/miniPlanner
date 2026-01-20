@@ -1,9 +1,9 @@
 // js/projectView/bottomPanel/notesSection.js
 
-function addAddNoteLogListener(projectData, projectView) {
+function addAddNoteLogListener(notesWrapper, projectData, projectView) {
   // Applies only to addNoteLogEntry button.
 
-  const addNoteLogBtn = projectView.querySelector('.addNoteLogBtn');
+  const addNoteLogBtn = notesWrapper.querySelector('.addNoteLogBtn');
   addNoteLogBtn.addEventListener('click', async (e) => {
     await addNoteLogEntry(projectData, projectView);
   });
@@ -59,8 +59,7 @@ function createNotesWrapper(projectData, projectView) {
   })
 
   // Build note log entries
-  const top10 = allNoteLogs.splice(0,4);
-  const noteLogEntries = top10
+  const noteLogEntries = allNoteLogs
     .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date);
@@ -98,6 +97,7 @@ function createNotesWrapper(projectData, projectView) {
     </div>
   `;
 
+  addAddNoteLogListener(notesWrapper, projectData, projectView);
   addEditNoteLogEntryListeners(notesWrapper, projectData, projectView); 
   addDeleteNoteLogEntryListeners(notesWrapper, projectData, projectView); 
   return notesWrapper;

@@ -1,5 +1,6 @@
 /* Tasks styles */
 
+.tasksWrapperLoadingBlock,
 .tasksWrapper {
   position: relative;
   display: flex;
@@ -9,6 +10,25 @@
   gap: 0.5em;
   height: 100%;
   width: 100%;
+}
+
+.tasksWrapperLoadingBlock {
+  animation: loadingTasksFlash;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes loadingTasksFlash {
+  from {
+    color: #ddd;
+    background-color: rgba(91, 217, 208, 0.95);
+  }
+  to {
+    color: rgba(161, 246, 240, 0.9);
+    background-color: #ddd;
+  }
 }
 
 .tasksWrapper h2 {

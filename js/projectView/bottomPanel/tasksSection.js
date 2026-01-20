@@ -1,10 +1,10 @@
 // js/projectView/bottomPanel/tasksSection.js
 
 // Listeners
-function addNewTaskListener(projectData, projectView) {
+function addNewTaskListener(tasksWrapper, projectData, projectView) {
   // Applies to large add 'New Task' button in tasksSection
 
-  const addNewTaskBtn = projectView.querySelector('.newTaskBtn');
+  const addNewTaskBtn = tasksWrapper.querySelector('.newTaskBtn');
   addNewTaskBtn.tabIndex = '3';
   addNewTaskBtn.addEventListener('click', () => {
     openNewProject({ parentID: projectData.uniqueProjectID, hasParent: true });
@@ -100,8 +100,7 @@ function createTasksWrapper(projectData, projectView) {
     .filter(p => p.parentProjectID === projectData.uniqueProjectID)
     .sort((a, b) => (a.placement[`level${depth}Task`] ?? 0) - (b.placement[`level${depth}Task`] ?? 0)); // depth is a global variable, found in js/main.js
   
-  const topTen = tasks.slice(0, 6); // Don't render full list, until toggle completed. Helps improve drop down animation.
-  topTen.forEach(task => {
+  tasks.forEach(task => {
     const renderAsSingleTask = !hasChildren(task.uniqueProjectID);
 
     const taskDiv = document.createElement('button');
@@ -121,11 +120,13 @@ function createTasksWrapper(projectData, projectView) {
       }
       <div class="taskStatusBubble statusShowing${task.projectStatus.replace(' ', '')}">${task.projectStatus}</div>
     `;
+
     addOpenTaskListener(taskDiv, task.uniqueProjectID, projectData, projectView);
     addDragLogicForTask(taskDiv);
     tasksList.appendChild(taskDiv);
   });
-
+  
+  addNewTaskListener(wrapper, projectData, projectView)
   return wrapper;
 }
 

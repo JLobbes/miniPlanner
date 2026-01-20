@@ -1,9 +1,9 @@
 // js/projectView/bottomPanel/timeSection.js
 
-function addAddTimeLogListener(projectData, projectView) {
+function addAddTimeLogListener(timeWrapper, projectData, projectView) {
   // Applies only to addTimeLogEntry button.
 
-  const addTimeLogBtn = projectView.querySelector('.addTimeLogBtn');
+  const addTimeLogBtn = timeWrapper.querySelector('.addTimeLogBtn');
   addTimeLogBtn.addEventListener('click', async (e) => {
     await addTimeLogEntry(projectData, projectView);
   });
@@ -66,9 +66,7 @@ function createTimeWrapper(projectData, projectView) {
   })
 
   // Build time log entries
-  console.time('Render Time Log');
-  const top10 = allTimeLogs.splice(0, 4);
-  const timeLogEntries = top10 // Don't render full list, until toggle completed. Helps improve drop down animation.
+  const timeLogEntries = allTimeLogs // Don't render full list, until toggle completed. Helps improve drop down animation.
     .sort((a, b) => (new Date(b.date) - new Date(a.date)))
     .map(entry => {
       const dateObj = new Date(entry.date)
@@ -126,9 +124,9 @@ function createTimeWrapper(projectData, projectView) {
       </button>
     </div>
   `;
-  console.timeEnd('Render Time Log')
 
-  addEditTimeLogEntryListeners(timeWrapper, projectData, projectView); 
+  addAddTimeLogListener(timeWrapper, projectData, projectView); 
+  addEditTimeLogEntryListeners(timeWrapper, projectData, projectView);
   addDeleteTimeLogEntryListeners(timeWrapper, projectData, projectView); 
   return timeWrapper;
 }

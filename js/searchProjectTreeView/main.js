@@ -33,24 +33,8 @@ function openSearchProjectTreeView(targetNodeID) {
 
   setInterval(() => {
     globalVariables.projectTreePopUpsEnabled = true;
-    checkFullyOpened(searchProjectTreeView);
   }, 500);
 };
-
-function checkFullyOpened(element) {
-  if (!element) return;
-
-  const onTransitionEnd = (e) => {
-    if (e.propertyName !== 'bottom') return;
-
-    element.removeEventListener('transitionend', onTransitionEnd);
-
-    // 🔥 do your "after the fact" stuff here
-    console.log('Search Project Tree View fully opened');
-  };
-
-  element.addEventListener('transitionend', onTransitionEnd);
-}
 
 function closeSearchProjectTreeView(searchProjectTreeView) {
   globalVariables.projectTreePopUpsEnabled = false;

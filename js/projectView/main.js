@@ -48,11 +48,8 @@ function openProjectView(projectData, hasParent) {
   addNoteScrollAnimation();
   
   // Trigger drop down animation
-  triggerDropDown({ element: projectView, className: 'active', delay: 0, hideDashboardActions: true });
+  // triggerDropDown({ element: projectView, className: 'active', delay: 0, hideDashboardActions: true });
 
-  setInterval(() => {
-    checkFullyOpened(projectView);
-  }, 500);
 }
 
 function closeSingleProjectView(projectData, projectView) {
@@ -76,7 +73,6 @@ function findOpenedProjectView(projectID) {
 
 // Main project view builder
 function createProjectView(projectData) {
-  console.time('Create Project View');
 
   // Projects that top level or have no children are 'Tasks'
   const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID) && projectData.parentProjectID !== null;
@@ -85,28 +81,46 @@ function createProjectView(projectData) {
   projectView.className = 'projectView';
   projectView.setAttribute('projectid', projectData.uniqueProjectID);
 
+  triggerDropDown({ element: projectView, className: 'active', delay: 0, hideDashboardActions: true });
+
 
   if(depth > 1) projectView.appendChild(createMinimizeButton(projectData))
 
   projectView.appendChild(createProjectViewTitleBar({ projectData, projectView, renderAsSingleTask: renderAsSingleTask }));
   projectView.appendChild(createProgressBar({ projectData, projectView, editable: true, renderAsSingleTask: renderAsSingleTask })); 
-  projectView.appendChild(createBottomPanel({projectData, projectView, renderAsSingleTask})); 
+  const { bottomPanel, 
+    left, 
+    right, 
+    tasksWrapperLoadingBlock, 
+    timeWrapperLoadingBlock, 
+    notesWrapperLoadingBlock 
+  } = createBottomPanelLoadingBlock();
+  projectView.appendChild(bottomPanel);
+  
+  setTimeout(() => {
+    createBottomPanel({
+      projectData, 
+      projectView, 
+      renderAsSingleTask,
+      left,
+      right,
+      tasksWrapperLoadingBlock,
+      timeWrapperLoadingBlock,
+      notesWrapperLoadingBlock
+    }); 
+  }, 50)
 
-  addProjectEventListeners(projectData, projectView, renderAsSingleTask) // TO-DO: Group all scattered listeners
-
+  addProjectEventListeners(projectData, projectView);
 
   return projectView;
 }
 
-function addProjectEventListeners(projectData, projectView, renderAsSingleTask) {
+function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
   if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
   addProjectActionListeners(projectData, projectView);
   if (projectData.parentProjectID !== null)  addProjectPinActionListeners(projectData, projectView);
-  addAddTimeLogListener(projectData, projectView);
-  addAddNoteLogListener(projectData, projectView);
-  if(!renderAsSingleTask) addNewTaskListener(projectData, projectView);
 
   addProjectViewEscapeKeyPressListener();
 }
@@ -149,4 +163,20 @@ function addMinimizeProjectViewListener(projectData, projectView) {
   minimizeProjectBtn.addEventListener('click', () => {
     closeSingleProjectView(projectData, projectView);
   });
+}
+
+function checkFullyOpened(element, transitionType, callback) {
+  if (!element || typeof callback !== 'function') return;
+
+  const _checkFullyOpenedListener = (e) => {
+    if (e.propertyName !== `${transitionType}`) return;
+
+    element.removeEventListener('transitionend', _checkFullyOpenedListener);
+
+    callback(e);
+  };
+
+  if(!element._checkFullyOpenedListener) {
+    element.addEventListener('transitionend', _checkFullyOpenedListener);
+  }
 }
