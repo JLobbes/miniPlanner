@@ -13,9 +13,6 @@ function addNewTaskListener(tasksWrapper, projectData, projectView) {
     if (searchProjectTreeViewOpen) {
       reRenderProjecTreeViewportToNode(projectData.uniqueProjectID);
     }
-
-    // Re-render tasksWrapper
-    reRenderTaskList(projectView, projectData)
   });
 }
 

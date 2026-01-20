@@ -66,7 +66,6 @@ function reRenderNotesAndTimeLogs(projectView, projectData) {
   locationForReRender.innerHTML = '';
   locationForReRender.appendChild(updatedTimeWrapper);
   locationForReRender.appendChild(updatedNotesWrapper);
-  addAddNoteLogListener(projectData, projectView);
   addNoteScrollAnimation();
 }
 
@@ -77,5 +76,4 @@ function reRenderTaskList(projectView, projectData) {
   
   locationForReRender.innerHTML = '';
   locationForReRender.appendChild(updatedTasksWrapper);
-  addNewTaskListener(projectData, projectView);
 }
