@@ -38,13 +38,12 @@ function addDeleteNoteLogEntryListeners (notesWrapper, projectData, projectView)
 }
 
 // Notes Section 
-function createNotesWrapper(projectData, projectView) {
+function createNotesWrapper(projectData, projectView, allChildren) {
   const notesWrapper = document.createElement('div');
   notesWrapper.className = 'notesWrapper';
 
   // Get all note logs from all children
   const allNoteLogs = [];
-  const allChildren = getCachedChildren(projectData);
   allChildren.forEach((child) => {
     child.noteLog.forEach((childNoteLogEntry) => {
       childNoteLogEntry.projectTitle = child.projectTitle;

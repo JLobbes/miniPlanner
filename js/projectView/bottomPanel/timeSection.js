@@ -44,13 +44,12 @@ function createLoadingBlock(className) {
 }
 
 // Time Section 
-function createTimeWrapper(projectData, projectView) {
+function createTimeWrapper(projectData, projectView, allChildren) {
   const timeWrapper = document.createElement('div');
   timeWrapper.classList.add('timeWrapper');
 
   // Get all time logs from all children
   const allTimeLogs = [];
-  const allChildren = getCachedChildren(projectData);
 
   allChildren.forEach((child) => {
     child.timeLog.forEach((childTimeLogEntry) => {

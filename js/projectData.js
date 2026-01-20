@@ -56,44 +56,23 @@ function getAllChildren(parentID) {
 }
 
 function getAllChildrenFast(parentID) {
-  // Build a static map the first time the function is called
-  if (!getAllChildrenFast._projectMap) {
-    const map = new Map();
-    globalProjectData.forEach(p => map.set(p.uniqueProjectID, { ...p, children: [] }));
+  // Build map of all projects
+  const map = new Map(globalProjectData.map(p => [p.uniqueProjectID, { ...p, children: [] }]));
 
-    map.forEach(node => {
-      if (node.parentProjectID) {
-        const parent = map.get(node.parentProjectID);
-        if (parent) parent.children.push(node);
-      }
-    });
+  // Link children to parents
+  map.forEach(node => {
+    if (node.parentProjectID) {
+      const parent = map.get(node.parentProjectID);
+      if (parent) parent.children.push(node);
+    }
+  });
 
-    getAllChildrenFast._projectMap = map;
-  }
-
-  const map = getAllChildrenFast._projectMap;
   const parentNode = map.get(parentID);
   if (!parentNode) return [];
 
-  // Internal helper for recursion
-  function traverse(node) {
-    if (node._cachedAllChildren) return node._cachedAllChildren;
-
-    const all = [];
-    for (let i = 0; i < node.children.length; i++) {
-      const child = node.children[i];
-      all.push(child);
-      const grandChildren = traverse(child);
-      for (let j = 0; j < grandChildren.length; j++) {
-        all.push(grandChildren[j]);
-      }
-    }
-
-    node._cachedAllChildren = all;
-    return all;
-  }
-
-  return traverse(parentNode);
+  // Recursive helper to collect all descendants
+  const collect = node => node.children.flatMap(child => [child, ...collect(child)]);
+  return collect(parentNode);
 }
 
 
@@ -394,14 +373,4 @@ async function updateProjectParent(projectID, newParentID) {
     // Update the actual data
     targetProject.parentProjectID = (newParentID === 'theVirtualRoot') ? null : newParentID;
     syncProjectInGlobalData(targetProject);
-
-    // Now data is fully updated; do NOT re-render here
-}
-
-function getCachedChildren(projectData) {
-  // Check if children already stored
-  if (!projectData._cachedChildren) {
-    projectData._cachedChildren = getAllChildrenFast(projectData.uniqueProjectID);
-  }
-  return projectData._cachedChildren;
 }

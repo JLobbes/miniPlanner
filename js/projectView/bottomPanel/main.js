@@ -45,10 +45,12 @@ function createBottomPanel({
     left.replaceChild(tasksWrapperProper, tasksWrapperLoadingBlock);
   }
 
-  const timeWrapperProper = createTimeWrapper(projectData, projectView);
+  const allChildren = getAllChildrenFast(projectData.uniqueProjectID);
+
+  const timeWrapperProper = createTimeWrapper(projectData, projectView, allChildren);
   right.replaceChild(timeWrapperProper, timeWrapperLoadingBlock);
   
-  const notesWrapperProper = createNotesWrapper(projectData, projectView);
+  const notesWrapperProper = createNotesWrapper(projectData, projectView, allChildren);
   right.replaceChild(notesWrapperProper, notesWrapperLoadingBlock);
 
   return;
@@ -56,11 +58,10 @@ function createBottomPanel({
 
 function reRenderNotesAndTimeLogs(projectView, projectData) { 
 
-  // TO-DO: This function should be split and only re-render where entries are held.
-  //        Writing logic for single entry addition maybe not the best path, low reusability.
+  const allChildren = getAllChildrenFast(projectData.uniqueProjectID);
 
-  const updatedTimeWrapper  = createTimeWrapper(projectData, projectView);
-  const updatedNotesWrapper = createNotesWrapper(projectData, projectView);
+  const updatedTimeWrapper  = createTimeWrapper(projectData, projectView, allChildren);
+  const updatedNotesWrapper = createNotesWrapper(projectData, projectView, allChildren);
   const locationForReRender = projectView.querySelector('.bottomPanelRight');
   
   locationForReRender.innerHTML = '';
