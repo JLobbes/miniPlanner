@@ -1,7 +1,7 @@
 // js/projectView/header.js
 
-function addProjectActionListeners(projectData, projectView) {
-  const deleteBtn = projectView.querySelector('.projectActionsDropDown button[title="Delete"]');
+function addProjectActionListeners(wrapper, projectData, projectView) {
+  const deleteBtn = wrapper.querySelector('.projectActionsDropDown button[title="Delete"]');
   deleteBtn.addEventListener('click', async (e) => {
 
     const success = await triggerDeleteProjectCascade(projectData);
@@ -21,7 +21,7 @@ function addProjectActionListeners(projectData, projectView) {
     }
   });
 
-  const focusNodeAction = projectView.querySelector('.projectActionsDropDown button.focusNodeAction');
+  const focusNodeAction = wrapper.querySelector('.projectActionsDropDown button.focusNodeAction');
   focusNodeAction.addEventListener('click', (e) => {
 
     const projectTreeViewOpened = document.querySelector('.searchProjectTreeView');
@@ -34,24 +34,63 @@ function addProjectActionListeners(projectData, projectView) {
     }
   });
 
-  const editButton = projectView.querySelector('.projectActionsDropDown button[title="Edit"]');
+  const editButton = wrapper.querySelector('.projectActionsDropDown button[title="Edit"]');
   editButton.addEventListener('click', (e) => {
     enableEditHeader(projectData, projectView); 
   });
 
+  const pinButton = wrapper.querySelector('.projectActionsDropDown button.pinActionBtn');
+  if(pinButton) {
+    pinButton.addEventListener('click', (e) => {
+      handlePinClick(pinButton, projectData);
+    });
+  }
+
   globalListeners.ctrlE = () => editButton.click();
 }
 
-function addProjectPinActionListeners(projectData, projectView) {
-  const unPinButton = projectView.querySelector('.projectActionsDropDown .unPinActionBtn');
-  unPinButton.addEventListener('click', (e) => {
-    unPinButtonProjFromDash(projectData, projectView); 
-  });
+function handlePinClick(pinButton, projectData) {
 
-  const pinButton = projectView.querySelector('.projectActionsDropDown .pinActionBtn');
-  pinButton.addEventListener('click', (e) => {
-    pinProjectToDash(projectData, projectView); 
-  });
+  if(projectData.hasOwnProperty('pinToDash') && projectData.pinToDash) {
+
+    updateCrossedGlobally(projectData);
+    setProjectPinned(projectData, false);
+
+    
+
+  } else {
+    updateCrossedGlobally(projectData);
+    setProjectPinned(projectData, true);
+  }
+
+  function updateCrossedGlobally(projectData) {
+
+    // Updated projectViews
+    const openProject = document.querySelector('.projectView');
+    if(openProject) {
+      const hasSameProjectID = Boolean(openProject.getAttribute('projectID') === projectData.uniqueProjectID);
+      if (hasSameProjectID) {
+        const pinActionBtn = openProject.querySelector('.projectActionsDropDown .pinActionBtn');
+        pinActionBtn.classList.toggle('crossed');
+      } 
+    }
+
+    // Updated projectTile PopUps
+    const openTilePopUps = document.querySelectorAll('.projectTilePopUp');
+    if(openTilePopUps) {
+      openTilePopUps.forEach(popUp => {
+        const projectTile = popUp.querySelector('.projectTile');
+        const hasSameProjectID = Boolean(popUp.getAttribute('ID') === `popup-${projectData.uniqueProjectID}`);
+        if (hasSameProjectID) {
+          const pinActionBtn = projectTile.querySelector('.projectActionsDropDown .pinActionBtn');
+          pinActionBtn.classList.toggle('crossed');
+        } 
+      });
+    }
+
+    // projectTiles on dashboard don't require above logic because dashboard gets 
+    // fresh reRender on close of projView or projTreeView.
+  }
 }
 
 // Title Bar
@@ -79,27 +118,18 @@ function createProjectViewTitleBar({ projectData, projectView, renderAsSingleTas
   if(projectData.parentProjectID === null) {
 
     // Top level projects shouldn't have pin or unpin action buttons
-    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, unPinAction: false, editAction: true, focusNodeAction: true }))
-
-  } else if(projectData.hasOwnProperty('pinToDash')) {
-
-    // Projects that have pinned or unpinned have pinToDash property. 
-    projectData.pinToDash ? 
-      wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, unPinAction: true, editAction: true, focusNodeAction: true })) :
-      wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, unPinAction: false, editAction: true, focusNodeAction: true }))
-    ;
+    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, editAction: true, focusNodeAction: true, projectData, projectView }))
 
   } else {
 
-    //Child projects without 'pinToDash' property are rendered with pinActionBtn visible.
-    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, unPinAction: false, editAction: true, focusNodeAction: true }))
+    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, editAction: true, focusNodeAction: true, projectData, projectView }));
   }
 
   return wrapper;
 }
 
 // Ellipsis action menu 
-function createProjectActions({ deleteAction = true, pinAction = false, unPinAction = false, editAction = false, tapeAction = false, focusNodeAction = false }) {
+function createProjectActions({ deleteAction = true, pinAction = false, editAction = false, tapeAction = false, focusNodeAction = false, projectData, projectView }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'projectActionsWrapper';
 
@@ -108,20 +138,15 @@ function createProjectActions({ deleteAction = true, pinAction = false, unPinAct
       <span>...</span>
       <div class="projectActionsDropDown">
         ${ deleteAction ? '<button class="deleteActionBtn" title="Delete"><i class="fa-solid fa-trash"></i></button>' : '' }
-        ${ pinAction ?  `
-                          <button class="pinActionBtn" title="Pin to Dashboard"><i class="fa-solid fa-thumbtack"></i></button>
-                          <button class="unPinActionBtn" title="Un-pin from Dash" style="display:none"><i class="fa-solid fa-thumbtack"></i></button>
-                        ` : '' }
-        ${ unPinAction ?  `
-                          <button class="pinActionBtn" title="Pin to Dashboard" style="display:none"><i class="fa-solid fa-thumbtack"></i></button>
-                          <button class="unPinActionBtn" title="Un-pin from Dash" ><i class="fa-solid fa-thumbtack"></i></button>
-                        ` : '' }
+        ${ pinAction ?  ` <button class="pinActionBtn ${((projectData.hasOwnProperty('pinToDash')) && projectData.pinToDash) ? 'crossed' : '' }" title="Pin to Dashboard"><i class="fa-solid fa-thumbtack"></i></button>` : '' }
         ${ focusNodeAction ? '<button class="focusNodeAction" title="Open node in Project Tree"><i class="fa-regular fa-circle-dot"></i></button>' : '' }
         ${ editAction ? '<button class="editActionBtn" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>' : '' }
         ${ tapeAction ? '<button class="tapeUpActionBtn" title="Tape Up Temporarily"><i class="fa-solid fa-tape"></i></button>' : '' }
       </div>
     </div>
   `;
+
+  if(projectView) addProjectActionListeners(wrapper, projectData, projectView);
 
   return wrapper;
 }
@@ -235,32 +260,3 @@ function handleAbortEditingProjectTitleBar(projectData, projectTitle, projectDes
   // TO-DO: @14:44 10.14(WED), Need to rename titleBarWrapper to projectViewHeader or sth. Current name TitleBar is wordy? 
 }
 
-function pinProjectToDash(projectData, projectView) {
-  // reRender projectAction show it shows the unpinned icon
-  showUnPinActionBtn(projectView);
-  setProjectPinned(projectData, true);
-}
-
-function unPinButtonProjFromDash(projectData, projectView) {
-  // reRender projectAction show it shows the unpinned icon
-  showPinActionBtn(projectView);
-  setProjectPinned(projectData, false);
-}
-
-function showPinActionBtn(projectView) {
-  
-  pinBtn = projectView.querySelector('.pinActionBtn');
-  pinBtn.style.display = ''; // Show
-
-  unPinBtn = projectView.querySelector('.unPinActionBtn');
-  unPinBtn.style.display = 'none';
-}
-
-function showUnPinActionBtn(projectView) {
-
-  unPinBtn = projectView.querySelector('.unPinActionBtn');
-  unPinBtn.style.display = ''; // Show
-  
-  pinBtn = projectView.querySelector('.pinActionBtn');
-  pinBtn.style.display = 'none';
-}

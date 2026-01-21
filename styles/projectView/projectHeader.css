@@ -156,7 +156,8 @@
   z-index: 25;
 }
 
-.projectView .projectActionsDropDown button { 
+.projectActionsDropDown button { 
+  position: relative;
   padding: 0.25em 0.5em;
   background-color: #fff;
   border: none;
@@ -164,29 +165,29 @@
   font-size: 1.1em;
 }
 
-.projectView .projectActionsDropDown button:hover {
+.projectActionsDropDown button:hover {
   background-color: #111;
   color: #fff;
   cursor: pointer;
 }
 
-.projectActionsDropDown button.unPinActionBtn::after,
-.projectActionsDropDown button.unPinActionBtn::before {
+.projectActionsDropDown button.pinActionBtn.crossed::after,
+.projectActionsDropDown button.pinActionBtn.crossed::before {
   content: "";
   position: absolute;
   width: 1.5em;
   height: 0.1em;
   background: red;
   top: 50%;
-  left: 36%;
+  left: 50%;
   transform-origin: center;
 }
 
 
-.projectActionsDropDown button.unPinActionBtn::after {
+.projectActionsDropDown button.pinActionBtn.crossed::after {
   transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.projectActionsDropDown button.unPinActionBtn::before {
+.projectActionsDropDown button.pinActionBtn.crossed::before {
   transform: translate(-50%, -50%) rotate(-45deg);
 } 

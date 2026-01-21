@@ -25,14 +25,18 @@ function createProjectTile({ projectData, forDashboard = true, forPopUp = false 
   tile.draggable = 'true';
   tile.setAttribute('projectid', projectData.uniqueProjectID); // ID gets converted to lowercase during setAttribute() call
 
-  const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID) || !projectData.parentProjectID === null;
+  const hasParent = Boolean(projectData.parentProjectID);
+  const renderAsSingleTask = !hasChildren(projectData.uniqueProjectID) && hasParent;
 
   tile.appendChild(createProjectTitle({ titleText: projectData.projectTitle, renderAsSingleTask}));
   tile.appendChild(createProjectDescription(projectData.projectDescription));
   tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask, forProjectTile: true }));
   
-  if(forPopUp && !forDashboard) tile.appendChild(createProjectActions({ tapeAction: true, focusNodeAction: true }));
-  if(forDashboard && !forPopUp) tile.appendChild(createProjectActions({ tapeAction: false, focusNodeAction: true }));
+
+  if(forPopUp && !forDashboard && !hasParent) tile.appendChild(createProjectActions({ tapeAction: true, focusNodeAction: true, projectData }));
+  if(forDashboard && !forPopUp && !hasParent) tile.appendChild(createProjectActions({ tapeAction: false, focusNodeAction: true, projectData }));
+  if(forPopUp && !forDashboard && hasParent) tile.appendChild(createProjectActions({ tapeAction: true, focusNodeAction: true, pinAction: true, projectData }));
+  if(forDashboard && !forPopUp && hasParent) tile.appendChild(createProjectActions({ tapeAction: false, focusNodeAction: true, pinAction: true, projectData }));
 
   addTileEventListeners({ projectData, projectTile: tile, forDashboard, forPopUp }) // TO-DO: Group all scattered listeners
 
@@ -83,6 +87,14 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
     tapeUpProjectBtn.addEventListener('click', (e) => {
       e.stopPropagation(); // prevent project from opening
       tapeUpProjectTile(projectTile);
+    });
+  }
+
+  const pinButton = projectTile.querySelector('.projectActionsDropDown button.pinActionBtn');
+  if(pinButton) {
+    pinButton.addEventListener('click', (e) => {
+      handlePinClick(pinButton, projectData);
+      renderProjectsToDash();
     });
   }
   

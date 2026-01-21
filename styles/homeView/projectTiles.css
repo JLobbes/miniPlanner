@@ -251,19 +251,5 @@ p.projectStatusBubble.statusShowingDead {
 
 .projectTile .projectActions:hover .projectActionsDropDown {
   display: flex;
-  z-index: 100;
-}
-
-.projectTile .projectActionsDropDown button { 
-  padding: 0.25em 0.5em;
-  background-color: #fff;
-  border: none;
-  border-radius: 0.5em;
-  font-size: 1.1em;
-}
-
-.projectTile .projectActionsDropDown button:hover {
-  background-color: #111;
-  color: #fff;
-  cursor: pointer;
+  z-index: 20;
 }

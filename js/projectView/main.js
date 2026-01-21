@@ -119,8 +119,6 @@ function addProjectEventListeners(projectData, projectView) {
 
   // Listeners are broken out for re-render simplicity.
   if(depth > 1) addMinimizeProjectViewListener(projectData, projectView);
-  addProjectActionListeners(projectData, projectView);
-  if (projectData.parentProjectID !== null)  addProjectPinActionListeners(projectData, projectView);
 
   addProjectViewEscapeKeyPressListener();
 }
