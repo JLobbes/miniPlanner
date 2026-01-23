@@ -46,6 +46,22 @@ function addProjectActionListeners(wrapper, projectData, projectView) {
     });
   }
 
+  const duplicateBtn = wrapper.querySelector('.projectActionsDropDown button.duplicateActionBtn');
+  if(duplicateBtn) {
+    duplicateBtn.addEventListener('click', async () => {
+
+      const duplicateProject = await copyProjectCascade(projectData); 
+
+      const projectTreeViewOpened = document.querySelector('.searchProjectTreeView');
+      if(projectTreeViewOpened) {
+        reRenderProjecTreeViewportToNode(duplicateProject.uniqueProjectID);
+      }
+
+      const hasParent = Boolean(projectData.parentProjectID)
+      openProjectView(duplicateProject, hasParent);
+    })
+  }
+
   globalListeners.ctrlE = () => editButton.click();
 }
 
@@ -118,11 +134,11 @@ function createProjectViewTitleBar({ projectData, projectView, renderAsSingleTas
   if(projectData.parentProjectID === null) {
 
     // Top level projects shouldn't have pin or unpin action buttons
-    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: false, editAction: true, focusNodeAction: true, projectData, projectView }))
+    wrapper.appendChild(createProjectActions({ deleteAction: true, duplicateAction: true, pinAction: false, editAction: true, focusNodeAction: true, projectData, projectView }))
 
   } else {
 
-    wrapper.appendChild(createProjectActions({ deleteAction: true, pinAction: true, editAction: true, focusNodeAction: true, projectData, projectView }));
+    wrapper.appendChild(createProjectActions({ deleteAction: true, duplicateAction: true, pinAction: true, editAction: true, focusNodeAction: true, projectData, projectView }));
   }
 
   return wrapper;
