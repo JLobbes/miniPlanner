@@ -73,9 +73,12 @@ function renderMiniForm(dataForMiniForm) {
     },
     confirmDuplicateChildren: {
       miniFormMessage: `
-        Would you like to duplicated the ${dataForMiniForm.quantityOfChildren}) child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} nested in 
-        <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.projectTitle) ? `${dataForMiniForm.projectTitle}` : 'this project.')}</span> 
-        Press enter to proceed.
+        <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.projectTitle) ? `${dataForMiniForm.projectTitle}` : 'The original project')}</span> 
+        has ${dataForMiniForm.quantityOfChildren } nested child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''}.
+        <br>
+        <br>
+        Press enter to proceed and copy child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} into
+        <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.newTitle) ? `${dataForMiniForm.newTitle}` : 'the new project.')}</span>
       `
     },
     confirmMoveChild: {

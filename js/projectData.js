@@ -54,30 +54,65 @@ function copySingleProject({ projectID, newTitle }) {
   return duplicatedProject;
 }
 
+function copyChildrenCascade(oldParentID, newParentID) {
+  const directChildren = getDirectChildren(oldParentID);
+
+  function getDirectChildren(parentID) {
+    const directChildren = structuredClone(globalProjectData).filter(p => p.parentProjectID === parentID);
+    return directChildren;
+  }
+
+  directChildren.forEach(child => {
+    const clone = structuredClone(child);
+    const oldID = clone.uniqueProjectID;
+
+    clone.uniqueProjectID = generateUniqueEntryID();
+    clone.parentProjectID = newParentID;
+
+    addProjectToGlobalData(clone);
+
+    copyChildrenCascade(oldID, clone.uniqueProjectID);
+  });
+}
+
 async function copyProjectCascade(projectData) {
+  const orignalProjectTitle = projectData.projectTitle;
   if(!projectData) return;
 
   let dataForMiniForm = {
     formType: 'collectDuplicateProjectTitle',
-    projectTitle: projectData.projectTitle,
+    projectTitle: orignalProjectTitle,
   }
 
   const confirmAndCollectTitle = await renderMiniForm(dataForMiniForm);
+  const newTitle = confirmAndCollectTitle.duplicatedProjectTitle;
   const duplicatedProject = copySingleProject({ 
     projectID: projectData.uniqueProjectID, 
-    newTitle: confirmAndCollectTitle.duplicatedProjectTitle, 
+    newTitle
   });
 
-  const hadChildren = hadChildren(projectData.projectID);
+  const hadChildren = hasChildren(projectData.uniqueProjectID);
   if(hadChildren) {
+    const allChildren = getAllChildrenFast(projectData.uniqueProjectID);
+    const childCount = allChildren.length;
+
     const dataForMiniForm = {
       formType: 'confirmDuplicateChildren',
-      projectTitle: newProject.projectTile,
+      projectTitle: orignalProjectTitle,
+      newTitle,
+      quantityOfChildren: childCount,
     }
 
-    await renderMiniForm(dataForMiniForm);
-
-    const allChildren = getAllChildrenFast(projectData.uniqueProjectID);
+    try {
+      await renderMiniForm(dataForMiniForm);
+      copyChildrenCascade(
+        projectData.uniqueProjectID,
+        duplicatedProject.uniqueProjectID
+      );
+    } 
+    catch {
+      // user cancelled copy children. Ignore.
+    }
   }
 
   return duplicatedProject;
@@ -220,7 +255,7 @@ function deleteSingleProject(uniqueProjectID, projectTile) {
 
 async function triggerDeleteProjectCascade(projectData, projectTile) {
   try {
-    const allChildren = getAllChildren(projectData.uniqueProjectID);
+    const allChildren = getAllChildrenFast(projectData.uniqueProjectID);
     const childCount = allChildren.length;
 
     // Delete children if there are any

@@ -144,9 +144,9 @@ function calculateProjectTaskCount(globalProjectData, projectID) {
     if (!projectID) return 0;
 
     // Find direct children of the project
-    const children = globalProjectData.filter(p => p.parentProjectID === projectID);
+    const directChildren = globalProjectData.filter(p => p.parentProjectID === projectID);
 
-    return children.length;
+    return directChildren.length;
   } catch (error) {
     console.error('Error calculating task count:', error);
     return 0;
