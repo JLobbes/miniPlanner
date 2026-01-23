@@ -33,10 +33,10 @@ function createProjectTile({ projectData, forDashboard = true, forPopUp = false 
   tile.appendChild(createProgressBar({ projectData, editable: false, renderAsSingleTask, forProjectTile: true }));
   
 
-  if(forPopUp && !forDashboard && !hasParent) tile.appendChild(createProjectActions({ tapeAction: true, focusNodeAction: true, projectData }));
-  if(forDashboard && !forPopUp && !hasParent) tile.appendChild(createProjectActions({ tapeAction: false, focusNodeAction: true, projectData }));
-  if(forPopUp && !forDashboard && hasParent) tile.appendChild(createProjectActions({ tapeAction: true, focusNodeAction: true, pinAction: true, projectData }));
-  if(forDashboard && !forPopUp && hasParent) tile.appendChild(createProjectActions({ tapeAction: false, focusNodeAction: true, pinAction: true, projectData }));
+  if(forPopUp && !forDashboard && !hasParent) tile.appendChild(createProjectActions({ duplicateAction: true, tapeAction: true, focusNodeAction: true, projectData }));
+  if(forDashboard && !forPopUp && !hasParent) tile.appendChild(createProjectActions({ duplicateAction: true, tapeAction: false, focusNodeAction: true, projectData }));
+  if(forPopUp && !forDashboard && hasParent) tile.appendChild(createProjectActions({ duplicateAction: true, tapeAction: true, focusNodeAction: true, pinAction: true, projectData }));
+  if(forDashboard && !forPopUp && hasParent) tile.appendChild(createProjectActions({ duplicateAction: true, tapeAction: false, focusNodeAction: true, pinAction: true, projectData }));
 
   addTileEventListeners({ projectData, projectTile: tile, forDashboard, forPopUp }) // TO-DO: Group all scattered listeners
 
@@ -96,6 +96,31 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
       handlePinClick(pinButton, projectData);
       renderProjectsToDash();
     });
+  }
+
+  const duplicateBtn = projectTile.querySelector('.projectActionsDropDown button.duplicateActionBtn');
+  if(duplicateBtn) {
+    duplicateBtn.addEventListener('click', async () => {
+
+      let dataForMiniForm = {
+        formType: 'collectDuplicateProjectTitle',
+        projectTitle: projectData.projectTitle,
+      }
+
+      const titleCollectionAndConfirmation = await renderMiniForm(dataForMiniForm);
+
+      const duplicateProject = copyProject({ 
+        projectData, 
+        newTitle: titleCollectionAndConfirmation.duplicatedProjectTitle 
+      });
+
+      const projectTreeViewOpened = document.querySelector('.searchProjectTreeView');
+      if(projectTreeViewOpened) {
+        reRenderProjecTreeViewportToNode(duplicateProject.uniqueProjectID);
+      }
+
+      renderProjectsToDash();
+    })
   }
   
   if(forPopUp && !forDashboard) addReLocateDragLogicForTile(projectTile);

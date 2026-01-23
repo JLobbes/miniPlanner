@@ -129,7 +129,7 @@ function createProjectViewTitleBar({ projectData, projectView, renderAsSingleTas
 }
 
 // Ellipsis action menu 
-function createProjectActions({ deleteAction = true, pinAction = false, editAction = false, tapeAction = false, focusNodeAction = false, projectData, projectView }) {
+function createProjectActions({ deleteAction = true, duplicateAction = false, pinAction = false, editAction = false, tapeAction = false, focusNodeAction = false, projectData, projectView }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'projectActionsWrapper';
 
@@ -138,6 +138,7 @@ function createProjectActions({ deleteAction = true, pinAction = false, editActi
       <span>...</span>
       <div class="projectActionsDropDown">
         ${ deleteAction ? '<button class="deleteActionBtn" title="Delete"><i class="fa-solid fa-trash"></i></button>' : '' }
+        ${ duplicateAction ?  `<button class="duplicateActionBtn" title="Duplicate Project"><i class="fa-solid fa-clone"></i></button>` : '' }
         ${ pinAction ?  ` <button class="pinActionBtn ${((projectData.hasOwnProperty('pinToDash')) && projectData.pinToDash) ? 'crossed' : '' }" title="Pin to Dashboard"><i class="fa-solid fa-thumbtack"></i></button>` : '' }
         ${ focusNodeAction ? '<button class="focusNodeAction" title="Open node in Project Tree"><i class="fa-regular fa-circle-dot"></i></button>' : '' }
         ${ editAction ? '<button class="editActionBtn" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button>' : '' }

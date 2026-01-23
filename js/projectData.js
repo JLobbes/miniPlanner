@@ -42,6 +42,31 @@ function openNewProject({ parentID , hasParent}) {
   openProjectView(structuredClone(newProjectData), hasParent || null);
 }
 
+
+// Write copyProjectCascade, copy delete
+
+function copyProject({ projectData, newTitle }) {
+  if(!projectData) return;
+
+  // Request Confirmation
+  // Request Confrmation children.
+  // Copy Children First
+
+  const newProject = structuredClone(projectData);
+  newProject.uniqueProjectID = generateUniqueEntryID();
+  const hasParent = (newProject.parentProject !== null);
+  // const hasChildren = hasChildren(newProject.projectID);
+
+  // get new name.
+  // if new name then use new name.
+
+  newProject.projectTitle = (newTitle) ? newTitle: (projectData.projectTitle) ? `(copy) ${projectData.projectTitle}` : null;
+
+  addProjectToGlobalData(newProject);
+
+  return newProject;
+}
+
 function getAllChildren(parentID) {
   // Includes nested
 
@@ -259,10 +284,10 @@ async function downloadProjectData() {
     formType: 'collectDownloadTitle',
     dateForDownload: `${(["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][new Date().getMonth()])+String(new Date().getDate()).padStart(2,"0")}`,
   };
-  const requestConfirmation = await renderMiniForm(dataForMiniForm);
+  const downloadTitleCollection = await renderMiniForm(dataForMiniForm);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${requestConfirmation.downloadTitle}`;
+  a.download = `${downloadTitleCollection.downloadTitle}`;
   a.click();
 
   URL.revokeObjectURL(url);

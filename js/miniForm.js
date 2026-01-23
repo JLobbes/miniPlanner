@@ -51,6 +51,14 @@ function renderMiniForm(dataForMiniForm) {
         </label>
       `
     },
+    collectDuplicateProjectTitle: {
+      miniFormMessage: `Name your new copy of <br><span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.projectTitle) ? `${dataForMiniForm.projectTitle}` : 'this project')}</span>.`,
+      miniFormInput: `
+        <label class='downloadTitle'>
+          <input type name="duplicatedProjectTitle" value="${escapeHTML((dataForMiniForm.projectTitle) ? `(copy) ${dataForMiniForm.projectTitle}` : '(copy) Untitled')}" required autofocus></textarea>
+        </label>
+      `
+    },
     confirmDeleteChildren: {
       miniFormMessage: `You must first delete (${dataForMiniForm.quantityOfChildren}) child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} from ${dataForMiniForm.hasOwnProperty('projectData') && dataForMiniForm.projectData.projectTitle ? dataForMiniForm.projectData.projectTitle : 'this project.'}`,
     },
@@ -62,6 +70,13 @@ function renderMiniForm(dataForMiniForm) {
     },
     confirmDeleteTimeLogEntry: {
       miniFormMessage: `Are you sure you want to delete logged time?`,
+    },
+    confirmDuplicateChild: {
+      miniFormMessage: `
+        This will duplicate 
+        <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.projectTitle) ? `${dataForMiniForm.projectTitle}` : 'this project.')}</span> 
+        Press enter to proceed.
+      `
     },
     confirmMoveChild: {
       miniFormMessage: `
