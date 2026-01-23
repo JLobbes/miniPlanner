@@ -71,9 +71,9 @@ function renderMiniForm(dataForMiniForm) {
     confirmDeleteTimeLogEntry: {
       miniFormMessage: `Are you sure you want to delete logged time?`,
     },
-    confirmDuplicateChild: {
+    confirmDuplicateChildren: {
       miniFormMessage: `
-        This will duplicate 
+        Would you like to duplicated the ${dataForMiniForm.quantityOfChildren}) child${dataForMiniForm.quantityOfChildren > 1 ? 'ren' : ''} nested in 
         <span class="miniFormProjectTitle">${escapeHTML((dataForMiniForm.projectTitle) ? `${dataForMiniForm.projectTitle}` : 'this project.')}</span> 
         Press enter to proceed.
       `

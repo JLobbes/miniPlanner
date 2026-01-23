@@ -42,29 +42,45 @@ function openNewProject({ parentID , hasParent}) {
   openProjectView(structuredClone(newProjectData), hasParent || null);
 }
 
+function copySingleProject({ projectID, newTitle }) {
 
-// Write copyProjectCascade, copy delete
+  const targetProject = getSingleProject(projectID);
 
-function copyProject({ projectData, newTitle }) {
+  const duplicatedProject = structuredClone(targetProject);
+  duplicatedProject.uniqueProjectID = generateUniqueEntryID();
+  duplicatedProject.projectTitle = (newTitle) ? newTitle: (targetProject.projectTitle) ? `(copy) ${targetProject.projectTitle}` : null;
+  addProjectToGlobalData(duplicatedProject);
+
+  return duplicatedProject;
+}
+
+async function copyProjectCascade(projectData) {
   if(!projectData) return;
 
-  // Request Confirmation
-  // Request Confrmation children.
-  // Copy Children First
+  let dataForMiniForm = {
+    formType: 'collectDuplicateProjectTitle',
+    projectTitle: projectData.projectTitle,
+  }
 
-  const newProject = structuredClone(projectData);
-  newProject.uniqueProjectID = generateUniqueEntryID();
-  const hasParent = (newProject.parentProject !== null);
-  // const hasChildren = hasChildren(newProject.projectID);
+  const confirmAndCollectTitle = await renderMiniForm(dataForMiniForm);
+  const duplicatedProject = copySingleProject({ 
+    projectID: projectData.uniqueProjectID, 
+    newTitle: confirmAndCollectTitle.duplicatedProjectTitle, 
+  });
 
-  // get new name.
-  // if new name then use new name.
+  const hadChildren = hadChildren(projectData.projectID);
+  if(hadChildren) {
+    const dataForMiniForm = {
+      formType: 'confirmDuplicateChildren',
+      projectTitle: newProject.projectTile,
+    }
 
-  newProject.projectTitle = (newTitle) ? newTitle: (projectData.projectTitle) ? `(copy) ${projectData.projectTitle}` : null;
+    await renderMiniForm(dataForMiniForm);
 
-  addProjectToGlobalData(newProject);
+    const allChildren = getAllChildrenFast(projectData.uniqueProjectID);
+  }
 
-  return newProject;
+  return duplicatedProject;
 }
 
 function getAllChildren(parentID) {

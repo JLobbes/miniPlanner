@@ -102,17 +102,7 @@ function addTileEventListeners({ projectData, projectTile, forDashboard, forPopU
   if(duplicateBtn) {
     duplicateBtn.addEventListener('click', async () => {
 
-      let dataForMiniForm = {
-        formType: 'collectDuplicateProjectTitle',
-        projectTitle: projectData.projectTitle,
-      }
-
-      const titleCollectionAndConfirmation = await renderMiniForm(dataForMiniForm);
-
-      const duplicateProject = copyProject({ 
-        projectData, 
-        newTitle: titleCollectionAndConfirmation.duplicatedProjectTitle 
-      });
+      const duplicateProject = await copyProjectCascade(projectData); 
 
       const projectTreeViewOpened = document.querySelector('.searchProjectTreeView');
       if(projectTreeViewOpened) {
